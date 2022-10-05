@@ -17,6 +17,8 @@ const GlobalTheme = {
     black: "#000000",
     white: "#ffffff",
     lightGray: "#FAFAFA",
+    lightTwoGray: "#ebebe6",
+    lightThreeGray: "#ebebe6",
     gray: "#848484",
   },
   buttons: {
