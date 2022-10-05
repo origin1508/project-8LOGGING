@@ -10,12 +10,11 @@ const SidebarContainer = styled.div`
   flex-direction: column;
   align-items: center;
 
-  border-right: solid 0.1rem grey;
-
   position: fixed;
   height: 100%;
   width: 20rem;
   padding: 1rem;
+  margin-left: 1.5rem;
   background: #white;
 
   font-size: ${GlobalTheme.fontSize.big};
@@ -24,9 +23,13 @@ const SidebarContainer = styled.div`
 const Logo = styled.div`
   margin: 1rem;
   font-size: ${GlobalTheme.fontSize.big};
+
+  margin-bottom: 3rem;
 `;
 
-const MenuContainer = styled.div``;
+const MenuContainer = styled.div`
+  width: 100%;
+`;
 const SearchContainer = styled.div`
   width: 100%;
   height: 10rem;
@@ -53,6 +56,7 @@ const Button = styled.button`
   width: 100%;
   background: white;
   border: none;
+  cursor: pointer;
 `;
 const Sidebar: React.FC = () => {
   return (
