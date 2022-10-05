@@ -20,12 +20,18 @@ const GlobalStyle = createGlobalStyle`
     html,
     body, 
     #root, 
-    .App { 
+    .App {
+        font-family: "eRegular"; 
         width: 100%; 
         height: 100%; 
         box-sizing: 
         border-box; 
         font-size: 62.5%; 
+    }
+    body{
+        background-image: url("mainBg.png");
+        background-size:cover;
+        background-repeat: no-repeat;
     }
 `;
 
