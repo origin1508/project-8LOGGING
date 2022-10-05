@@ -2,23 +2,23 @@ import React from "react";
 import styled from "styled-components";
 import GlobalStyle from "@/styles/globalStyle";
 import GlobalTheme from "@/styles/theme";
-
+import Main from "@/pages/Main";
 function App() {
   return (
     <React.Fragment>
-      <CustomDiv>EliceDigitalBaeumOTF_Regular</CustomDiv>
-      <CustomDiv2>EliceDigitalBaeumOTF_Bold</CustomDiv2>
+      <Main />
+
       <GlobalStyle />
     </React.Fragment>
   );
 }
-const CustomDiv = styled.div`
-  font-family: ${GlobalTheme.fontStyle.regular};
-  font-size: ${GlobalTheme.fontSize.moreBig};
-`;
+// const CustomDiv = styled.div`
+//   font-family: ${GlobalTheme.fontStyle.regular};
+//   font-size: ${GlobalTheme.fontSize.moreBig};
+// `;
 
-const CustomDiv2 = styled.div`
-  font-family: ${GlobalTheme.fontStyle.bold};
-`;
+// const CustomDiv2 = styled.div`
+//   font-family: ${GlobalTheme.fontStyle.bold};
+// `;
 
 export default App;
