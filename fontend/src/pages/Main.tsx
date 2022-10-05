@@ -1,38 +1,42 @@
 import React from "react";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
+
+interface ButtonProps {
+  bgColor?: string;
+  color?: string;
+}
+
 function Main() {
   return (
-    <Wrapper>
-      <MainContainer>
-        <MainContent>
-          <MainContentTitle>
-            Join plogging for a Pleasant environment For Everyone
-          </MainContentTitle>
-          <MainContentMinTitle>
-            We are help for health in the world. We make world a better place
-          </MainContentMinTitle>
-          <ButtonContainer>
-            <Button
-              color={GlobalTheme.colors.white}
-              bgColor={GlobalTheme.colors.theme}
-            >
-              Explore our service
-            </Button>
-            <Button
-              color={GlobalTheme.colors.theme}
-              bgColor={GlobalTheme.colors.white}
-            >
-              Explore our service
-            </Button>
-          </ButtonContainer>
-          <ImgContainer>
-            <MainImg src="mainPloggingImg2.png" />
-            <MainImg src="mainPloggingImg.png" />
-          </ImgContainer>
-        </MainContent>
-      </MainContainer>
-    </Wrapper>
+    <MainContainer>
+      <MainContent>
+        <MainContentTitle>
+          Join plogging for a Pleasant environment For Everyone
+        </MainContentTitle>
+        <MainContentMinTitle>
+          We are help for health in the world. We make world a better place
+        </MainContentMinTitle>
+        <ButtonContainer>
+          <Button
+            color={GlobalTheme.colors.white}
+            bgColor={GlobalTheme.colors.theme}
+          >
+            Explore our service
+          </Button>
+          <Button
+            color={GlobalTheme.colors.theme}
+            bgColor={GlobalTheme.colors.white}
+          >
+            Explore our service
+          </Button>
+        </ButtonContainer>
+        <ImgContainer>
+          <MainImg src="mainPloggingImg2.png" />
+          <MainImg src="mainPloggingImg.png" />
+        </ImgContainer>
+      </MainContent>
+    </MainContainer>
   );
 }
 
@@ -66,10 +70,6 @@ const ButtonContainer = styled.div`
   margin-bottom: 4rem;
 `;
 
-interface ButtonProps {
-  bgColor?: string;
-  color?: string;
-}
 const Button = styled.button<ButtonProps>`
   ${GlobalTheme.buttons}
   background-color:${(props) => props.bgColor};
