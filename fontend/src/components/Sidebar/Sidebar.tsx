@@ -13,9 +13,8 @@ const SidebarContainer = styled.div`
   position: fixed;
   height: 100%;
   width: 20rem;
-  padding: 1rem;
-  margin-left: 1.5rem;
-  background: #white;
+  padding: 3rem;
+  background-color: ${GlobalTheme.colors.white};
 
   font-size: ${GlobalTheme.fontSize.big};
 `;
@@ -23,7 +22,6 @@ const SidebarContainer = styled.div`
 const Logo = styled.div`
   margin: 1rem;
   font-size: ${GlobalTheme.fontSize.big};
-
   margin-bottom: 3rem;
 `;
 
@@ -39,7 +37,7 @@ const SearchContainer = styled.div`
 const SearchInput = styled.input`
   width: 20rem;
   height: 4rem;
-  background: #fafafa;
+  background-color: ${GlobalTheme.colors.lightGray};
   border: none;
   border-radius: 4px;
   text-align: center;
@@ -54,10 +52,11 @@ const MenuLink = styled.a`
 
 const Button = styled.button`
   width: 100%;
-  background: white;
+  background-color: ${GlobalTheme.colors.white};
   border: none;
   cursor: pointer;
 `;
+
 const Sidebar: React.FC = () => {
   return (
     <SidebarContainer>
