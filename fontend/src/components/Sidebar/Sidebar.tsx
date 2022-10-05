@@ -1,4 +1,7 @@
 import React from "react";
+import Channel from "./Channel";
+import { SidebarData } from "./SidebarData";
+
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 
@@ -7,38 +10,68 @@ const SidebarContainer = styled.div`
   flex-direction: column;
   align-items: center;
 
+  border-right: solid 0.1rem grey;
+
   position: fixed;
   height: 100%;
-  width: 18rem;
+  width: 20rem;
   padding: 1rem;
-  background: #fafafa;
+  background: #white;
 
   font-size: ${GlobalTheme.fontSize.big};
 `;
 
-const LogoContainer = styled.div`
+const Logo = styled.div`
   margin: 1rem;
   font-size: ${GlobalTheme.fontSize.big};
 `;
 
 const MenuContainer = styled.div``;
+const SearchContainer = styled.div`
+  width: 100%;
+  height: 10rem;
+  margin-top: 5rem;
+`;
 
-const ChannelContainer = styled.div``;
+const SearchInput = styled.input`
+  width: 20rem;
+  height: 4rem;
+  background: #fafafa;
+  border: none;
+  border-radius: 4px;
+  text-align: center;
+`;
+const MenuItem = styled.div`
+  margin-bottom: 3rem;
+`;
+const MenuLink = styled.a`
+  text-decoration: none;
+  color: #848484;
+`;
 
+const Button = styled.button`
+  width: 100%;
+  background: white;
+  border: none;
+`;
 const Sidebar: React.FC = () => {
   return (
     <SidebarContainer>
-      <LogoContainer>
-        <h1>8LOGGING</h1>
-      </LogoContainer>
+      <Logo>8LOGGING</Logo>
+      <Button>Login</Button>
+      <SearchContainer>
+        <SearchInput placeholder="Search"></SearchInput>
+      </SearchContainer>
       <MenuContainer>
-        <li>Login</li>
-        <li>About plogging</li>
-        <li>Recruiting channel</li>
-        <li>Region</li>
-        <li>Friend list</li>
+        {SidebarData.map((item, index) => {
+          return (
+            <MenuItem key={index}>
+              <MenuLink href={item.path}>{item.title}</MenuLink>
+            </MenuItem>
+          );
+        })}
       </MenuContainer>
-      <ChannelContainer>Channel</ChannelContainer>
+      <Channel />
     </SidebarContainer>
   );
 };
