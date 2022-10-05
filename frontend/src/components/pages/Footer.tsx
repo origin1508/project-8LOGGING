@@ -4,7 +4,7 @@ import GlobalTheme from "@/styles/theme";
 
 const Footer = () => {
   return (
-    <React.Fragment>
+    <FooterWrapper>
       <FooterContainer>
         <FooterFontWrapper>
           <FooterFont>TEAM</FooterFont>
@@ -20,9 +20,15 @@ const Footer = () => {
       <FooterCopyRightContainer>
         © Photo, Inc. 2022. We love our users!
       </FooterCopyRightContainer>
-    </React.Fragment>
+    </FooterWrapper>
   );
 };
+
+const FooterWrapper = styled.div`
+  margin-top: 3rem;
+  margin-left: 26rem;
+  background-color: ${GlobalTheme.colors.lightThreeGray};
+`;
 
 const FooterContainer = styled.div`
   width: 100%;
