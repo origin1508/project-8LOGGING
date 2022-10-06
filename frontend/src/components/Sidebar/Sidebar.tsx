@@ -1,9 +1,40 @@
 import React from "react";
+import { useNavigate, Link } from "react-router-dom";
 import Channel from "./Channel";
-import { SidebarData } from "./SidebarData";
+import { SidebarData } from "./sidebarData";
 
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
+
+const Sidebar = () => {
+  const navigate = useNavigate();
+
+  const handleLogoImageClick = () => {
+    navigate("/");
+  };
+
+  return (
+    <SidebarContainer>
+      <Logo onClick={handleLogoImageClick}>
+        <LogoImg src={`${process.env.PUBLIC_URL}/images/plogging_logo.png`} />
+      </Logo>
+      <Button>Login</Button>
+      <SearchContainer>
+        <SearchInput placeholder="Search"></SearchInput>
+      </SearchContainer>
+      <MenuContainer>
+        {SidebarData.map((item, index) => {
+          return (
+            <MenuItem key={index}>
+              <MenuLink to={item.path}>{item.title}</MenuLink>
+            </MenuItem>
+          );
+        })}
+      </MenuContainer>
+      <Channel />
+    </SidebarContainer>
+  );
+};
 
 const SidebarContainer = styled.div`
   display: flex;
@@ -20,9 +51,14 @@ const SidebarContainer = styled.div`
 `;
 
 const Logo = styled.div`
+  cursor: pointer;
   margin: 1rem;
   font-size: ${GlobalTheme.fontSize.big};
   margin-bottom: 3rem;
+`;
+
+const LogoImg = styled.img`
+  width: auto;
 `;
 
 const MenuContainer = styled.div`
@@ -45,7 +81,7 @@ const SearchInput = styled.input`
 const MenuItem = styled.div`
   margin-bottom: 3rem;
 `;
-const MenuLink = styled.a`
+const MenuLink = styled(Link)`
   text-decoration: none;
   color: #848484;
 `;
@@ -56,27 +92,5 @@ const Button = styled.button`
   border: none;
   cursor: pointer;
 `;
-
-const Sidebar: React.FC = () => {
-  return (
-    <SidebarContainer>
-      <Logo>8LOGGING</Logo>
-      <Button>Login</Button>
-      <SearchContainer>
-        <SearchInput placeholder="Search"></SearchInput>
-      </SearchContainer>
-      <MenuContainer>
-        {SidebarData.map((item, index) => {
-          return (
-            <MenuItem key={index}>
-              <MenuLink href={item.path}>{item.title}</MenuLink>
-            </MenuItem>
-          );
-        })}
-      </MenuContainer>
-      <Channel />
-    </SidebarContainer>
-  );
-};
 
 export default Sidebar;
