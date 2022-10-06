@@ -41,18 +41,17 @@ function Main() {
 }
 
 export default Main;
-const Wrapper = styled.div`
-  width: 100%;
-  height: 100%;
-`;
+
 const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
   margin-left: 20%;
 `;
+
 const MainContent = styled.div`
   margin: 4rem 0 0 20rem;
 `;
+
 const MainContentTitle = styled.h1`
   font-family: ${GlobalTheme.fontStyle.bold};
   font-size: 4.5rem;
