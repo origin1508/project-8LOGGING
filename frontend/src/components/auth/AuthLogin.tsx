@@ -7,14 +7,14 @@ const AuthLogin = () => {
   return (
     <AuthLoginFormContainer>
       <BaseIntputContainer>
-        <AuthLoginInput placeholder="Please enter your email" />
+        <AuthLoginInput placeholder="Email" />
       </BaseIntputContainer>
       <BaseIntputContainer>
-        <AuthLoginInput placeholder="Please enter your password" />
+        <AuthLoginInput placeholder="Password" />
       </BaseIntputContainer>
-      <BaseIntputContainer>
+      <AuthLoginButtonContainer>
         <AuthLoginButton>Sign in</AuthLoginButton>
-      </BaseIntputContainer>
+      </AuthLoginButtonContainer>
     </AuthLoginFormContainer>
   );
 };
@@ -24,7 +24,7 @@ const AuthLoginFormContainer = styled.div`
   flex-direction: column;
   width: 400px;
   padding: 1rem;
-  margin-top: 12rem;
+  margin-top: 5rem;
 `;
 
 const AuthLoginInput = styled.input`
@@ -38,7 +38,12 @@ const AuthLoginInput = styled.input`
   border: ${GlobalTheme.input.border};
   box-shadow: 1px 1px 3px ${GlobalTheme.colors.gray};
 `;
-
+const AuthLoginButtonContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
 const AuthLoginButton = styled.div`
   ${GlobalTheme.buttons}
   width: 70%;

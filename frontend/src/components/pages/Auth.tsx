@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
+import BasePageComponent from "@/components/hoc/BasePageComponent";
 import AuthLogin from "@/components/auth/AuthLogin";
 import AuthReigster from "../auth/AuthRegister";
 
@@ -10,7 +11,7 @@ const Login = () => {
   const [tabIndex, setTabIndex] = useState(0);
 
   return (
-    <LoginWarrper>
+    <BasePageComponent>
       <LoginContainer tabIndex={tabIndex}>
         <LoginHeader>
           <LoginHeaderTitle>8LOGGING</LoginHeaderTitle>
@@ -47,17 +48,10 @@ const Login = () => {
           )}
         </FormContainer>
       </LoginContainer>
-    </LoginWarrper>
+    </BasePageComponent>
   );
 };
 
-const LoginWarrper = styled.div`
-  display: flex;
-  width: 100%;
-  height: 100%;
-
-  justify-content: center;
-`;
 const LoginContainer = styled.div`
   position: absolute;
   top: 17%;
@@ -66,7 +60,6 @@ const LoginContainer = styled.div`
   flex-direction: column;
   align-items: center;
 
-  margin-left: 26rem;
   border-radius: 8px;
   background-color: ${GlobalTheme.colors.white};
   box-shadow: 1px 4px 5px ${GlobalTheme.colors.gray};
