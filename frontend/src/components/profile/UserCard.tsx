@@ -5,7 +5,14 @@ import GlobalTheme from "@/styles/theme";
 interface ImgProps {
   img?: string;
 }
-function UserCard() {
+interface UserCardProps {
+  setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+function UserCard({ setIsEditing }: UserCardProps) {
+  const handlerEditClick = () => {
+    setIsEditing(true);
+  };
   return (
     <UserCardContainer>
       <TitleContainer>
@@ -16,7 +23,7 @@ function UserCard() {
         <UserName>김대운 (dlzagu)</UserName>
         <UserEmail>eodnsdlekd@naver.com</UserEmail>
         <UserDescription>안녕하세요 ~ ~</UserDescription>
-        <Button>Edit</Button>
+        <Button onClick={handlerEditClick}>Edit</Button>
       </InforContainer>
     </UserCardContainer>
   );
