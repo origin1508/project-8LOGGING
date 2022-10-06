@@ -15,7 +15,7 @@ module.exports = {
       res.status(200).json({
         status: 200,
         message: "로그인 성공",
-        data: userData,
+        datas: userData,
       });
     } catch (err) {
       next(err);
@@ -30,7 +30,7 @@ module.exports = {
       res.status(201).json({
         status: 201,
         message: "회원가입 성공",
-        data: user,
+        datas: user,
       });
     } catch (err) {
       next(err);
