@@ -39,6 +39,10 @@ const UserSchema = new Schema(
       type: Array,
       required: false,
       default: []
+    },
+    description: {
+      type: String,
+      required: false
     }
   },
   {
