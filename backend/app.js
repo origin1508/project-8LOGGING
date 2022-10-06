@@ -1,12 +1,11 @@
-// 패키지, 미들웨어 불러오기
+// 패키지
 const express = require("express");
 const dotenv = require("dotenv");
 
-const jwtVerification = require("./src/middlewares/jwtVerification");
+// 미들웨어, 설정 모듈
 const errorMiddleware = require("./src/middlewares/error");
-const {swaggerUI, specs} = require('./src/config/swagger');
-
-// 몽고디비 커넥션 이벤트 불러오기
+const { swaggerUI, specs } = require("./src/config/swagger");
+const cors = require("cors");
 const dbConnect = require("./src/config/mongoose");
 
 // 라우터 불러오기
@@ -19,16 +18,13 @@ dotenv.config();
 dbConnect();
 
 // 미들웨어 연결
+app.use(cors({ credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// app.get("/", jwtVerification, (req, res, next) => {
-//   res.send(req.userId);
-// });
-
 // 라우터 연결
 app.use("/api/auth", authRouter);
-app.use('/api/users', userRouter);
+app.use("/api/users", userRouter);
 
 // swagger
 app.use("/docs", swaggerUI.serve, swaggerUI.setup(specs));
