@@ -25,6 +25,13 @@ const GlobalTheme = {
     borderRadius: "4px",
     border: "none",
   },
+  input: {
+    outline: "none",
+    width: "100%",
+    borderRadius: "4px",
+    padding: "8px 10px 8px 10px",
+    border: "1px solid #ffffff",
+  },
 };
 
 export default GlobalTheme;
