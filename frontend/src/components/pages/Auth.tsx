@@ -1,13 +1,32 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
+import useRegisterForm from "@/hooks/useRegisterForm";
 import AuthLogin from "@/components/auth/AuthLogin";
 import AuthReigster from "../auth/AuthRegister";
+import { authRegisterRequest } from "@/api/authFetcher";
 
 const TapMenu = ["Sign in", "Registration"];
 
 const Login = () => {
   const [tabIndex, setTabIndex] = useState(0);
+
+  const { registerFormState, handleRegisterFormValueChange } = useRegisterForm({
+    email: "",
+    nickname: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  const handleRegisterSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const { email, nickname, password } = registerFormState;
+    await authRegisterRequest("/api/auth/register", {
+      email,
+      nickname,
+      password,
+    });
+  };
 
   return (
     <LoginWarrper>
@@ -43,7 +62,12 @@ const Login = () => {
           {tabIndex === 0 ? (
             <AuthLogin />
           ) : (
-            <AuthReigster setTabIndex={setTabIndex} />
+            <AuthReigster
+              setTabIndex={setTabIndex}
+              registerFormState={registerFormState}
+              onRegisterFormValueChaneEvent={handleRegisterFormValueChange}
+              onRegisterSubmitEvent={handleRegisterSubmit}
+            />
           )}
         </FormContainer>
       </LoginContainer>
