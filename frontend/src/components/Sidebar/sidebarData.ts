@@ -1,18 +1,14 @@
 export const SidebarData = [
   {
     title: "About plogging",
-    path: "#",
+    path: "/about",
   },
   {
     title: "Recruiting channel",
-    path: "#",
+    path: "/channels/create",
   },
   {
     title: "Region",
-    path: "#",
-  },
-  {
-    title: "Friend list",
-    path: "#",
+    path: "/locations",
   },
 ];
