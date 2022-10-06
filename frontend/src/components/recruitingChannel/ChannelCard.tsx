@@ -1,7 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
-import { BsPeopleFill, BsMapFill, BsCalendarDateFill } from "react-icons/bs";
+import CustomIcon from "@/components/icons/CustomIcon";
+
 interface CardImgProps {
   bg: string;
 }
@@ -14,21 +15,23 @@ function ChannelCard() {
         <CardTitle>제주에서 플로깅</CardTitle>
         <CardInfoList>
           <List>
-            <BsPeopleFill
+            <CustomIcon
+              name="people"
               size="20"
               color={GlobalTheme.colors.theme}
-            ></BsPeopleFill>
+            />
             <PeopleCount>12명</PeopleCount>
           </List>
           <List>
-            <BsMapFill size="20" color={GlobalTheme.colors.theme}></BsMapFill>
+            <CustomIcon name="map" size="20" color={GlobalTheme.colors.theme} />
             <Location>제주도</Location>
           </List>
           <List>
-            <BsCalendarDateFill
+            <CustomIcon
+              name="date"
               size="20"
               color={GlobalTheme.colors.theme}
-            ></BsCalendarDateFill>
+            />
             <Date>22/10/22</Date>
           </List>
         </CardInfoList>
