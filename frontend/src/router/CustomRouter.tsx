@@ -1,6 +1,6 @@
 import React, { Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
-import Sidebar from "@/components/commonLayout/Sidebar/Sidebar";
+import SidebarComponent from "@/components/commonLayout/sidebars/SidebarComponent";
 import Footer from "@/components/commonLayout/footer/Footer";
 
 const MainComponentPage = React.lazy(() => import("@/components/pages/Main"));
@@ -15,7 +15,7 @@ const ProfileComponentPage = React.lazy(
 const CustomRouter = () => {
   return (
     <React.Fragment>
-      <Sidebar />
+      <SidebarComponent />
       <Suspense fallback={<div>Loading...</div>}>
         <Routes>
           <Route path="/" element={<MainComponentPage />} />

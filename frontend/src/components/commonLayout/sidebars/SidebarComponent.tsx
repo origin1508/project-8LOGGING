@@ -1,11 +1,11 @@
 import React from "react";
 import { useNavigate, Link } from "react-router-dom";
 import Channel from "./Channel";
-import { SidebarData } from "./sidebarData";
+import { SidebarData } from "@/components/commonLayout/sidebars/sidebarData";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 
-const Sidebar = () => {
+const SidebarComponent = () => {
   const navigate = useNavigate();
 
   const handleLogoImageClick = () => {
@@ -90,4 +90,4 @@ const LoginButton = styled(Link)`
   color: ${GlobalTheme.colors.gray};
 `;
 
-export default Sidebar;
+export default SidebarComponent;
