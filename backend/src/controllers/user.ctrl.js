@@ -10,6 +10,7 @@ module.exports = {
 
       res.status(201).json({
         success: true,
+        status: 201,
         message: "nickname modification success.",
         datas: user,
       });
@@ -30,6 +31,7 @@ module.exports = {
 
       res.status(200).json({
         success: true,
+        status: 200,
         message: "Verification completed.",
       });
     } catch (err) {
@@ -46,6 +48,7 @@ module.exports = {
 
       res.status(201).json({
         success: true,
+        status: 201,
         message: "Password modification success",
       })
     } catch (err) {
@@ -61,6 +64,7 @@ module.exports = {
 
       res.status(201).json({
         success: true,
+        status: 201,
         message: "profile picture modification success.",
         datas: user,
       });
