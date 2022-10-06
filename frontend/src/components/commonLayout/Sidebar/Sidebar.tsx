@@ -2,7 +2,6 @@ import React from "react";
 import { useNavigate, Link } from "react-router-dom";
 import Channel from "./Channel";
 import { SidebarData } from "./sidebarData";
-
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 

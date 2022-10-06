@@ -1,23 +1,24 @@
 import React from "react";
-
 import styled from "styled-components";
 import User from "./User";
 import ChannelHistory from "./ChannelHistory";
+import BasePageComponent from "@/components/hoc/BasePageComponent";
+
 function Profile() {
   return (
-    <ProfileContainer>
+    <BasePageComponent>
+      {/* <ProfileContainer> */}
       <User />
       <ChannelHistory />
-    </ProfileContainer>
+      {/* </ProfileContainer> */}
+    </BasePageComponent>
   );
 }
-const ProfileContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-left: 30rem;
-  height: 100%;
-  gap: 4rem;
-`;
+
+// const ProfileContainer = styled.div`
+//   display: flex;
+//   justify-content: center;
+//   gap: 4rem;
+// `;
 
 export default Profile;

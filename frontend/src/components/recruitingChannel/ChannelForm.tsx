@@ -1,37 +1,41 @@
 import React from "react";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
+import BasePageComponent from "@/components/hoc/BasePageComponent";
+import BaseIntputContainer from "@/components/hoc/BaseInputContainer";
 
 const ChannelForm = () => {
   return (
-    <ChannelContainer>
-      <ChannelFormWrapper>
-        <ChannelTitle>CREATE CHANNEL</ChannelTitle>
-        <ChannelWrapper>
-          <ChannelInputWrapper>
-            <ChannelInputContainer>
-              <ChannelInput placeholder="Channel title" />
-            </ChannelInputContainer>
-            <ChannelInputContainer>
-              <ChannelInput placeholder="Number of recruits" />
-            </ChannelInputContainer>
-            <ChannelInputContainer>
-              <ChannelInput placeholder="Location" />
-            </ChannelInputContainer>
-            <ChannelInputContainer>
-              <ChannelInput placeholder="Date" />
-            </ChannelInputContainer>
-          </ChannelInputWrapper>
-          <ChannelImageBox>Image upload preview</ChannelImageBox>
-        </ChannelWrapper>
-        <ChannelTextArea placeholder="Please enter your channel description" />
-      </ChannelFormWrapper>
-    </ChannelContainer>
+    <BasePageComponent>
+      <ChannelContainer>
+        <ChannelFormWrapper>
+          <ChannelTitle>CREATE CHANNEL</ChannelTitle>
+          <ChannelWrapper>
+            <ChannelInputWrapper>
+              <BaseIntputContainer>
+                <ChannelInput placeholder="Channel title" />
+              </BaseIntputContainer>
+              <BaseIntputContainer>
+                <ChannelInput placeholder="Number of recruits" />
+              </BaseIntputContainer>
+              <BaseIntputContainer>
+                <ChannelInput placeholder="Location" />
+              </BaseIntputContainer>
+              <BaseIntputContainer>
+                <ChannelInput placeholder="Date" />
+              </BaseIntputContainer>
+            </ChannelInputWrapper>
+            <ChannelImageBox>Image upload preview</ChannelImageBox>
+          </ChannelWrapper>
+          <ChannelTextArea placeholder="Please enter your channel description" />
+        </ChannelFormWrapper>
+      </ChannelContainer>
+    </BasePageComponent>
   );
 };
 
 const ChannelContainer = styled.div`
-  margin-left: 26rem;
+  width: 100%;
   background-color: ${GlobalTheme.colors.lightThreeGray};
   padding: 3rem;
 `;
@@ -59,11 +63,6 @@ const ChannelWrapper = styled.div`
 
 const ChannelInputWrapper = styled.div`
   width: 50%;
-`;
-
-const ChannelInputContainer = styled.div`
-  margin-bottom: 3rem;
-  font-size: ${GlobalTheme.fontSize.littleBig};
 `;
 
 const ChannelInput = styled.input`
