@@ -34,7 +34,6 @@ function ChannelHistoryCard() {
           </List>
         </CardInfoList>
         <ButtonContainer>
-          <Button>참가하기</Button>
           <Button>More</Button>
         </ButtonContainer>
       </CardContent>
