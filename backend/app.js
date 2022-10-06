@@ -10,7 +10,7 @@ const {swaggerUI, specs} = require('./src/config/swagger');
 const dbConnect = require("./src/config/mongoose");
 
 // 라우터 불러오기
-const { authRouter } = require("./src/routes");
+const { authRouter, userRouter } = require("./src/routes");
 
 const app = express();
 dotenv.config();
@@ -22,12 +22,13 @@ dbConnect();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.get("/", jwtVerification, (req, res, next) => {
-  res.send(req.userId);
-});
+// app.get("/", jwtVerification, (req, res, next) => {
+//   res.send(req.userId);
+// });
 
 // 라우터 연결
 app.use("/api/auth", authRouter);
+app.use('/api/users', userRouter);
 
 // swagger
 app.use("/docs", swaggerUI.serve, swaggerUI.setup(specs));
