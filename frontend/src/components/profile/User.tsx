@@ -4,7 +4,7 @@ import UserEditForm from "./UserEditForm";
 import styled from "styled-components";
 
 function User() {
-  const [isEditing, setIsEditing] = useState<boolean>(true);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
 
   return (
     <UserContainer>
@@ -20,9 +20,6 @@ function User() {
 }
 const UserContainer = styled.div`
   display: flex;
-  margin-left: 30rem;
-  width: 100%;
-  height: 100%;
 `;
 const UserCardContainer = styled.div`
   display: flex;
