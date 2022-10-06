@@ -58,7 +58,7 @@ const ChannelWrapper = styled.div`
 `;
 
 const ChannelInputWrapper = styled.div`
-  width: 440px;
+  width: 50%;
 `;
 
 const ChannelInputContainer = styled.div`
@@ -77,7 +77,7 @@ const ChannelInput = styled.input`
 
 const ChannelImageBox = styled.div`
   display: block;
-  width: 580px;
+  width: 45%;
   height: 230px;
   text-align: center;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
