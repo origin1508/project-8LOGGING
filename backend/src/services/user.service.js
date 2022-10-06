@@ -81,4 +81,19 @@ module.exports = {
 
     return result;
   },
+
+  /**
+   * 유저 프로필 사진 URL 수정
+   * 
+   * @param {*} userId 
+   * @param {*} location 
+   * @returns 
+   */
+  async updateUserProfPic(userId, location) {
+    const result = await User.findByIdAndUpdate(
+      userId,
+      { profPic: location }
+    );
+    return result;
+  },
 };
