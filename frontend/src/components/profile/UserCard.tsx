@@ -22,7 +22,7 @@ function UserCard({ setIsEditing }: UserCardProps) {
       <InforContainer>
         <UserName>김대운 (dlzagu)</UserName>
         <UserEmail>eodnsdlekd@naver.com</UserEmail>
-        <UserDescription>안녕하세요 ~ ~</UserDescription>
+        <UserDescription>안녕하세요~~</UserDescription>
         <Button onClick={handlerEditClick}>Edit</Button>
       </InforContainer>
     </UserCardContainer>
@@ -30,14 +30,15 @@ function UserCard({ setIsEditing }: UserCardProps) {
 }
 
 const UserCardContainer = styled.div`
-  margin-top: 5rem;
   width: 40rem;
-  height: 60rem;
+  overflow: hidden;
+  height: 65rem;
   border-radius: 1rem;
   background-color: white;
   display: flex;
   align-items: center;
   flex-direction: column;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 `;
 const TitleContainer = styled.div`
   padding: 2rem;
@@ -62,11 +63,14 @@ const Img = styled.div<ImgProps>`
 `;
 const InforContainer = styled.div`
   display: flex;
-  width: 100%;
+  background-color: ${GlobalTheme.colors.lightThreeGray};
+  border-radius: 1rem;
+  width: 80%;
   height: 50%;
   align-items: center;
   justify-content: space-around;
   flex-direction: column;
+  padding: 1rem;
   font-size: ${GlobalTheme.fontSize.littleBig};
 `;
 
