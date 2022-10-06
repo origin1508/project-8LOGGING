@@ -6,10 +6,10 @@ const AuthLogin = () => {
   return (
     <AuthLoginFormContainer>
       <AuthLoginInputContainer>
-        <AuthLoginInput placeholder="Please enter your email" />
+        <AuthLoginInput placeholder="Email" />
       </AuthLoginInputContainer>
       <AuthLoginInputContainer>
-        <AuthLoginInput placeholder="Please enter your password" />
+        <AuthLoginInput placeholder="Password" />
       </AuthLoginInputContainer>
       <AuthLoginButtonContainer>
         <AuthLoginButton>Sign in</AuthLoginButton>
@@ -23,7 +23,7 @@ const AuthLoginFormContainer = styled.div`
   flex-direction: column;
   width: 400px;
   padding: 1rem;
-  margin-top: 12rem;
+  margin-top: 5rem;
 `;
 
 const AuthLoginInputContainer = styled.div`

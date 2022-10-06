@@ -11,7 +11,7 @@ const Login = () => {
 
   return (
     <LoginWarrper>
-      <LoginContainer>
+      <LoginContainer tabIndex={tabIndex}>
         <LoginHeader>
           <LoginHeaderTitle>8LOGGING</LoginHeaderTitle>
           <LoginTaps>
@@ -56,10 +56,12 @@ const LoginWarrper = styled.div`
   width: 100%;
   height: 100%;
 
-  align-items: center;
   justify-content: center;
 `;
 const LoginContainer = styled.div`
+  position: absolute;
+  top: 17%;
+
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -69,7 +71,7 @@ const LoginContainer = styled.div`
   background-color: ${GlobalTheme.colors.white};
   box-shadow: 1px 4px 5px ${GlobalTheme.colors.gray};
   width: 50rem;
-  height: 70rem;
+  height: ${(props) => (props.tabIndex === 0 ? "45rem" : "65rem")};
 `;
 const LoginHeader = styled.div`
   width: 100%;
