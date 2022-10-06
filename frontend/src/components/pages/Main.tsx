@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
+import BasePageComponent from "@/components/hoc/BasePageComponent";
 
 interface ButtonProps {
   bgColor?: string;
@@ -9,7 +10,7 @@ interface ButtonProps {
 
 function Main() {
   return (
-    <MainContainer>
+    <BasePageComponent>
       <MainContent>
         <MainContentTitle>
           Join plogging for a Pleasant environment For Everyone
@@ -36,17 +37,11 @@ function Main() {
           <MainImg src="mainPloggingImg.png" />
         </ImgContainer>
       </MainContent>
-    </MainContainer>
+    </BasePageComponent>
   );
 }
 
 export default Main;
-
-const MainContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-left: 20%;
-`;
 
 const MainContent = styled.div`
   margin: 4rem 0 0 20rem;
@@ -59,7 +54,7 @@ const MainContentTitle = styled.h1`
 `;
 
 const MainContentMinTitle = styled.h3`
-  font-size: 1.5rem;
+  font-size: ${GlobalTheme.fontSize.littleBig};
   margin-bottom: 4rem;
 `;
 

@@ -1,19 +1,20 @@
 import React from "react";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
+import BaseIntputContainer from "@/components/hoc/BaseInputContainer";
 
 const AuthLogin = () => {
   return (
     <AuthLoginFormContainer>
-      <AuthLoginInputContainer>
-        <AuthLoginInput placeholder="Email" />
-      </AuthLoginInputContainer>
-      <AuthLoginInputContainer>
-        <AuthLoginInput placeholder="Password" />
-      </AuthLoginInputContainer>
-      <AuthLoginButtonContainer>
+      <BaseIntputContainer>
+        <AuthLoginInput placeholder="Please enter your email" />
+      </BaseIntputContainer>
+      <BaseIntputContainer>
+        <AuthLoginInput placeholder="Please enter your password" />
+      </BaseIntputContainer>
+      <BaseIntputContainer>
         <AuthLoginButton>Sign in</AuthLoginButton>
-      </AuthLoginButtonContainer>
+      </BaseIntputContainer>
     </AuthLoginFormContainer>
   );
 };
@@ -23,11 +24,7 @@ const AuthLoginFormContainer = styled.div`
   flex-direction: column;
   width: 400px;
   padding: 1rem;
-  margin-top: 5rem;
-`;
-
-const AuthLoginInputContainer = styled.div`
-  margin-bottom: 1rem;
+  margin-top: 12rem;
 `;
 
 const AuthLoginInput = styled.input`
@@ -40,13 +37,8 @@ const AuthLoginInput = styled.input`
   line-height: 3rem;
   border: ${GlobalTheme.input.border};
   box-shadow: 1px 1px 3px ${GlobalTheme.colors.gray};
-  margin-bottom: 2rem;
 `;
 
-const AuthLoginButtonContainer = styled.div`
-  display: flex;
-  justify-content: center;
-`;
 const AuthLoginButton = styled.div`
   ${GlobalTheme.buttons}
   width: 70%;

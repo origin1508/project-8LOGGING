@@ -2,7 +2,6 @@ import React from "react";
 import { useNavigate, Link } from "react-router-dom";
 import Channel from "./Channel";
 import { SidebarData } from "./sidebarData";
-
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 
@@ -18,7 +17,7 @@ const Sidebar = () => {
       <Logo onClick={handleLogoImageClick}>
         <LogoImg src={`${process.env.PUBLIC_URL}/images/plogging_logo.png`} />
       </Logo>
-      <LoginButton to="/login">Login</LoginButton>
+      <LoginButton to="/auth">Login</LoginButton>
       <SearchContainer>
         <SearchInput placeholder="Search"></SearchInput>
       </SearchContainer>

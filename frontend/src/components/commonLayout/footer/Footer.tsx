@@ -26,7 +26,6 @@ const Footer = () => {
 
 const FooterWrapper = styled.div`
   margin-left: 26rem;
-  background-color: ${GlobalTheme.colors.lightThreeGray};
 `;
 
 const FooterContainer = styled.div`
@@ -34,6 +33,7 @@ const FooterContainer = styled.div`
   display: flex;
   justify-content: space-between;
   border-bottom: 0.7px solid ${GlobalTheme.colors.black};
+  background-color: ${GlobalTheme.colors.lightThreeGray};
   height: auto;
   font-family: ${GlobalTheme.fontStyle.bold};
 `;

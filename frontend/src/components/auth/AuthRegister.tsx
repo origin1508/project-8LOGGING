@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
+import BaseIntputContainer from "@/components/hoc/BaseInputContainer";
 
 interface Props {
   setTabIndex: React.Dispatch<React.SetStateAction<number>>;
@@ -11,21 +12,21 @@ interface RegistrationButtonProps {
   Color?: string;
 }
 
-const Registration: React.FC<Props> = ({ setTabIndex }) => {
+const AuthReigster: React.FC<Props> = ({ setTabIndex }) => {
   return (
     <RegistrationFormContainer>
-      <RegistrationInputContainer>
+      <BaseIntputContainer>
         <RegistrationInput placeholder="Email" />
-      </RegistrationInputContainer>
-      <RegistrationInputContainer>
+      </BaseIntputContainer>
+      <BaseIntputContainer>
         <RegistrationInput placeholder="Nickname" />
-      </RegistrationInputContainer>
-      <RegistrationInputContainer>
+      </BaseIntputContainer>
+      <BaseIntputContainer>
         <RegistrationInput placeholder="Password" />
-      </RegistrationInputContainer>
-      <RegistrationInputContainer>
+      </BaseIntputContainer>
+      <BaseIntputContainer>
         <RegistrationInput placeholder="Confirm password" />
-      </RegistrationInputContainer>
+      </BaseIntputContainer>
       <RegistrationButtonContainer>
         <RegistrationButton>Register</RegistrationButton>
         <RegistrationButton
@@ -45,12 +46,7 @@ const RegistrationFormContainer = styled.div`
   flex-direction: column;
   width: 400px;
   padding: 1rem;
-
   margin-top: 5rem;
-`;
-
-const RegistrationInputContainer = styled.div`
-  margin-bottom: 1rem;
 `;
 
 const RegistrationInput = styled.input`
@@ -63,7 +59,6 @@ const RegistrationInput = styled.input`
   line-height: 3rem;
   border: ${GlobalTheme.input.border};
   box-shadow: 1px 1px 3px ${GlobalTheme.colors.gray};
-  margin-bottom: 2rem;
 `;
 
 const RegistrationButtonContainer = styled.div`
@@ -84,4 +79,4 @@ const RegistrationButton = styled.div<RegistrationButtonProps>`
   margin-bottom: 2rem;
 `;
 
-export default Registration;
+export default AuthReigster;

@@ -52,4 +52,20 @@ module.exports = {
       next(err);
     }
   },
+
+  async modifyProfPic(req, res, next) {
+    const userId = req.userId;
+    const { location } = req.file;
+    try {
+      const user = await userService.updateUserProfPic(userId, location);
+
+      res.status(201).json({
+        success: true,
+        message: "profile picture modification success.",
+        datas: user,
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
 };
