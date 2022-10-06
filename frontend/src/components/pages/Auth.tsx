@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import AuthLogin from "@/components/auth/AuthLogin";
-import Registration from "@/components/auth/Registration";
+import AuthReigster from "../auth/AuthRegister";
 
 const TapMenu = ["Sign in", "Registration"];
 
@@ -43,7 +43,7 @@ const Login = () => {
           {tabIndex === 0 ? (
             <AuthLogin />
           ) : (
-            <Registration setTabIndex={setTabIndex} />
+            <AuthReigster setTabIndex={setTabIndex} />
           )}
         </FormContainer>
       </LoginContainer>

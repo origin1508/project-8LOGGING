@@ -17,7 +17,7 @@ const Sidebar = () => {
       <Logo onClick={handleLogoImageClick}>
         <LogoImg src={`${process.env.PUBLIC_URL}/images/plogging_logo.png`} />
       </Logo>
-      <LoginButton to="/login">Login</LoginButton>
+      <LoginButton to="/auth">Login</LoginButton>
       <SearchContainer>
         <SearchInput placeholder="Search"></SearchInput>
       </SearchContainer>

@@ -20,6 +20,7 @@ function User() {
 }
 const UserContainer = styled.div`
   display: flex;
+  margin-right: 3rem;
 `;
 const UserCardContainer = styled.div`
   display: flex;

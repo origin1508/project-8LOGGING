@@ -12,7 +12,7 @@ interface RegistrationButtonProps {
   Color?: string;
 }
 
-const Registration: React.FC<Props> = ({ setTabIndex }) => {
+const AuthReigster: React.FC<Props> = ({ setTabIndex }) => {
   return (
     <RegistrationFormContainer>
       <BaseIntputContainer>
@@ -85,4 +85,4 @@ const RegistrationButton = styled.div<RegistrationButtonProps>`
     `}
 `;
 
-export default Registration;
+export default AuthReigster;
