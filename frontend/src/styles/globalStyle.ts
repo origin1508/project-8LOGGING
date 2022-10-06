@@ -24,8 +24,7 @@ const GlobalStyle = createGlobalStyle`
         font-family: "eRegular"; 
         width: 100%; 
         height: 100%; 
-        box-sizing: 
-        border-box; 
+        box-sizing:border-box; 
         font-size: 62.5%; 
     }
     body{

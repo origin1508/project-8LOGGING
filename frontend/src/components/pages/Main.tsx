@@ -59,7 +59,7 @@ const MainContentTitle = styled.h1`
 `;
 
 const MainContentMinTitle = styled.h3`
-  font-size: 1.5rem;
+  font-size: ${GlobalTheme.fontSize.littleBig};
   margin-bottom: 4rem;
 `;
 
