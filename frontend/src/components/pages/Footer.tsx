@@ -25,7 +25,6 @@ const Footer = () => {
 };
 
 const FooterWrapper = styled.div`
-  margin-top: 3rem;
   margin-left: 26rem;
   background-color: ${GlobalTheme.colors.lightThreeGray};
 `;
