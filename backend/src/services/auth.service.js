@@ -15,7 +15,6 @@ module.exports = {
    */
   async createUser(email, password, nickname) {
     // 중복된 이메일 확인
-    //const exUser = await User.findOne().or([{email}, {nickname}]);
     const exUserEmail = await User.findOne({ email });
     if (exUserEmail) {
       throw ApiError.badRequest("중복된 이메일이 존재합니다.");
