@@ -11,13 +11,19 @@ const AuthLogin = () => {
       <AuthLoginInputContainer>
         <AuthLoginInput placeholder="Please enter your password" />
       </AuthLoginInputContainer>
+      <AuthLoginButtonContainer>
+        <AuthLoginButton>Sign in</AuthLoginButton>
+      </AuthLoginButtonContainer>
     </AuthLoginFormContainer>
   );
 };
 
 const AuthLoginFormContainer = styled.div`
-  width: 500px;
+  display: flex;
+  flex-direction: column;
+  width: 400px;
   padding: 1rem;
+  margin-top: 12rem;
 `;
 
 const AuthLoginInputContainer = styled.div`
@@ -25,12 +31,30 @@ const AuthLoginInputContainer = styled.div`
 `;
 
 const AuthLoginInput = styled.input`
-  width: ${GlobalTheme.input.width};
+  width: 100%;
   outline: ${GlobalTheme.input.outline};
   font-size: ${GlobalTheme.fontSize.littleBig};
   border-radius: ${GlobalTheme.input.borderRadius};
   padding: ${GlobalTheme.input.padding};
+  box-sizing: border-box;
+  line-height: 3rem;
   border: ${GlobalTheme.input.border};
+  box-shadow: 1px 1px 3px ${GlobalTheme.colors.gray};
+  margin-bottom: 2rem;
 `;
 
+const AuthLoginButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+const AuthLoginButton = styled.div`
+  ${GlobalTheme.buttons}
+  width: 70%;
+  line-height: 4rem;
+  font-size: ${GlobalTheme.fontSize.littleBig};
+  color: ${GlobalTheme.colors.white};
+  background-color: ${GlobalTheme.colors.theme};
+  text-align: center;
+  cursor: pointer;
+`;
 export default AuthLogin;
