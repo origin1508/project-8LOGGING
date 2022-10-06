@@ -50,7 +50,7 @@ module.exports = {
         success: true,
         status: 201,
         message: "Password modification success",
-      })
+      });
     } catch (err) {
       next(err);
     }
@@ -67,6 +67,23 @@ module.exports = {
         status: 201,
         message: "profile picture modification success.",
         datas: user,
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  async getFollowingList(req, res, next) {
+    const userId = req.userId;
+
+    try {
+      const followingList = await userService.findFollowingList(userId);
+
+      res.status(200).json({
+        success: true,
+        status: 200,
+        message: "success getting following list",
+        datas: followingList,
       });
     } catch (err) {
       next(err);
