@@ -18,7 +18,7 @@ const Login = () => {
             {TapMenu.map((menu, index) => {
               return (
                 <Tab
-                  onClick={(e) => {
+                  onClick={() => {
                     setTabIndex(index);
                   }}
                   key={index}
@@ -40,7 +40,11 @@ const Login = () => {
           </LoginTaps>
         </LoginHeader>
         <FormContainer>
-          {tabIndex === 0 ? <AuthLogin /> : <Registration />}
+          {tabIndex === 0 ? (
+            <AuthLogin />
+          ) : (
+            <Registration setTabIndex={setTabIndex} />
+          )}
         </FormContainer>
       </LoginContainer>
     </LoginWarrper>

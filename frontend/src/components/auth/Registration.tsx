@@ -2,7 +2,16 @@ import React from "react";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 
-const Registration = () => {
+interface Props {
+  setTabIndex: React.Dispatch<React.SetStateAction<number>>;
+}
+
+interface RegistrationButtonProps {
+  bgColor?: string;
+  Color?: string;
+}
+
+const Registration: React.FC<Props> = ({ setTabIndex }) => {
   return (
     <RegistrationFormContainer>
       <RegistrationInputContainer>
@@ -22,6 +31,7 @@ const Registration = () => {
         <RegistrationButton
           bgColor={GlobalTheme.colors.white}
           color={GlobalTheme.colors.theme}
+          onClick={() => setTabIndex(0)}
         >
           sign in
         </RegistrationButton>
@@ -79,10 +89,5 @@ const RegistrationButton = styled.div<RegistrationButtonProps>`
       color: ${props.color};
     `}
 `;
-
-interface RegistrationButtonProps {
-  bgColor?: string;
-  Color?: string;
-}
 
 export default Registration;
