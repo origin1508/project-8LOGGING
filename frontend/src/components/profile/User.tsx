@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import UserCard from "./UserCard";
 import UserEditForm from "./UserEditForm";
 import styled from "styled-components";
 
-function User() {
-  const [isEditing, setIsEditing] = useState<boolean>(false);
+interface UserProps {
+  isEditing: boolean;
+  setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
+function User({ isEditing, setIsEditing }: UserProps) {
   return (
     <UserContainer>
       <UserCardContainer>
