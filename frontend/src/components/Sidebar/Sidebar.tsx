@@ -1,9 +1,31 @@
 import React from "react";
 import Channel from "./Channel";
-import { SidebarData } from "./SidebarData";
+import { SidebarData } from "./sidebarData";
 
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
+
+const Sidebar: React.FC = () => {
+  return (
+    <SidebarContainer>
+      <Logo>8LOGGING</Logo>
+      <Button>Login</Button>
+      <SearchContainer>
+        <SearchInput placeholder="Search"></SearchInput>
+      </SearchContainer>
+      <MenuContainer>
+        {SidebarData.map((item, index) => {
+          return (
+            <MenuItem key={index}>
+              <MenuLink href={item.path}>{item.title}</MenuLink>
+            </MenuItem>
+          );
+        })}
+      </MenuContainer>
+      <Channel />
+    </SidebarContainer>
+  );
+};
 
 const SidebarContainer = styled.div`
   display: flex;
@@ -56,27 +78,5 @@ const Button = styled.button`
   border: none;
   cursor: pointer;
 `;
-
-const Sidebar: React.FC = () => {
-  return (
-    <SidebarContainer>
-      <Logo>8LOGGING</Logo>
-      <Button>Login</Button>
-      <SearchContainer>
-        <SearchInput placeholder="Search"></SearchInput>
-      </SearchContainer>
-      <MenuContainer>
-        {SidebarData.map((item, index) => {
-          return (
-            <MenuItem key={index}>
-              <MenuLink href={item.path}>{item.title}</MenuLink>
-            </MenuItem>
-          );
-        })}
-      </MenuContainer>
-      <Channel />
-    </SidebarContainer>
-  );
-};
 
 export default Sidebar;
