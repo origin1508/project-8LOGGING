@@ -72,14 +72,14 @@ function UserCardEditForm({ setIsEditing }: UserCardEditProps) {
 }
 
 const EditContainer = styled.div`
-  margin-top: 5rem;
   width: 40rem;
-  height: 60rem;
+  height: 65rem;
   border-radius: 1rem;
   background-color: white;
   display: flex;
   align-items: center;
   flex-direction: column;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 `;
 const TitleContainer = styled.div`
   padding: 2rem;
