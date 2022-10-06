@@ -18,7 +18,7 @@ const Sidebar = () => {
       <Logo onClick={handleLogoImageClick}>
         <LogoImg src={`${process.env.PUBLIC_URL}/images/plogging_logo.png`} />
       </Logo>
-      <Button>Login</Button>
+      <LoginButton to="/login">Login</LoginButton>
       <SearchContainer>
         <SearchInput placeholder="Search"></SearchInput>
       </SearchContainer>
@@ -86,11 +86,9 @@ const MenuLink = styled(Link)`
   color: #848484;
 `;
 
-const Button = styled.button`
-  width: 100%;
-  background-color: ${GlobalTheme.colors.white};
-  border: none;
-  cursor: pointer;
+const LoginButton = styled(Link)`
+  text-decoration: none;
+  color: ${GlobalTheme.colors.gray};
 `;
 
 export default Sidebar;
