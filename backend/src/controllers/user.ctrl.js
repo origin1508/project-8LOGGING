@@ -89,4 +89,26 @@ module.exports = {
       next(err);
     }
   },
+
+  async modifyDescription(req, res, next) {
+    const userId = req.userId;
+    const { newDescription } = req.body;
+    console.log(newDescription)
+
+    try {
+      const description = await userService.updateUserDescription(
+        userId,
+        newDescription
+      );
+
+      res.status(201).json({
+        success: true,
+        status: 201,
+        message: "description modification success",
+        datas: description,
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
 };

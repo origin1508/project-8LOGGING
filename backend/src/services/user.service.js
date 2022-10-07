@@ -96,15 +96,29 @@ module.exports = {
 
   /**
    * 유저 팔로잉 리스트 조회
-   * 
-   * @param {String} userId 
-   * @returns 
+   *
+   * @param {String} userId
+   * @returns
    */
   async findFollowingList(userId) {
     const user = await User.findOne({ _id: userId });
 
     return {
       following: user.following,
+    };
+  },
+
+  async updateUserDescription(userId, newDescription) {
+    const user = await User.findByIdAndUpdate(
+      userId,
+      {
+        description: newDescription,
+      },
+      { new: true }
+    );
+
+    return {
+      description: user.description,
     };
   },
 };
