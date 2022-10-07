@@ -3,6 +3,8 @@ import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import { ChannelFormInitialType } from "@/types/channel/channelTypes";
 import BaseIntputContainer from "@/components/hoc/BaseInputContainer";
+import BaseValidateTextContainer from "../hoc/BaseValidateTextContainer";
+import ValidationUtil from "@/util/validationUtil";
 
 interface ChannelFormCardProps {
   channelForm: ChannelFormInitialType;
@@ -28,12 +30,32 @@ const ChannelFormCard = ({
   onChannelImageUploadClickEvent,
   onChannelFormCreateClickEvent,
 }: ChannelFormCardProps) => {
+  const isValidTitle = ValidationUtil.checkChannelTitleValidate(
+    channelForm.title
+  );
+
+  const isValidMemberCount = ValidationUtil.checkChannelMemberCountValidate(
+    channelForm.memberNum
+  );
+
+  const isValidLocationCity = ValidationUtil.checkChannelLocationCityValidate(
+    channelForm.locationCity
+  );
+
+  const isValid = [isValidTitle, isValidMemberCount, isValidLocationCity].every(
+    (valid) => valid === true
+  );
+
   return (
     <ChannelFormWrapper>
       <ChannelHeaderWrapper>
         <ChannelTitle>CREATE CHANNEL</ChannelTitle>
         <ChannelButtonContainer>
-          <ChannelButton type="submit" onClick={onChannelFormCreateClickEvent}>
+          <ChannelButton
+            type="submit"
+            disabled={isValid ? false : true}
+            onClick={onChannelFormCreateClickEvent}
+          >
             CREATE CHANNEL
           </ChannelButton>
           <ChannelImageUploadInput
@@ -51,6 +73,11 @@ const ChannelFormCard = ({
               value={channelForm.title}
               onChange={onChannelFormValueChangeEvent}
             />
+            {!isValidTitle && (
+              <BaseValidateTextContainer>
+                Please check your channel title
+              </BaseValidateTextContainer>
+            )}
           </BaseIntputContainer>
           <BaseIntputContainer>
             <ChannelInput
@@ -60,6 +87,11 @@ const ChannelFormCard = ({
               value={channelForm.memberNum}
               onChange={onChannelFormValueChangeEvent}
             />
+            {!isValidMemberCount && (
+              <BaseValidateTextContainer>
+                Please check your channel member count
+              </BaseValidateTextContainer>
+            )}
           </BaseIntputContainer>
           <BaseIntputContainer>
             <ChannelInput
@@ -68,6 +100,11 @@ const ChannelFormCard = ({
               value={channelForm.locationCity}
               onChange={onChannelFormValueChangeEvent}
             />
+            {!isValidLocationCity && (
+              <BaseValidateTextContainer>
+                Please check your channel location city
+              </BaseValidateTextContainer>
+            )}
           </BaseIntputContainer>
           <BaseIntputContainer>
             <ChannelSelector
