@@ -58,6 +58,7 @@ const CardContainer = styled.div`
   border-radius: 0.7rem;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 `;
 
