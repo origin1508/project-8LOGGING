@@ -20,7 +20,7 @@ function UserCard({ setIsEditing }: UserCardProps) {
       </TitleContainer>
       <Img img="mainPloggingImg2.png"></Img>
       <InforContainer>
-        <UserName>김대운 (dlzagu)</UserName>
+        <UserNicname>김대운</UserNicname>
         <UserEmail>eodnsdlekd@naver.com</UserEmail>
         <UserDescription>안녕하세요~~</UserDescription>
         <Button onClick={handlerEditClick}>Edit</Button>
@@ -74,7 +74,7 @@ const InforContainer = styled.div`
   font-size: ${GlobalTheme.fontSize.littleBig};
 `;
 
-const UserName = styled.h3``;
+const UserNicname = styled.h3``;
 
 const UserEmail = styled.span``;
 

@@ -33,16 +33,10 @@ function UserCardEditForm({ setIsEditing }: UserCardEditProps) {
       </TitleContainer>
       <Img img="mainPloggingImg2.png"></Img>
       <InforContainer>
-        <UserNameInput
-          type="text"
-          placeholder="Name..."
-          value="김대운"
-          name="name"
-        />
         <UserNickNameIntput
           type="text"
           placeholder="NickName..."
-          value="dlzagu"
+          value="김대운"
           name="nickname"
         />
         <UserEmailIntput

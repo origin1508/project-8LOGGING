@@ -37,3 +37,11 @@ export async function authLoginRequest(
     return null;
   }
 }
+
+export async function get(endpoint: string, params = "") {
+  return axios.get(baseUrl + endpoint + "/" + params, {
+    headers: {
+      Authorization: `Bearer ${sessionStorage.getItem("userToken")}`,
+    },
+  });
+}
