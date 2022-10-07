@@ -60,7 +60,12 @@ module.exports = {
    */
   async getRecruitChannels() {
     const channels = await Channel.find({status: 0});
-    const recruitChannels = channels.map(channel => { return {
+
+    const recruitChannels = await Promise.all(channels.map( async (channel) => { 
+      // ownerId에 해당되는 nickname 찾기용
+      const user = await User.findById(channel.ownerId)
+
+      return {
         _id: channel._id, 
         title: channel.title,
         imgUrl: channel.img,
@@ -68,9 +73,9 @@ module.exports = {
         locationCity: channel.locationCity,
         memberNum: channel.memberNum,
         curMemberNum: channel.members.length,
-        ownerId: channel.ownerId
+        ownerNickname: user.nickname
       }
-    });
+    }));
 
     return recruitChannels
   },
