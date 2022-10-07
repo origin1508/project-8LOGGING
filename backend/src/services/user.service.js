@@ -85,8 +85,8 @@ module.exports = {
   /**
    * 유저 프로필 사진 URL 수정
    *
-   * @param {*} userId
-   * @param {*} location
+   * @param {String} userId
+   * @param {String} location
    * @returns
    */
   async updateUserProfPic(userId, location) {
