@@ -6,3 +6,14 @@ export interface ChannelFormInitialType {
   spec: string;
   image?: string | Blob;
 }
+
+export interface ChannelsType {
+  _id: string;
+  title: string;
+  ownerNickname: string;
+  locationDist: string;
+  locationCity: string;
+  imgUrl: string;
+  memberNum: number;
+  curMemberNum: number;
+}
