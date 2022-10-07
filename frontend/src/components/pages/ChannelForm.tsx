@@ -6,9 +6,10 @@ import GlobalTheme from "@/styles/theme";
 import ChannelFormCard from "@/components/recruitingChannel/ChannelFormCard";
 import BasePageComponent from "@/components/hoc/BasePageComponent";
 import { createChannelRequest } from "@/api/channelFetcher";
+import { imageResize } from "@/util/imageResizeUtil";
 
 const ChannelForm = () => {
-  const [image, setImage] = useState<File>();
+  const [image, setImage] = useState<Blob>();
   const [imagePreview, setImagePreview] = useState<
     string | ArrayBuffer | null
   >();
@@ -37,7 +38,8 @@ const ChannelForm = () => {
   ) => {
     if (e.target.files) {
       const file = e.target.files[0];
-      setImage(file);
+      const compress = await imageResize(file);
+      setImage(compress);
       const preview = new FileReader();
       preview.readAsDataURL(file);
       preview.onload = () => {
