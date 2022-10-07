@@ -14,3 +14,11 @@ export async function authRegisterRequest(
   });
   console.log(res);
 }
+
+export async function get(endpoint: string, params = "") {
+  return axios.get(baseUrl + endpoint + "/" + params, {
+    headers: {
+      Authorization: `Bearer ${sessionStorage.getItem("userToken")}`,
+    },
+  });
+}
