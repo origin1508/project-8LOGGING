@@ -1,6 +1,6 @@
-export interface RegisterFormInitialType {
+export interface AuthFormInitialType {
   email: string;
-  nickname: string;
+  nickname?: string;
   password: string;
   confirmPassword?: string;
 }

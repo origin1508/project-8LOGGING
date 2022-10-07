@@ -11,7 +11,7 @@ const TapMenu = ["Sign in", "Registration"];
 const Login = () => {
   const [tabIndex, setTabIndex] = useState(0);
 
-  const { registerFormState, handleRegisterFormValueChange } = useRegisterForm({
+  const { authFormState, handleAuthFormValueChange } = useRegisterForm({
     email: "",
     nickname: "",
     password: "",
@@ -20,7 +20,7 @@ const Login = () => {
 
   const handleRegisterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const { email, nickname, password } = registerFormState;
+    const { email, nickname, password } = authFormState;
     await authRegisterRequest("/api/auth/register", {
       email,
       nickname,
@@ -64,8 +64,8 @@ const Login = () => {
           ) : (
             <AuthReigster
               setTabIndex={setTabIndex}
-              registerFormState={registerFormState}
-              onRegisterFormValueChaneEvent={handleRegisterFormValueChange}
+              authFormState={authFormState}
+              onRegisterFormValueChaneEvent={handleAuthFormValueChange}
               onRegisterSubmitEvent={handleRegisterSubmit}
             />
           )}

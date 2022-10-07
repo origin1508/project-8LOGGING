@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import { RegisterFormInitialType } from "@/types/auth/authTypes";
+import { AuthFormInitialType } from "@/types/auth/authTypes";
 
-const useRegisterForm = (initialValue: RegisterFormInitialType) => {
-  const [registerFormState, setRegisterForm] = useState(initialValue);
+const useRegisterForm = (initialValue: AuthFormInitialType) => {
+  const [authFormState, setAuthForm] = useState(initialValue);
 
-  const handleRegisterFormValueChange = (
+  const handleAuthFormValueChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     const { name, value } = e.target as HTMLInputElement;
-    setRegisterForm((prev) => {
+    setAuthForm((prev) => {
       return {
         ...prev,
         [name]: value,
@@ -16,7 +16,7 @@ const useRegisterForm = (initialValue: RegisterFormInitialType) => {
     });
   };
 
-  return { registerFormState, handleRegisterFormValueChange };
+  return { authFormState, handleAuthFormValueChange };
 };
 
 export default useRegisterForm;

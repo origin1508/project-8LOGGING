@@ -2,11 +2,11 @@ import React from "react";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import BaseIntputContainer from "@/components/hoc/BaseInputContainer";
-import { RegisterFormInitialType } from "@/types/auth/authTypes";
+import { AuthFormInitialType } from "@/types/auth/authTypes";
 
 interface Props {
   setTabIndex: React.Dispatch<React.SetStateAction<number>>;
-  registerFormState: RegisterFormInitialType;
+  authFormState: AuthFormInitialType;
   onRegisterFormValueChaneEvent: (
     e: React.ChangeEvent<HTMLInputElement>
   ) => void;
@@ -20,7 +20,7 @@ interface RegistrationButtonProps {
 
 const AuthReigster: React.FC<Props> = ({
   setTabIndex,
-  registerFormState,
+  authFormState,
   onRegisterFormValueChaneEvent,
   onRegisterSubmitEvent,
 }) => {
@@ -30,7 +30,7 @@ const AuthReigster: React.FC<Props> = ({
         <RegistrationInput
           placeholder="Email"
           name="email"
-          value={registerFormState.email}
+          value={authFormState.email}
           onChange={onRegisterFormValueChaneEvent}
         />
       </BaseIntputContainer>
@@ -38,7 +38,7 @@ const AuthReigster: React.FC<Props> = ({
         <RegistrationInput
           placeholder="Nickname"
           name="nickname"
-          value={registerFormState.nickname}
+          value={authFormState.nickname}
           onChange={onRegisterFormValueChaneEvent}
         />
       </BaseIntputContainer>
@@ -47,7 +47,7 @@ const AuthReigster: React.FC<Props> = ({
           placeholder="Password"
           type="password"
           name="password"
-          value={registerFormState.password}
+          value={authFormState.password}
           onChange={onRegisterFormValueChaneEvent}
         />
       </BaseIntputContainer>
@@ -56,7 +56,7 @@ const AuthReigster: React.FC<Props> = ({
           placeholder="Confirm password"
           type="password"
           name="confirmPassword"
-          value={registerFormState.confirmPassword}
+          value={authFormState.confirmPassword}
           onChange={onRegisterFormValueChaneEvent}
         />
       </BaseIntputContainer>
