@@ -1,5 +1,6 @@
 import { atom, selector } from "recoil";
-import Storage from "@/storage/storage";
+import { recoilPersist } from "recoil-persist";
+
 export interface IUser {
   _id?: string;
   token?: string;
@@ -12,19 +13,23 @@ export interface IUser {
   waitReqList?: string[];
   following?: string[];
   profPic?: any;
+  __v?: number;
+}
+export interface IUserId {
+  CurUserId: string;
 }
 
 export const authState = atom({
   key: "authState",
   default: {
-    userId: "",
+    userId: "123",
   },
 });
-export const curUserIdState = atom({
+const { persistAtom } = recoilPersist();
+export const curUserIdState = atom<string>({
   key: "curUserId",
-  default: {
-    userId: "",
-  },
+  default: "",
+  effects_UNSTABLE: [persistAtom],
 });
 export const curUserState = atom<IUser | null>({
   key: "curUser",
