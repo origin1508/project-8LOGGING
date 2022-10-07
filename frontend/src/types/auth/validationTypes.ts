@@ -1,6 +1,7 @@
 export interface ValidationType {
-  email: boolean;
+  email?: boolean;
   nickname?: boolean;
-  password: boolean;
+  description?: boolean;
+  password?: boolean;
   confirmPassword?: boolean;
 }
