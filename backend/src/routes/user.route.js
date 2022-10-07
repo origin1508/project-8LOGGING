@@ -9,6 +9,8 @@ router.put("/nickname", jwtVerification, userCtrl.modifyNickname); // 닉네임 
 router.get("/password", jwtVerification, userCtrl.confirmPassword); // 비밀번호 확인
 router.put("/password", jwtVerification, userCtrl.modifyPassword); // 비밀번호 변경
 router.put("/profpic", jwtVerification, upload.single("image"), userCtrl.modifyProfPic); // 유저 프로필 사진 변경
-router.get('/following', jwtVerification, userCtrl.getFollowingList);
+router.get('/following', jwtVerification, userCtrl.getFollowingList); // 팔로윙 리스트 조회
+router.put("/description", jwtVerification, userCtrl.modifyDescription); // 자기소개 수정
+router.get('/userinfo', jwtVerification, userCtrl.getUserAllData);
 
 module.exports = router;

@@ -96,9 +96,9 @@ module.exports = {
 
   /**
    * 유저 팔로잉 리스트 조회
-   * 
-   * @param {String} userId 
-   * @returns 
+   *
+   * @param {String} userId
+   * @returns
    */
   async findFollowingList(userId) {
     const user = await User.findOne({ _id: userId });
@@ -106,5 +106,31 @@ module.exports = {
     return {
       following: user.following,
     };
+  },
+  /**
+   * 자기소개 수정
+   *
+   * @param {String} userId
+   * @param {String} newDescription
+   * @returns
+   */
+  async updateUserDescription(userId, newDescription) {
+    const user = await User.findByIdAndUpdate(
+      userId,
+      {
+        description: newDescription,
+      },
+      { new: true }
+    );
+
+    return {
+      description: user.description,
+    };
+  },
+
+  async findUserAllData(userId) {
+    const user = await User.findOne({ _id: userId });
+    
+    return user;
   },
 };
