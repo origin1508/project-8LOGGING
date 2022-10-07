@@ -2,13 +2,13 @@ import { atom } from "recoil";
 import { recoilPersist } from "recoil-persist";
 
 export interface IUser {
-  _id?: string;
+  _id: string;
   token?: string;
   email?: string;
-  nickname?: string;
+  nickname: string;
   password?: string;
   chnnels?: string[];
-  description?: string;
+  description: string;
   waitResList?: string[];
   waitReqList?: string[];
   following?: string[];
@@ -31,7 +31,20 @@ export const curUserIdState = atom<string>({
   default: "",
   effects_UNSTABLE: [persistAtom],
 });
-export const curUserState = atom<IUser | null>({
+export const curUserState = atom<IUser>({
   key: "curUser",
-  default: null,
+  default: {
+    _id: "",
+    token: "",
+    email: "",
+    nickname: "",
+    password: "",
+    chnnels: [],
+    description: "",
+    waitResList: [],
+    waitReqList: [],
+    following: [],
+    profPic: "",
+    __v: 0,
+  },
 });
