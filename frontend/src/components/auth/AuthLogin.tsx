@@ -29,9 +29,9 @@ const AuthLogin = ({
           onChange={onLoginFormChangeEvent}
           value={loginValue.email}
         />
-        {!isValid.email && (
+        {loginValue.email && !isValid.email && (
           <BaseValidateTextContainer>
-            올바른 email을 입력해주세요
+            please check your email
           </BaseValidateTextContainer>
         )}
       </BaseIntputContainer>
@@ -43,9 +43,9 @@ const AuthLogin = ({
           onChange={onLoginFormChangeEvent}
           value={loginValue.password}
         />
-        {!isValid.password && (
+        {loginValue.password && !isValid.password && (
           <BaseValidateTextContainer>
-            올바른 password을 입력해주세요
+            please check your password
           </BaseValidateTextContainer>
         )}
       </BaseIntputContainer>
