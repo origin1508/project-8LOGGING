@@ -4,12 +4,14 @@ import { BaseComponentType } from "@/types/common/baseComponentType";
 
 interface ModalProps extends BaseComponentType {
   isOpenModal: boolean;
-  onModalAcceptButtonClickEvent: () => void;
+  isAlertModal?: boolean;
+  onModalAcceptButtonClickEvent?: () => void;
   onModalCancelButtonClickEvent: () => void;
 }
 
 const Modal = ({
   isOpenModal,
+  isAlertModal,
   onModalAcceptButtonClickEvent,
   onModalCancelButtonClickEvent,
   children,
@@ -17,21 +19,40 @@ const Modal = ({
   return (
     <ModalStyle.ModalBackDrop isOpenModal={isOpenModal}>
       <ModalStyle.ModalContainer isOpenModal={isOpenModal}>
-        <ModalStyle.ModalImageContainer>
-          <ModalStyle.ModalImage
-            src={`${process.env.PUBLIC_URL}/images/popup-cancel.png`}
-            onClick={onModalCancelButtonClickEvent}
-          />
-        </ModalStyle.ModalImageContainer>
-        {children}
-        <ModalStyle.ModalButtonContainer>
-          <ModalStyle.ModalAcceptButton onClick={onModalAcceptButtonClickEvent}>
-            ACCEPT
-          </ModalStyle.ModalAcceptButton>
-          <ModalStyle.ModalButton onClick={onModalCancelButtonClickEvent}>
-            CANCEL
-          </ModalStyle.ModalButton>
-        </ModalStyle.ModalButtonContainer>
+        <ModalStyle.ModalHeader>
+          <ModalStyle.ModalImageContainer>
+            <ModalStyle.ModalImage
+              src={`${process.env.PUBLIC_URL}/images/popup-cancel.png`}
+              onClick={onModalCancelButtonClickEvent}
+            />
+            <ModalStyle.ModalMainImage
+              src={`${process.env.PUBLIC_URL}/images/popup-icon.png`}
+            />
+          </ModalStyle.ModalImageContainer>
+        </ModalStyle.ModalHeader>
+        <ModalStyle.ModalTextContainer>
+          {children}
+        </ModalStyle.ModalTextContainer>
+        {isAlertModal ? (
+          <ModalStyle.ModalButtonContainer>
+            <ModalStyle.ModalAcceptButton
+              onClick={onModalCancelButtonClickEvent}
+            >
+              Close
+            </ModalStyle.ModalAcceptButton>
+          </ModalStyle.ModalButtonContainer>
+        ) : (
+          <ModalStyle.ModalButtonContainer>
+            <ModalStyle.ModalAcceptButton
+              onClick={onModalAcceptButtonClickEvent}
+            >
+              ACCEPT
+            </ModalStyle.ModalAcceptButton>
+            <ModalStyle.ModalButton onClick={onModalCancelButtonClickEvent}>
+              CANCEL
+            </ModalStyle.ModalButton>
+          </ModalStyle.ModalButtonContainer>
+        )}
       </ModalStyle.ModalContainer>
     </ModalStyle.ModalBackDrop>
   );

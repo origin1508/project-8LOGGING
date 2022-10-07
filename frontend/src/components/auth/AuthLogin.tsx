@@ -11,6 +11,7 @@ interface AuthLoginProps {
   onLoginFormChangeEvent: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onLoginSubmitEvent: (e: React.FormEvent) => void;
   isValid: ValidationType;
+  errMessage: string;
 }
 
 const AuthLogin = ({
@@ -18,6 +19,7 @@ const AuthLogin = ({
   onLoginFormChangeEvent,
   onLoginSubmitEvent,
   isValid,
+  errMessage,
 }: AuthLoginProps) => {
   const isValidAll = isValid.email && isValid.password;
   return (
@@ -54,6 +56,7 @@ const AuthLogin = ({
         <AuthLoginButton type="submit" disabled={!isValidAll && true}>
           Sign in
         </AuthLoginButton>
+        <AuthErrorMessage>{errMessage}</AuthErrorMessage>
       </AuthLoginButtonContainer>
     </AuthLoginFormContainer>
   );
@@ -93,5 +96,11 @@ const AuthLoginButton = styled.button`
   background-color: ${GlobalTheme.colors.theme};
   text-align: center;
   cursor: pointer;
+`;
+
+const AuthErrorMessage = styled.div`
+  color: red;
+  font-size: ${GlobalTheme.fontSize.default};
+  margin-top: 3rem;
 `;
 export default AuthLogin;
