@@ -13,6 +13,7 @@ const TapMenu = ["Sign in", "Registration"];
 
 const Login = () => {
   const [tabIndex, setTabIndex] = useState(0);
+  const [errMessage, setErrMessage] = useState("");
 
   const { authFormState, handleAuthFormValueChange } = useRegisterForm({
     email: "",
@@ -31,6 +32,7 @@ const Login = () => {
   const handleRegisterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const { email, nickname, password } = authFormState;
+
     const res = await authRegisterRequest("/api/auth/register", {
       email,
       nickname,
@@ -47,6 +49,7 @@ const Login = () => {
       password,
     });
     if (res) navigate("/");
+    if (!res) setErrMessage("Incorret email or password");
   };
 
   return (
@@ -86,6 +89,7 @@ const Login = () => {
               onLoginFormChangeEvent={handleLoginFormChange}
               onLoginSubmitEvent={handleLoginSubmit}
               isValid={isValid}
+              errMessage={errMessage}
             />
           ) : (
             <AuthReigster
