@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import useChannelForm from "@/hooks/useChannelForm";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
@@ -14,12 +15,14 @@ const ChannelForm = () => {
 
   const { channelForm, handleChannelFormValueChange } = useChannelForm({
     title: "",
-    locationDist: "",
+    locationDist: "Gyeonggi",
     locationCity: "",
     memberNum: 1,
     spec: "",
     image: "",
   });
+
+  const navigate = useNavigate();
 
   const distOptions = [
     "Gyeonggi",
@@ -34,8 +37,6 @@ const ChannelForm = () => {
   ) => {
     if (e.target.files) {
       const file = e.target.files[0];
-      // const imgFormData = new FormData();
-      // imgFormData.append("image", file);
       setImage(file);
       const preview = new FileReader();
       preview.readAsDataURL(file);
@@ -56,7 +57,7 @@ const ChannelForm = () => {
       spec,
       image,
     });
-    console.log(datas);
+    if (datas) navigate("/");
   };
 
   return (
