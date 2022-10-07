@@ -12,7 +12,7 @@ export interface IUser {
   waitResList?: string[];
   waitReqList?: string[];
   following?: string[];
-  profPic?: any;
+  profPic?: string;
   __v?: number;
 }
 export interface IUserId {

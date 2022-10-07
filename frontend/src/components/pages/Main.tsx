@@ -3,11 +3,6 @@ import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import BasePageComponent from "@/components/hoc/BasePageComponent";
 
-interface ButtonProps {
-  bgColor?: string;
-  color?: string;
-}
-
 function Main() {
   return (
     <BasePageComponent>
@@ -21,13 +16,13 @@ function Main() {
         <ButtonContainer>
           <Button
             color={GlobalTheme.colors.white}
-            bgColor={GlobalTheme.colors.theme}
+            itemProp={GlobalTheme.colors.theme}
           >
             Explore our service
           </Button>
           <Button
             color={GlobalTheme.colors.theme}
-            bgColor={GlobalTheme.colors.white}
+            itemProp={GlobalTheme.colors.white}
           >
             Explore our service
           </Button>
@@ -64,9 +59,9 @@ const ButtonContainer = styled.div`
   margin-bottom: 4rem;
 `;
 
-const Button = styled.button<ButtonProps>`
+const Button = styled.button`
   ${GlobalTheme.buttons}
-  background-color:${(props) => props.bgColor};
+  background-color:${(props) => props.itemProp};
   color: ${(props) => props.color};
   font-size: 1.5rem;
   padding: 1rem 2rem;

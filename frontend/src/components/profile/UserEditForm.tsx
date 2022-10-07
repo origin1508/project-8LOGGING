@@ -3,8 +3,9 @@ import styled, { css } from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import { curUserState } from "@/recoil/atoms/authState";
 import { useRecoilState } from "recoil";
+import BaseValidateTextContainer from "@/components/hoc/BaseValidateTextContainer";
 import UseEditForm from "@/hooks/useEditForm";
-
+import * as Api from "@/api/api";
 interface ImgProps {
   img?: string;
 }
@@ -35,30 +36,68 @@ function UserCardEditForm({ setIsEditing }: UserCardEditProps) {
     description: curUser.description,
   });
 
+  const isValidAll = isValid.description && isValid.nickname;
+
+  const handleSubmitClick = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const res = await Api.put(`/api/users/description`, {
+        newDescription: values.description,
+      });
+      const res2 = await Api.put(`/api/users/nickname`, {
+        newNickname: values.nickname,
+      });
+      const newDescription = res.data.datas.description;
+      const newNickname = res2.data.datas.nickname;
+      setCurUser({
+        ...curUser,
+        description: newDescription,
+        nickname: newNickname,
+      });
+      setIsEditing(false);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   return (
     <EditContainer>
       <TitleContainer>
         <Title>EDIT USER INFORMATION</Title>
       </TitleContainer>
       <Img img={curUser?.profPic}></Img>
-      <InforContainer>
-        <UserNickNameIntput
-          type="text"
-          placeholder="NickName..."
-          value={values.nickname}
-          name="nickname"
-          onChange={handleEditFormChange}
-        />
+      <InpurForm onSubmit={handleSubmitClick}>
+        <InputContainer>
+          <UserNickNameIntput
+            type="text"
+            placeholder="NickName..."
+            value={values.nickname}
+            name="nickname"
+            onChange={handleEditFormChange}
+          />
+          {values.nickname && !isValid.nickname && (
+            <BaseValidateTextContainer>
+              please check your nickname
+            </BaseValidateTextContainer>
+          )}
+        </InputContainer>
+        <InputContainer>
+          <UserDescriptionInput
+            type="text"
+            placeholder="Description..."
+            value={values.description}
+            name="description"
+            onChange={handleEditFormChange}
+          />
+          {values.description && !isValid.description && (
+            <BaseValidateTextContainer>
+              please check your introduction
+            </BaseValidateTextContainer>
+          )}
+        </InputContainer>
 
-        <UserDescriptionInput
-          type="text"
-          placeholder="Description..."
-          value={values.description}
-          name="description"
-          onChange={handleEditFormChange}
-        />
         <ButtonWrapper>
-          <Button width="60%" onClick={handlerClick}>
+          <Button width="60%" type="submit" disabled={!isValidAll}>
             CONFIRM
           </Button>
           <Button width="60%" onClick={handlerClick}>
@@ -66,7 +105,7 @@ function UserCardEditForm({ setIsEditing }: UserCardEditProps) {
           </Button>
         </ButtonWrapper>
         <Button width="60%">비밀번호 변경하기</Button>
-      </InforContainer>
+      </InpurForm>
     </EditContainer>
   );
 }
@@ -102,7 +141,7 @@ const Img = styled.div<ImgProps>`
   border-radius: 100%;
   margin-bottom: 2rem;
 `;
-const InforContainer = styled.div`
+const InpurForm = styled.form`
   display: flex;
   width: 100%;
   height: 50%;
@@ -114,10 +153,14 @@ const InforContainer = styled.div`
     ${EditInput}
   }
 `;
-
+const InputContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 1rem;
+`;
 const UserNickNameIntput = styled.input``;
-
-const UserEmailIntput = styled.input``;
 
 const UserDescriptionInput = styled.input``;
 
