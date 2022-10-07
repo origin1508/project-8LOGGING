@@ -6,12 +6,12 @@ import useRegisterForm from "@/hooks/useRegisterForm";
 import useLoginForm from "@/hooks/useLoginForm";
 import AuthLogin from "@/components/auth/AuthLogin";
 import AuthReigster from "../auth/AuthRegister";
-import { authRegisterRequest, authLoginRequest } from "@/api/authFetcher";
 import BasePageComponent from "@/components/hoc/BasePageComponent";
+import { authRegisterRequest, authLoginRequest } from "@/api/authFetcher";
 
 const TapMenu = ["Sign in", "Registration"];
 
-const Login = () => {
+const Auth = () => {
   const [tabIndex, setTabIndex] = useState(0);
 
   const { authFormState, handleAuthFormValueChange } = useRegisterForm({
@@ -143,4 +143,4 @@ const FormContainer = styled.div`
   justify-content: center;
 `;
 
-export default Login;
+export default Auth;
