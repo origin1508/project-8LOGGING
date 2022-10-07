@@ -2,6 +2,7 @@ const ApiError = require("../utils/ApiError");
 const { userService } = require("../services");
 
 module.exports = {
+  // 유저 닉네임 수정
   async modifyNickname(req, res, next) {
     const userId = req.userId;
     const { newNickname } = req.body;
@@ -19,6 +20,7 @@ module.exports = {
     }
   },
 
+  // 현재 비밀번호와 입려한 비밀번호 비교
   async confirmPassword(req, res, next) {
     const userId = req.userId;
     const { confirmationPassword } = req.body;
@@ -39,6 +41,7 @@ module.exports = {
     }
   },
 
+  // 유저 비밀번호 수정
   async modifyPassword(req, res, next) {
     const userId = req.userId;
     const { newPassword } = req.body;
@@ -56,6 +59,7 @@ module.exports = {
     }
   },
 
+  // 유저 프로필 사진 변경
   async modifyProfPic(req, res, next) {
     const userId = req.userId;
     const { location } = req.file;
@@ -66,7 +70,7 @@ module.exports = {
         success: true,
         message: "Profile picture modification success",
         datas: {
-          profileUrl: location
+          profileUrl: location,
         },
       });
     } catch (err) {
@@ -74,6 +78,7 @@ module.exports = {
     }
   },
 
+  // 유저의 친구 목록 조회
   async getFollowingList(req, res, next) {
     const userId = req.userId;
 
@@ -91,6 +96,7 @@ module.exports = {
     }
   },
 
+  // 유저 자기소개 수정
   async modifyDescription(req, res, next) {
     const userId = req.userId;
     const { newDescription } = req.body;
@@ -112,20 +118,38 @@ module.exports = {
     }
   },
 
+  // 유저의 모든 데이터 조회
   async getUserAllData(req, res, next) {
     const userId = req.userId;
-    
+
     try {
-      let user = await userService.findUserAllData(userId);
-    
+      const user = await userService.findUserAllData(userId);
+
       res.status(200).json({
         success: true,
-        status:200,
-        message: 'success getting user all datas',
+        status: 200,
+        message: "success getting user all datas",
         datas: user,
-      })
+      });
     } catch {
       next(err);
     }
-  }
+  },
+
+  async getChannelHistory(req, res, next) {
+    const userId = req.userId;
+
+    try {
+      const history = await userService.findChannelHistory(userId);
+
+      res.status(200).json({
+        success: true,
+        status: 200,
+        message: "Get channel history success",
+        datas: history,
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
 };
