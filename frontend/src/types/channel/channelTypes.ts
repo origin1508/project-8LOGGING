@@ -4,5 +4,5 @@ export interface ChannelFormInitialType {
   locationCity: string;
   memberNum: number;
   spec: string;
-  image?: string;
+  image?: string | File;
 }
