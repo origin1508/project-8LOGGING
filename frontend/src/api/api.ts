@@ -4,10 +4,10 @@ import { constSelector } from "recoil";
 
 const serverUrl = process.env.REACT_APP_SERVER_BASE_URL;
 interface ApiType {
-  nickname?: string;
-  description?: string;
-  password?: string;
-  profPic?: string;
+  newNickname?: string;
+  newDescription?: string;
+  newPassword?: string;
+  newProfPic?: string;
 }
 
 export async function put(endpoint: string, data: ApiType) {

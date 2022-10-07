@@ -38,14 +38,14 @@ function UserCardEditForm({ setIsEditing }: UserCardEditProps) {
 
   const isValidAll = isValid.description && isValid.nickname;
 
-  const handleSubmitClick = async (e: any) => {
+  const handleSubmitClick = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const res = await Api.put(`/api/users/description`, {
-        description: values.description,
+        newDescription: values.description,
       });
       const res2 = await Api.put(`/api/users/nickname`, {
-        nickname: values.nickname,
+        newNickname: values.nickname,
       });
       const newDescription = res.data.datas.description;
       const newNickname = res2.data.datas.nickname;
@@ -55,9 +55,6 @@ function UserCardEditForm({ setIsEditing }: UserCardEditProps) {
         nickname: newNickname,
       });
       setIsEditing(false);
-      console.log(res.data.success);
-      console.log(newNickname);
-      console.log(curUser);
     } catch (e) {
       console.log(e);
     }
