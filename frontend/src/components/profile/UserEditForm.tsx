@@ -117,8 +117,6 @@ const InforContainer = styled.div`
 
 const UserNickNameIntput = styled.input``;
 
-const UserEmailIntput = styled.input``;
-
 const UserDescriptionInput = styled.input``;
 
 const ButtonWrapper = styled.div`
