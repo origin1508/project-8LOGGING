@@ -61,8 +61,10 @@ module.exports = {
 
       res.status(201).json({
         success: true,
-        message: "profile picture modification success.",
-        datas: user,
+        message: "Profile picture modification success",
+        datas: {
+          profileUrl: location
+        },
       });
     } catch (err) {
       next(err);
