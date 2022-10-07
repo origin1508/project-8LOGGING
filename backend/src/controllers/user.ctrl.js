@@ -93,7 +93,6 @@ module.exports = {
   async modifyDescription(req, res, next) {
     const userId = req.userId;
     const { newDescription } = req.body;
-    console.log(newDescription)
 
     try {
       const description = await userService.updateUserDescription(
@@ -111,4 +110,21 @@ module.exports = {
       next(err);
     }
   },
+
+  async getUserAllData(req, res, next) {
+    const userId = req.userId;
+    
+    try {
+      let user = await userService.findUserAllData(userId);
+    
+      res.status(200).json({
+        success: true,
+        status:200,
+        message: 'success getting user all datas',
+        datas: user,
+      })
+    } catch {
+      next(err);
+    }
+  }
 };

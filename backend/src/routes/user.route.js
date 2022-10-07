@@ -11,5 +11,6 @@ router.put("/password", jwtVerification, userCtrl.modifyPassword); // 비밀번�
 router.put("/profpic", jwtVerification, upload.single("image"), userCtrl.modifyProfPic); // 유저 프로필 사진 변경
 router.get('/following', jwtVerification, userCtrl.getFollowingList); // 팔로윙 리스트 조회
 router.put("/description", jwtVerification, userCtrl.modifyDescription); // 자기소개 수정
+router.get('/userinfo', jwtVerification, userCtrl.getUserAllData);
 
 module.exports = router;

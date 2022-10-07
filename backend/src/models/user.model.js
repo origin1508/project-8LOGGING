@@ -24,6 +24,8 @@ const UserSchema = new Schema(
     profPic: {
       type: String,
       required: false,
+      default:
+        "https://elice-8seconds.s3.ap-northeast-2.amazonaws.com/1665109688589_image_1648301949725_750.jpeg",
     },
     channels: {
       type: Array,
