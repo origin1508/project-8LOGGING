@@ -3,6 +3,7 @@ import styled, { css } from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import { curUserState } from "@/recoil/atoms/authState";
 import { useRecoilState } from "recoil";
+import UseEditForm from "@/hooks/useEditForm";
 
 interface ImgProps {
   img?: string;
@@ -29,6 +30,10 @@ function UserCardEditForm({ setIsEditing }: UserCardEditProps) {
   const handlerClick = () => {
     setIsEditing(false);
   };
+  const [values, handleEditFormChange, isValid] = UseEditForm({
+    nickname: curUser.nickname,
+    description: curUser.description,
+  });
 
   return (
     <EditContainer>
@@ -40,20 +45,17 @@ function UserCardEditForm({ setIsEditing }: UserCardEditProps) {
         <UserNickNameIntput
           type="text"
           placeholder="NickName..."
-          value={curUser?.nickname}
+          value={values.nickname}
           name="nickname"
+          onChange={handleEditFormChange}
         />
-        <UserEmailIntput
-          type="text"
-          placeholder="Email..."
-          value={curUser?.email}
-          name="email"
-        />
+
         <UserDescriptionInput
           type="text"
           placeholder="Description..."
-          value={curUser?.description}
+          value={values.description}
           name="description"
+          onChange={handleEditFormChange}
         />
         <ButtonWrapper>
           <Button width="60%" onClick={handlerClick}>
