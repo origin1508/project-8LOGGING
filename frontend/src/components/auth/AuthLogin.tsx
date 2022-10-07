@@ -26,7 +26,7 @@ const AuthLogin = () => {
       })
       .then((res) => {
         const token = res.data.datas.token;
-        sessionStorage.setItem("token", token);
+        localStorage.setItem("token", token);
         navigate("/", { replace: true });
       });
   };
