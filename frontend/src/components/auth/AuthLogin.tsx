@@ -2,19 +2,24 @@ import React from "react";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import BaseIntputContainer from "@/components/hoc/BaseInputContainer";
+import BaseValidateTextContainer from "@/components/hoc/BaseValidateTextContainer";
 import { AuthFormInitialType } from "@/types/auth/authTypes";
+import { ValidationType } from "@/types/auth/validationTypes";
 
 interface AuthLoginProps {
   loginValue: AuthFormInitialType;
   onLoginFormChangeEvent: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onLoginSubmitEvent: (e: React.FormEvent) => void;
+  isValid: ValidationType;
 }
 
 const AuthLogin = ({
   loginValue,
   onLoginFormChangeEvent,
   onLoginSubmitEvent,
+  isValid,
 }: AuthLoginProps) => {
+  const isValidAll = isValid.email && isValid.password;
   return (
     <AuthLoginFormContainer onSubmit={onLoginSubmitEvent}>
       <BaseIntputContainer>
@@ -25,6 +30,11 @@ const AuthLogin = ({
           onChange={onLoginFormChangeEvent}
           value={loginValue.email}
         />
+        {loginValue.email && !isValid.email && (
+          <BaseValidateTextContainer>
+            please check your email
+          </BaseValidateTextContainer>
+        )}
       </BaseIntputContainer>
       <BaseIntputContainer>
         <AuthLoginInput
@@ -34,9 +44,16 @@ const AuthLogin = ({
           onChange={onLoginFormChangeEvent}
           value={loginValue.password}
         />
+        {loginValue.password && !isValid.password && (
+          <BaseValidateTextContainer>
+            please check your password
+          </BaseValidateTextContainer>
+        )}
       </BaseIntputContainer>
       <AuthLoginButtonContainer>
-        <AuthLoginButton type="submit">Sign in</AuthLoginButton>
+        <AuthLoginButton type="submit" disabled={!isValidAll && true}>
+          Sign in
+        </AuthLoginButton>
       </AuthLoginButtonContainer>
     </AuthLoginFormContainer>
   );
