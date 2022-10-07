@@ -30,3 +30,8 @@ export async function createChannelRequest(
   });
   return res.data;
 }
+
+export async function currentChannelListRequest(endPoint: string) {
+  const res = await customAxios.get(endPoint);
+  return res.data;
+}
