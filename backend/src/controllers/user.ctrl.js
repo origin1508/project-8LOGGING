@@ -120,7 +120,7 @@ module.exports = {
 
   // 유저의 모든 데이터 조회
   async getUserAllData(req, res, next) {
-    const { userId } = req.body;
+    const { userId } = req.params;
 
     try {
       const user = await userService.findUserAllData(userId);
