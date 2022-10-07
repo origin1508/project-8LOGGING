@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import BaseIntputContainer from "@/components/hoc/BaseInputContainer";
+import BaseValidateTextContainer from "@/components/hoc/BaseValidateTextContainer";
 import { AuthFormInitialType } from "@/types/auth/authTypes";
 
 interface Props {
@@ -33,6 +34,9 @@ const AuthReigster: React.FC<Props> = ({
           value={authFormState.email}
           onChange={onRegisterFormValueChaneEvent}
         />
+        <BaseValidateTextContainer>
+          ㅁㅇㄻㄴㄹㄴㅁㅇㄹ
+        </BaseValidateTextContainer>
       </BaseIntputContainer>
       <BaseIntputContainer>
         <RegistrationInput
