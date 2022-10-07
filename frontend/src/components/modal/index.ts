@@ -41,22 +41,36 @@ export const ModalContainer = styled.div`
   padding: 1.25rem;
   ${isVisibleModal};
 `;
-
-export const ModalImageContainer = styled.div`
+export const ModalHeader = styled.div`
   width: 100%;
+`;
+export const ModalImageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+export const ModalMainImage = styled.img`
+  width: 10rem;
+  height: 10rem;
+  align-self: center;
 `;
 
 export const ModalImage = styled.img`
   cursor: pointer;
   width: 30px;
   height: 30px;
-  float: right;
+  align-self: flex-end;
 `;
-
+export const ModalTextContainer = styled.div`
+  width: 100%;
+  line-height: 10rem;
+  font-size: ${GlobalTheme.fontSize.moreBig};
+`;
 export const ModalButtonContainer = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
+  margin-bottom: 3rem;
 `;
 
 export const ModalAcceptButton = styled.button`
