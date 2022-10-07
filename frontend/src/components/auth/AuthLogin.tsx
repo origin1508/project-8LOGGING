@@ -4,12 +4,13 @@ import GlobalTheme from "@/styles/theme";
 import BaseIntputContainer from "@/components/hoc/BaseInputContainer";
 import BaseValidateTextContainer from "@/components/hoc/BaseValidateTextContainer";
 import { AuthFormInitialType } from "@/types/auth/authTypes";
+import { ValidationType } from "@/types/auth/validationTypes";
 
 interface AuthLoginProps {
   loginValue: AuthFormInitialType;
   onLoginFormChangeEvent: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onLoginSubmitEvent: (e: React.FormEvent) => void;
-  isValid: { email: boolean; password: boolean };
+  isValid: ValidationType;
 }
 
 const AuthLogin = ({

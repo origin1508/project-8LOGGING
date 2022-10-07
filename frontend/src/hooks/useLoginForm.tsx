@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { AuthFormInitialType } from "@/types/auth/authTypes";
+import { ValidationType } from "@/types/auth/validationTypes";
 import ValidationUtil from "@/util/validationUtil";
 
 const useLoginForm = (
@@ -7,7 +8,7 @@ const useLoginForm = (
 ): [
   AuthFormInitialType,
   (e: React.ChangeEvent<HTMLInputElement>) => void,
-  { email: boolean; password: boolean }
+  ValidationType
 ] => {
   const [loginValue, setLoginValue] = useState(initialState);
   const [isValid, setIsValid] = useState({ email: false, password: false });
