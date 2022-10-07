@@ -2,7 +2,7 @@ const bcrypt = require("bcrypt");
 const ApiError = require("../utils/ApiError");
 
 // 모델 불러오기
-const { User } = require("../models");
+const { User, Channel } = require("../models");
 
 module.exports = {
   /**
@@ -128,10 +128,39 @@ module.exports = {
     };
   },
 
+  /**
+   * 유저 모든 데이터 조회
+   *
+   * @param {String} userId
+   * @returns
+   */
   async findUserAllData(userId) {
     const user = await User.findOne({ _id: userId }).lean();
     delete user.password;
 
     return user;
+  },
+
+  /**
+   * 유저가 참여했던(활동이 끝난) 채널 정보 조회
+   * 
+   * @param {String} userId 
+   * @returns 
+   */
+  async findChannelHistory(userId) {
+    const channelsOfUser = await User.findById(userId, "channels");
+    const channelsIds = channelsOfUser.channels;
+
+    // 채널 아이디에 대응하는 채널 정보 가져오기, 활동 죵료된 채널(status == 2)
+    const channels = await Promise.all(
+      channelsIds.map((channelId) => {
+        return Channel.findOne({ _id: channelId, status: 2 });
+      })
+    );
+
+    // 채널 정보 배열에서 null 값 제거
+    const results = channels.filter((channel) => channel != null);
+
+    return results;
   },
 };
