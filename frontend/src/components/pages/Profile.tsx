@@ -35,11 +35,7 @@ function Profile() {
   }, [params, navigate]);
   return (
     <BasePageComponent>
-      <User
-        isEditing={isEditing}
-        setIsEditing={setIsEditing}
-        curUser={curUser}
-      />
+      <User isEditing={isEditing} setIsEditing={setIsEditing} />
       <ChannelHistory />
     </BasePageComponent>
   );

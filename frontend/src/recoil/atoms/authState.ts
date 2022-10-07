@@ -1,6 +1,6 @@
 import { atom, selector } from "recoil";
 
-export interface User {
+export interface IUser {
   _id?: string;
   token?: string;
   email: string;
@@ -21,7 +21,7 @@ export const authState = atom({
   },
 });
 
-export const curUserState = atom<User | null>({
+export const curUserState = atom<IUser | null>({
   key: "cuUser",
   default: null,
 });
