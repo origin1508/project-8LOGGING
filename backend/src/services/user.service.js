@@ -34,10 +34,10 @@ module.exports = {
 
   /**
    * 기존 비밀번호와 확인 비밀번호 일치 확인
-   * 
-   * @param {String} userId 
-   * @param {String} confirmationPassword 
-   * @returns 
+   *
+   * @param {String} userId
+   * @param {String} confirmationPassword
+   * @returns
    */
   async confirmUserPassword(userId, confirmationPassword) {
     const user = await User.findOne({ _id: userId });
@@ -56,18 +56,18 @@ module.exports = {
 
   /**
    * 유저 비밀번호 수정
-   * 
-   * @param {String} userId 
-   * @param {String} newPassword 
-   * @returns 
+   *
+   * @param {String} userId
+   * @param {String} newPassword
+   * @returns
    */
   async updateUserPassword(userId, newPassword) {
     // 기존 비밀번호와 새로운 비밀번호가 같은지 비교
-    const user = await User.findOne({_id: userId});
+    const user = await User.findOne({ _id: userId });
     const isSamePassword = await bcrypt.compare(newPassword, user.password);
 
     if (isSamePassword) {
-      throw ApiError.badRequest('기존 비밀번호와 같은 비밀번호 입니다.');
+      throw ApiError.badRequest("기존 비밀번호와 같은 비밀번호 입니다.");
     }
 
     // 비밀번호 암호화
@@ -84,16 +84,27 @@ module.exports = {
 
   /**
    * 유저 프로필 사진 URL 수정
-   * 
-   * @param {*} userId 
-   * @param {*} location 
-   * @returns 
+   *
+   * @param {*} userId
+   * @param {*} location
+   * @returns
    */
   async updateUserProfPic(userId, location) {
-    const result = await User.findByIdAndUpdate(
-      userId,
-      { profPic: location }
-    );
+    const result = await User.findByIdAndUpdate(userId, { profPic: location });
     return result;
+  },
+
+  /**
+   * 유저 팔로잉 리스트 조회
+   * 
+   * @param {String} userId 
+   * @returns 
+   */
+  async findFollowingList(userId) {
+    const user = await User.findOne({ _id: userId });
+
+    return {
+      following: user.following,
+    };
   },
 };
