@@ -107,17 +107,11 @@ const RegistrationButton = styled.button<RegistrationButtonProps>`
   width: 70%;
   line-height: 4rem;
   font-size: ${GlobalTheme.fontSize.littleBig};
-  color: ${GlobalTheme.colors.white};
-  background-color: ${GlobalTheme.colors.theme};
+  color: ${(props) => props.color || GlobalTheme.colors.white};
+  background-color: ${(props) => props.bgColor || GlobalTheme.colors.theme};
   text-align: center;
   cursor: pointer;
   margin-bottom: 2rem;
-  ${(props) =>
-    props &&
-    `
-      background-color: ${props.bgColor};
-      color: ${props.color};
-    `}
 `;
 
 export default AuthReigster;
