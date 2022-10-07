@@ -3,16 +3,24 @@ import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import CustomIcon from "@/components/icons/CustomIcon";
 
-interface CardImgProps {
-  bg: string;
+interface ChannelCardPropsType {
+  imgUrl: string;
+  title: string;
+  curMemberNum: number;
+  locationDist: string;
 }
 
-function ChannelCard() {
+function ChannelCard({
+  imgUrl,
+  title,
+  curMemberNum,
+  locationDist,
+}: ChannelCardPropsType) {
   return (
     <CardContainer>
-      <CardImg bg="cardImg1.png"></CardImg>
+      <CardImg src={imgUrl} />
       <CardContent>
-        <CardTitle>제주에서 플로깅</CardTitle>
+        <CardTitle>{title}</CardTitle>
         <CardInfoList>
           <List>
             <CustomIcon
@@ -20,11 +28,11 @@ function ChannelCard() {
               size="20"
               color={GlobalTheme.colors.theme}
             />
-            <PeopleCount>12명</PeopleCount>
+            <PeopleCount>{curMemberNum}</PeopleCount>
           </List>
           <List>
             <CustomIcon name="map" size="20" color={GlobalTheme.colors.theme} />
-            <Location>제주도</Location>
+            <Location>{locationDist}</Location>
           </List>
           <List>
             <CustomIcon
@@ -50,13 +58,11 @@ const CardContainer = styled.div`
   border-radius: 0.7rem;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 `;
 
-const CardImg = styled.div<CardImgProps>`
+const CardImg = styled.img`
   height: 50%;
-  background-image: url(${(props) => props.bg});
   background-size: cover;
 `;
 
