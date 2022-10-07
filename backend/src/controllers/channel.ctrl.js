@@ -28,10 +28,25 @@ module.exports = {
     try {
       const recruitChannels = await channelService.getRecruitChannels();
 
-      res.status(201).json({
+      res.status(200).json({
         success: true,
-        message: "Channel create success.",
+        message: "Channel list load success",
         datas: recruitChannels
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  async showChannelInfo(req, res, next) {
+    const { channelId }= req.params;
+    try {
+      const channelInfo = await channelService.getChannelInfo(channelId)
+
+      res.status(200).json({
+        success: true,
+        message: "Channel info load success.",
+        datas: channelInfo
       });
     } catch (err) {
       next(err);
@@ -49,7 +64,7 @@ module.exports = {
         success: true,
         message: "Channel status change success",
         datas: {
-          _id: channelId,
+          _id: updatedChannelId,
         }
       });
     } catch (err) {

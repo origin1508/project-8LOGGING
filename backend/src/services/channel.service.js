@@ -81,6 +81,45 @@ module.exports = {
   },
 
   /**
+   * 채널 정보 확인
+   * 
+   * @param {String} channelId 
+   */
+  async getChannelInfo(channelId) {
+    const channel = await Channel.findById(channelId);
+    const owner = await User.findById(channel.ownerId);
+
+    // 멤버들 정보 불어오기
+    const membersInfo = await Promise.all(channel.members.map( async (memberId) => {
+      const member = await User.findById(memberId);
+      return {
+        memberId,
+        memberNickname: member.nickname,
+        memberPic: member.profPic
+      }
+    }))
+
+    // 채널 정보 모으기
+    const channelInfo = {
+      _id: channel._id,
+      title: channel.title,
+      ownerInfo: {
+        ownerId: channel.ownerId,
+        ownerNickname: owner.nickname,
+        ownerPic: owner.profPic, 
+      },
+      locationDist: channel.locationDist, 
+      locationCity: channel.locationCity,
+      imgUrl: channel.img,
+      spec: channel.spec,
+      memberNum: channel.memberNum,
+      membersInfo
+    }
+
+    return channelInfo
+  },
+
+  /**
    * 채널 상태 변경
    * 
    * @param {String} userId 
