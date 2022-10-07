@@ -54,6 +54,28 @@ module.exports = {
   },
 
   /**
+   * 모집 중인 채널 목록 반환
+   * 
+   * @returns 
+   */
+  async getRecruitChannels() {
+    const channels = await Channel.find({status: 0});
+    const recruitChannels = channels.map(channel => { return {
+        _id: channel._id, 
+        title: channel.title,
+        imgUrl: channel.img,
+        locationDist: channel.locationDist,
+        locationCity: channel.locationCity,
+        memberNum: channel.memberNum,
+        curMemberNum: channel.members.length,
+        ownerId: channel.ownerId
+      }
+    });
+
+    return recruitChannels
+  },
+
+  /**
    * 채널 상태 변경
    * 
    * @param {String} userId 

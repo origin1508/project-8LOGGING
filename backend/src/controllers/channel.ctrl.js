@@ -24,6 +24,20 @@ module.exports = {
     }
   },
 
+  async showRecruitChannels(req, res, next) {
+    try {
+      const recruitChannels = await channelService.getRecruitChannels();
+
+      res.status(201).json({
+        success: true,
+        message: "Channel create success.",
+        datas: recruitChannels
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
+
   async changeChannelStatus(req, res, next) {
     const userId = req.userId;
     const channelId = req.params.channelId;
