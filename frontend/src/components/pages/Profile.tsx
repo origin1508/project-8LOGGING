@@ -1,37 +1,42 @@
 import React, { useState, useEffect } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { useNavigate, useParams } from "react-router-dom";
-import { isLoginState, curUserState } from "@/recoil/atoms/authState";
+import { curUserState, curUserIdState } from "@/recoil/atoms/authState";
 import User from "../profile/User";
 import ChannelHistory from "../profile/ChannelHistory";
 import BasePageComponent from "@/components/hoc/BasePageComponent";
 import * as Api from "@/api/authFetcher";
+import Storage from "@/storage/storage";
 function Profile() {
   const navigate = useNavigate();
   const params = useParams();
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const isLogin = useRecoilValue(isLoginState);
   const [curUser, setCurUser] = useRecoilState(curUserState);
   const [isFetchCompleted, setIsFetchCompleted] = useState(false);
-
-  const fetchPorfolioOwner = async (curUserId: any) => {
-    const res = await Api.get("api/users", curUserId);
-    const curUserData = res.data.data;
+  const curUserId = useRecoilValue(curUserIdState);
+  console.log(curUserId);
+  const fetchProfileOwner = async (curUserId: any) => {
+    const res = await Api.get("api/users/userinfo", curUserId);
+    const curUserData = res.data;
+    console.log("res", res);
     setCurUser(curUserData);
     setIsFetchCompleted(true);
   };
   useEffect(() => {
-    if (!isLogin) {
-      navigate("/login", { replace: true });
+    if (!Storage.getToken()) {
+      navigate("/auth", { replace: true });
       return;
     }
     if (params.userId) {
-      const curUserID = params.userId;
-      fetchPorfolioOwner(curUserID);
+      const userId = params.userId;
+      fetchProfileOwner(userId);
     } else {
-      const curUserID = curUser?._id;
-      fetchPorfolioOwner(curUserID);
+      const userId = curUserId?.userId;
+      fetchProfileOwner(userId);
     }
+
+    console.log("curUser", curUser);
+    console.log("storage", Storage.getToken());
   }, [params, navigate]);
   return (
     <BasePageComponent>
