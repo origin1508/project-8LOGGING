@@ -127,15 +127,26 @@ module.exports = {
    * @param {Number} newStatus 
    * @returns 
    */
-  async updateChannelStatus(userId, channelId, newStatus) {
+  async updateChannelInfo(userId, channelId, toUpdate) {
     // 채널 소유권 확인
     const channel = await Channel.findById(channelId);
     if (channel.ownerId!=userId) {
       throw ApiError.badRequest("채널의 수정 권한이 없습니다.");
     }    
 
-    // 채널 상태 수정
-    const updatedChannel = await Channel.findByIdAndUpdate(channelId, { status: newStatus });
+    // 채널 정보 수정
+    const { title, status, spec, locationDist, locationCity, img } = toUpdate;
+
+    const newValues = {
+        ...(title && { title }),
+        ...(status && { status }),
+        ...(spec && { spec }),
+        ...(locationDist && { locationDist }),
+        ...(locationCity && { locationCity }),
+        ...(img && { img }),
+    };
+
+    const updatedChannel = await Channel.findByIdAndUpdate(channelId, newValues);
 
     return updatedChannel._id
   },

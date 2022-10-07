@@ -8,7 +8,8 @@ import AuthLogin from "@/components/auth/AuthLogin";
 import AuthReigster from "../auth/AuthRegister";
 import BasePageComponent from "@/components/hoc/BasePageComponent";
 import { authRegisterRequest, authLoginRequest } from "@/api/authFetcher";
-
+import { useRecoilState } from "recoil";
+import { curUserIdState } from "@/recoil/atoms/authState";
 const TapMenu = ["Sign in", "Registration"];
 
 const Auth = () => {
@@ -26,7 +27,7 @@ const Auth = () => {
     email: "",
     password: "",
   });
-
+  const [curUserId, setCurUserId] = useRecoilState(curUserIdState);
   const navigate = useNavigate();
 
   const handleRegisterSubmit = async (e: React.FormEvent) => {
@@ -48,6 +49,9 @@ const Auth = () => {
       email,
       password,
     });
+
+    setCurUserId(res.userId);
+    console.log(curUserId);
     if (res) navigate("/");
     if (!res) setErrMessage("Incorret email or password");
   };

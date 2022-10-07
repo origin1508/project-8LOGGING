@@ -17,20 +17,16 @@ export interface IUser {
 export const authState = atom({
   key: "authState",
   default: {
-    id: "",
+    userId: "",
   },
 });
-
-export const curUserState = atom<IUser>({
+export const curUserIdState = atom({
+  key: "curUserId",
+  default: {
+    userId: "",
+  },
+});
+export const curUserState = atom<IUser | null>({
   key: "curUser",
-  default: {},
-});
-
-export const isLoginState = selector({
-  key: "isLogin",
-  get: ({ get }) => {
-    const curUser = get(curUserState);
-    const checkLogin = Storage.getToken() && curUser?.token ? true : false;
-    return checkLogin;
-  },
+  default: null,
 });
