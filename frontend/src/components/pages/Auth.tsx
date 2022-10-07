@@ -1,10 +1,12 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import useRegisterForm from "@/hooks/useRegisterForm";
+import useLoginForm from "@/hooks/useLoginForm";
 import AuthLogin from "@/components/auth/AuthLogin";
 import AuthReigster from "../auth/AuthRegister";
-import { authRegisterRequest } from "@/api/authFetcher";
+import { authRegisterRequest, authLoginRequest } from "@/api/authFetcher";
 import BasePageComponent from "@/components/hoc/BasePageComponent";
 
 const TapMenu = ["Sign in", "Registration"];
@@ -19,14 +21,32 @@ const Login = () => {
     confirmPassword: "",
   });
 
+  const [loginValue, handleLoginFormChange] = useLoginForm({
+    email: "",
+    password: "",
+  });
+
+  const navigate = useNavigate();
+
   const handleRegisterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const { email, nickname, password } = authFormState;
-    await authRegisterRequest("/api/auth/register", {
+    const res = await authRegisterRequest("/api/auth/register", {
       email,
       nickname,
       password,
-    }).then(() => setTabIndex(0));
+    });
+    if (res) setTabIndex(0);
+  };
+
+  const handleLoginSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const { email, password } = loginValue;
+    const res = await authLoginRequest("/api/auth/login", {
+      email,
+      password,
+    });
+    if (res) navigate("/");
   };
 
   return (
@@ -61,7 +81,11 @@ const Login = () => {
         </LoginHeader>
         <FormContainer>
           {tabIndex === 0 ? (
-            <AuthLogin />
+            <AuthLogin
+              loginValue={loginValue}
+              onLoginFormChangeEvent={handleLoginFormChange}
+              onLoginSubmitEvent={handleLoginSubmit}
+            />
           ) : (
             <AuthReigster
               setTabIndex={setTabIndex}
