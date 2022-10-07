@@ -1,25 +1,76 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import BaseIntputContainer from "@/components/hoc/BaseInputContainer";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
+interface InitialStateType {
+  email: string;
+  password: string;
+}
+
+const useForm = (initialState: InitialStateType): [InitialStateType, any] => {
+  const [loginValue, setLoginValue] = useState(initialState);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    setLoginValue({ ...loginValue, [name]: value });
+  };
+
+  return [loginValue, handleChange];
+};
 
 const AuthLogin = () => {
+  const navigate = useNavigate();
+  const [loginValue, handleChange] = useForm({
+    email: "",
+    password: "",
+  });
+
+  const submitHandle = async (e: React.SyntheticEvent) => {
+    e.preventDefault();
+
+    const data = JSON.stringify(loginValue);
+
+    await axios
+      .post("http://localhost:3003/api/auth/login", data, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((res) => navigate("/", { replace: true }));
+  };
+
   return (
-    <AuthLoginFormContainer>
+    <AuthLoginFormContainer onSubmit={submitHandle}>
       <BaseIntputContainer>
-        <AuthLoginInput placeholder="Email" />
+        <AuthLoginInput
+          placeholder="Email"
+          type="email"
+          name="email"
+          onChange={handleChange}
+          value={loginValue.email}
+        />
       </BaseIntputContainer>
       <BaseIntputContainer>
-        <AuthLoginInput placeholder="Password" />
+        <AuthLoginInput
+          placeholder="Password"
+          type="password"
+          name="password"
+          onChange={handleChange}
+          value={loginValue.password}
+        />
       </BaseIntputContainer>
       <AuthLoginButtonContainer>
-        <AuthLoginButton>Sign in</AuthLoginButton>
+        <AuthLoginButton type="submit">Sign in</AuthLoginButton>
       </AuthLoginButtonContainer>
     </AuthLoginFormContainer>
   );
 };
 
-const AuthLoginFormContainer = styled.div`
+const AuthLoginFormContainer = styled.form`
   display: flex;
   flex-direction: column;
   width: 400px;
@@ -44,7 +95,7 @@ const AuthLoginButtonContainer = styled.div`
   justify-content: center;
   align-items: center;
 `;
-const AuthLoginButton = styled.div`
+const AuthLoginButton = styled.button`
   ${GlobalTheme.buttons}
   width: 70%;
   line-height: 4rem;
