@@ -2,43 +2,27 @@ import React from "react";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import BaseIntputContainer from "@/components/hoc/BaseInputContainer";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import useLoginForm from "@/hooks/useLoginForm";
+import { AuthFormInitialType } from "@/types/auth/authTypes";
 
-const AuthLogin = () => {
-  const navigate = useNavigate();
-  const [loginValue, handleChange] = useLoginForm({
-    email: "",
-    password: "",
-  });
+interface AuthLoginProps {
+  loginValue: AuthFormInitialType;
+  onLoginFormChangeEvent: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onLoginSubmitEvent: (e: React.FormEvent) => void;
+}
 
-  const submitHandle = async (e: React.SyntheticEvent) => {
-    e.preventDefault();
-
-    const data = JSON.stringify(loginValue);
-
-    await axios
-      .post("http://localhost:3003/api/auth/login", data, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((res) => {
-        const token = res.data.datas.token;
-        localStorage.setItem("token", token);
-        navigate("/", { replace: true });
-      });
-  };
-
+const AuthLogin = ({
+  loginValue,
+  onLoginFormChangeEvent,
+  onLoginSubmitEvent,
+}: AuthLoginProps) => {
   return (
-    <AuthLoginFormContainer onSubmit={submitHandle}>
+    <AuthLoginFormContainer onSubmit={onLoginSubmitEvent}>
       <BaseIntputContainer>
         <AuthLoginInput
           placeholder="Email"
           type="email"
           name="email"
-          onChange={handleChange}
+          onChange={onLoginFormChangeEvent}
           value={loginValue.email}
         />
       </BaseIntputContainer>
@@ -47,7 +31,7 @@ const AuthLogin = () => {
           placeholder="Password"
           type="password"
           name="password"
-          onChange={handleChange}
+          onChange={onLoginFormChangeEvent}
           value={loginValue.password}
         />
       </BaseIntputContainer>
