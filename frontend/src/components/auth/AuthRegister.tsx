@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import BaseIntputContainer from "@/components/hoc/BaseInputContainer";
+import BaseValidateTextContainer from "@/components/hoc/BaseValidateTextContainer";
 import { AuthFormInitialType } from "@/types/auth/authTypes";
 
 interface Props {
@@ -33,6 +34,9 @@ const AuthReigster: React.FC<Props> = ({
           value={authFormState.email}
           onChange={onRegisterFormValueChaneEvent}
         />
+        <BaseValidateTextContainer>
+          ㅁㅇㄻㄴㄹㄴㅁㅇㄹ
+        </BaseValidateTextContainer>
       </BaseIntputContainer>
       <BaseIntputContainer>
         <RegistrationInput
@@ -107,17 +111,11 @@ const RegistrationButton = styled.button<RegistrationButtonProps>`
   width: 70%;
   line-height: 4rem;
   font-size: ${GlobalTheme.fontSize.littleBig};
-  color: ${GlobalTheme.colors.white};
-  background-color: ${GlobalTheme.colors.theme};
+  color: ${(props) => props.color || GlobalTheme.colors.white};
+  background-color: ${(props) => props.bgColor || GlobalTheme.colors.theme};
   text-align: center;
   cursor: pointer;
   margin-bottom: 2rem;
-  ${(props) =>
-    props &&
-    `
-      background-color: ${props.bgColor};
-      color: ${props.color};
-    `}
 `;
 
 export default AuthReigster;

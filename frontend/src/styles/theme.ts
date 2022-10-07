@@ -20,6 +20,7 @@ const GlobalTheme = {
     lightTwoGray: "#ebebe6",
     lightThreeGray: "#f2f3f0",
     gray: "#848484",
+    lightRed: "#ff0000",
   },
   buttons: {
     borderRadius: "4px",
