@@ -5,6 +5,7 @@ import useRegisterForm from "@/hooks/useRegisterForm";
 import AuthLogin from "@/components/auth/AuthLogin";
 import AuthReigster from "../auth/AuthRegister";
 import { authRegisterRequest } from "@/api/authFetcher";
+import BasePageComponent from "@/components/hoc/BasePageComponent";
 
 const TapMenu = ["Sign in", "Registration"];
 
@@ -25,12 +26,12 @@ const Login = () => {
       email,
       nickname,
       password,
-    });
+    }).then(() => setTabIndex(0));
   };
 
   return (
-    <LoginWarrper>
-      <LoginContainer>
+    <BasePageComponent>
+      <LoginContainer tabIndex={tabIndex}>
         <LoginHeader>
           <LoginHeaderTitle>8LOGGING</LoginHeaderTitle>
           <LoginTaps>
@@ -71,29 +72,23 @@ const Login = () => {
           )}
         </FormContainer>
       </LoginContainer>
-    </LoginWarrper>
+    </BasePageComponent>
   );
 };
 
-const LoginWarrper = styled.div`
-  display: flex;
-  width: 100%;
-  height: 100%;
-
-  align-items: center;
-  justify-content: center;
-`;
 const LoginContainer = styled.div`
+  position: absolute;
+  top: 17%;
+
   display: flex;
   flex-direction: column;
   align-items: center;
 
-  margin-left: 26rem;
   border-radius: 8px;
   background-color: ${GlobalTheme.colors.white};
   box-shadow: 1px 4px 5px ${GlobalTheme.colors.gray};
   width: 50rem;
-  height: 70rem;
+  height: ${(props) => (props.tabIndex === 0 ? "45rem" : "65rem")};
 `;
 const LoginHeader = styled.div`
   width: 100%;
