@@ -26,7 +26,7 @@ const Login = () => {
       email,
       nickname,
       password,
-    });
+    }).then(() => setTabIndex(0));
   };
 
   return (

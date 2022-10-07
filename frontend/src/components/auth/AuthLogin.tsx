@@ -1,30 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import BaseIntputContainer from "@/components/hoc/BaseInputContainer";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
-interface InitialStateType {
-  email: string;
-  password: string;
-}
-
-const useForm = (initialState: InitialStateType): [InitialStateType, any] => {
-  const [loginValue, setLoginValue] = useState(initialState);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-
-    setLoginValue({ ...loginValue, [name]: value });
-  };
-
-  return [loginValue, handleChange];
-};
+import useLoginForm from "@/hooks/useLoginForm";
 
 const AuthLogin = () => {
   const navigate = useNavigate();
-  const [loginValue, handleChange] = useForm({
+  const [loginValue, handleChange] = useLoginForm({
     email: "",
     password: "",
   });
@@ -40,7 +24,11 @@ const AuthLogin = () => {
           "Content-Type": "application/json",
         },
       })
-      .then((res) => navigate("/", { replace: true }));
+      .then((res) => {
+        const token = res.data.datas.token;
+        sessionStorage.setItem("token", token);
+        navigate("/", { replace: true });
+      });
   };
 
   return (
