@@ -51,5 +51,26 @@ module.exports = {
     )
 
     return channel._id;
-  }
+  },
+
+  /**
+   * 채널 상태 변경
+   * 
+   * @param {String} userId 
+   * @param {String} channelId 
+   * @param {Number} newStatus 
+   * @returns 
+   */
+  async updateChannelStatus(userId, channelId, newStatus) {
+    // 채널 소유권 확인
+    const channel = await Channel.findById(channelId);
+    if (channel.ownerId!=userId) {
+      throw ApiError.badRequest("채널의 수정 권한이 없습니다.");
+    }    
+
+    // 채널 상태 수정
+    const updatedChannel = await Channel.findByIdAndUpdate(channelId, { status: newStatus });
+
+    return updatedChannel._id
+  },
 };
