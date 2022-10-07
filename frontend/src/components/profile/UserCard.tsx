@@ -1,6 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
+import { curUserState } from "@/recoil/atoms/authState";
+import { useRecoilValue } from "recoil";
 
 interface ImgProps {
   img?: string;
@@ -10,6 +12,8 @@ interface UserCardProps {
 }
 
 function UserCard({ setIsEditing }: UserCardProps) {
+  const curUser = useRecoilValue(curUserState);
+
   const handlerEditClick = () => {
     setIsEditing(true);
   };
@@ -20,9 +24,9 @@ function UserCard({ setIsEditing }: UserCardProps) {
       </TitleContainer>
       <Img img="mainPloggingImg2.png"></Img>
       <InforContainer>
-        <UserNicname>김대운</UserNicname>
-        <UserEmail>eodnsdlekd@naver.com</UserEmail>
-        <UserDescription>안녕하세요~~</UserDescription>
+        <UserNicname>${curUser?.nickname}</UserNicname>
+        <UserEmail>${curUser?.email}</UserEmail>
+        <UserDescription>${curUser?.description}</UserDescription>
         <Button onClick={handlerEditClick}>Edit</Button>
       </InforContainer>
     </UserCardContainer>

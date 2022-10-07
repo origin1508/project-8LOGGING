@@ -26,10 +26,10 @@ function Profile() {
       return;
     }
     if (params.userId) {
-      const curUserID = sessionStorage.getItem("userToken");
+      const curUserID = params.userId;
       fetchPorfolioOwner(curUserID);
     } else {
-      const curUserID = sessionStorage.getItem("userToken");
+      const curUserID = curUser?._id;
       fetchPorfolioOwner(curUserID);
     }
   }, [params, navigate]);
