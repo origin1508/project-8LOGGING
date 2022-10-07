@@ -2,9 +2,15 @@ import React from "react";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import BaseIntputContainer from "@/components/hoc/BaseInputContainer";
+import { AuthFormInitialType } from "@/types/auth/authTypes";
 
 interface Props {
   setTabIndex: React.Dispatch<React.SetStateAction<number>>;
+  authFormState: AuthFormInitialType;
+  onRegisterFormValueChaneEvent: (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => void;
+  onRegisterSubmitEvent: (e: React.FormEvent) => void;
 }
 
 interface RegistrationButtonProps {
@@ -12,23 +18,52 @@ interface RegistrationButtonProps {
   Color?: string;
 }
 
-const AuthReigster: React.FC<Props> = ({ setTabIndex }) => {
+const AuthReigster: React.FC<Props> = ({
+  setTabIndex,
+  authFormState,
+  onRegisterFormValueChaneEvent,
+  onRegisterSubmitEvent,
+}) => {
   return (
     <RegistrationFormContainer>
       <BaseIntputContainer>
-        <RegistrationInput placeholder="Email" />
+        <RegistrationInput
+          placeholder="Email"
+          name="email"
+          value={authFormState.email}
+          onChange={onRegisterFormValueChaneEvent}
+        />
       </BaseIntputContainer>
       <BaseIntputContainer>
-        <RegistrationInput placeholder="Nickname" />
+        <RegistrationInput
+          placeholder="Nickname"
+          name="nickname"
+          value={authFormState.nickname}
+          onChange={onRegisterFormValueChaneEvent}
+        />
       </BaseIntputContainer>
       <BaseIntputContainer>
-        <RegistrationInput placeholder="Password" />
+        <RegistrationInput
+          placeholder="Password"
+          type="password"
+          name="password"
+          value={authFormState.password}
+          onChange={onRegisterFormValueChaneEvent}
+        />
       </BaseIntputContainer>
       <BaseIntputContainer>
-        <RegistrationInput placeholder="Confirm password" />
+        <RegistrationInput
+          placeholder="Confirm password"
+          type="password"
+          name="confirmPassword"
+          value={authFormState.confirmPassword}
+          onChange={onRegisterFormValueChaneEvent}
+        />
       </BaseIntputContainer>
       <RegistrationButtonContainer>
-        <RegistrationButton>Register</RegistrationButton>
+        <RegistrationButton type="submit" onClick={onRegisterSubmitEvent}>
+          Register
+        </RegistrationButton>
         <RegistrationButton
           bgColor={GlobalTheme.colors.white}
           color={GlobalTheme.colors.theme}
@@ -41,7 +76,7 @@ const AuthReigster: React.FC<Props> = ({ setTabIndex }) => {
   );
 };
 
-const RegistrationFormContainer = styled.div`
+const RegistrationFormContainer = styled.form`
   display: flex;
   flex-direction: column;
   width: 400px;
@@ -67,7 +102,7 @@ const RegistrationButtonContainer = styled.div`
   justify-content: center;
   align-items: center;
 `;
-const RegistrationButton = styled.div<RegistrationButtonProps>`
+const RegistrationButton = styled.button<RegistrationButtonProps>`
   ${GlobalTheme.buttons}
   width: 70%;
   line-height: 4rem;

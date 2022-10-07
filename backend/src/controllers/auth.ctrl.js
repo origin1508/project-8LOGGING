@@ -13,9 +13,10 @@ module.exports = {
       };
       
       res.status(200).json({
+        success: true,
         status: 200,
-        message: "로그인 성공",
-        data: userData,
+        message: "login success",
+        datas: userData,
       });
     } catch (err) {
       next(err);
@@ -28,9 +29,10 @@ module.exports = {
       const user = await authService.createUser(email, password, nickname);
       
       res.status(201).json({
+        success: true,
         status: 201,
-        message: "회원가입 성공",
-        data: user,
+        message: "register success",
+        datas: user,
       });
     } catch (err) {
       next(err);

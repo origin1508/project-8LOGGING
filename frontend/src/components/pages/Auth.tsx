@@ -1,14 +1,33 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
-import BasePageComponent from "@/components/hoc/BasePageComponent";
+import useRegisterForm from "@/hooks/useRegisterForm";
 import AuthLogin from "@/components/auth/AuthLogin";
 import AuthReigster from "../auth/AuthRegister";
+import { authRegisterRequest } from "@/api/authFetcher";
+import BasePageComponent from "@/components/hoc/BasePageComponent";
 
 const TapMenu = ["Sign in", "Registration"];
 
 const Login = () => {
   const [tabIndex, setTabIndex] = useState(0);
+
+  const { authFormState, handleAuthFormValueChange } = useRegisterForm({
+    email: "",
+    nickname: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  const handleRegisterSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const { email, nickname, password } = authFormState;
+    await authRegisterRequest("/api/auth/register", {
+      email,
+      nickname,
+      password,
+    });
+  };
 
   return (
     <BasePageComponent>
@@ -44,7 +63,12 @@ const Login = () => {
           {tabIndex === 0 ? (
             <AuthLogin />
           ) : (
-            <AuthReigster setTabIndex={setTabIndex} />
+            <AuthReigster
+              setTabIndex={setTabIndex}
+              authFormState={authFormState}
+              onRegisterFormValueChaneEvent={handleAuthFormValueChange}
+              onRegisterSubmitEvent={handleRegisterSubmit}
+            />
           )}
         </FormContainer>
       </LoginContainer>

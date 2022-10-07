@@ -18,7 +18,7 @@ const upload = multer({
       acl: "public-read-write",
       contentType: multerS3.AUTO_CONTENT_TYPE,
       key(req, file, cb) {
-         cb(null, `${Date.now()}_${path.basename(file.originalname)}`) // original 폴더안에다 파일을 저장
+         cb(null, `${Date.now()}_${path.basename(file.originalname)}`) // original 폴더안에 파일을 저장
       },
    }),
    limits: { fileSize: 10 * 1024 * 1024 },
