@@ -7,6 +7,7 @@ import ChannelHistory from "../profile/ChannelHistory";
 import BasePageComponent from "@/components/hoc/BasePageComponent";
 import * as Api from "@/api/authFetcher";
 import Storage from "@/storage/storage";
+
 function Profile() {
   const navigate = useNavigate();
   const params = useParams();
@@ -14,14 +15,15 @@ function Profile() {
   const [curUser, setCurUser] = useRecoilState(curUserState);
   const [isFetchCompleted, setIsFetchCompleted] = useState(false);
   const curUserId = useRecoilValue(curUserIdState);
-  console.log(curUserId);
-  const fetchProfileOwner = async (curUserId: any) => {
-    const res = await Api.get("api/users/userinfo", curUserId);
-    const curUserData = res.data;
-    console.log("res", res);
+
+  const fetchProfileOwner = async (curUserId: string) => {
+    const res = await Api.get("/api/users/userinfo", curUserId);
+    const curUserData = res.data.datas;
+
     setCurUser(curUserData);
     setIsFetchCompleted(true);
   };
+
   useEffect(() => {
     if (!Storage.getToken()) {
       navigate("/auth", { replace: true });
@@ -31,12 +33,9 @@ function Profile() {
       const userId = params.userId;
       fetchProfileOwner(userId);
     } else {
-      const userId = curUserId?.userId;
+      const userId = curUserId;
       fetchProfileOwner(userId);
     }
-
-    console.log("curUser", curUser);
-    console.log("storage", Storage.getToken());
   }, [params, navigate]);
   return (
     <BasePageComponent>

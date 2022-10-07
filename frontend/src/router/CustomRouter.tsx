@@ -24,7 +24,8 @@ const CustomRouter = () => {
             path="/channels/create"
             element={<ChannelFormComponentPage />}
           />
-          <Route path="/profile/:useId" element={<ProfileComponentPage />} />
+          <Route path="/profile" element={<ProfileComponentPage />} />
+          <Route path="/profile/:id" element={<ProfileComponentPage />} />
         </Routes>
       </Suspense>
       <Footer />

@@ -51,7 +51,11 @@ const Auth = () => {
     });
 
     setCurUserId(res.userId);
-    if (res) navigate("/");
+
+    if (res) {
+      setCurUserId(res.userId);
+      navigate("/");
+    }
     if (!res) setErrMessage("Incorret email or password");
   };
 

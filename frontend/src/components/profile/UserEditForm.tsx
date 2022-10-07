@@ -1,6 +1,9 @@
 import React from "react";
 import styled, { css } from "styled-components";
 import GlobalTheme from "@/styles/theme";
+import { curUserState } from "@/recoil/atoms/authState";
+import { useRecoilState } from "recoil";
+import UseEditForm from "@/hooks/useEditForm";
 
 interface ImgProps {
   img?: string;
@@ -23,33 +26,36 @@ const EditInput = css`
 `;
 
 function UserCardEditForm({ setIsEditing }: UserCardEditProps) {
+  const [curUser, setCurUser] = useRecoilState(curUserState);
   const handlerClick = () => {
     setIsEditing(false);
   };
+  const [values, handleEditFormChange, isValid] = UseEditForm({
+    nickname: curUser.nickname,
+    description: curUser.description,
+  });
+
   return (
     <EditContainer>
       <TitleContainer>
         <Title>EDIT USER INFORMATION</Title>
       </TitleContainer>
-      <Img img="mainPloggingImg2.png"></Img>
+      <Img img={curUser?.profPic}></Img>
       <InforContainer>
         <UserNickNameIntput
           type="text"
           placeholder="NickName..."
-          value="김대운"
+          value={values.nickname}
           name="nickname"
+          onChange={handleEditFormChange}
         />
-        <UserEmailIntput
-          type="text"
-          placeholder="Email..."
-          value="eodnsdlekd@naver.com"
-          name="email"
-        />
+
         <UserDescriptionInput
           type="text"
           placeholder="Description..."
-          value="안녕하세요 ~~~"
+          value={values.description}
           name="description"
+          onChange={handleEditFormChange}
         />
         <ButtonWrapper>
           <Button width="60%" onClick={handlerClick}>
