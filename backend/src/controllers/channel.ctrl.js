@@ -53,16 +53,28 @@ module.exports = {
     }
   },
 
-  async changeChannelStatus(req, res, next) {
+  async changeChannelInfo(req, res, next) {
     const userId = req.userId;
     const channelId = req.params.channelId;
-    const { newStatus } = req.body;
+    var location = null;
+    if(req.file) {
+      var { location } = req.file;
+    }
+    const { newTitle, newStatus, newSpec, newLocationDist, newLocationCity } = req.body;
+    const toUpdate = { 
+      title: newTitle,
+      status: newStatus,
+      spec: newSpec,
+      locationDist: newLocationDist,
+      locationCity: newLocationCity,
+      img: location
+    }
     try {
-      const updatedChannelId = await channelService.updateChannelStatus(userId, channelId, newStatus);
+      const updatedChannelId = await channelService.updateChannelInfo(userId, channelId, toUpdate);
 
       res.status(201).json({
         success: true,
-        message: "Channel status change success",
+        message: "Channel info change success",
         datas: {
           _id: updatedChannelId,
         }
