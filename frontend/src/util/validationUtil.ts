@@ -27,6 +27,12 @@ class ValidationUtil {
     if (myNicnkname.length < 4) return false;
     return true;
   }
+
+  static checkDescriptionValidate(description: string) {
+    const myDescription = description.trim();
+    if (myDescription.length < 5) return false;
+    return true;
+  }
 }
 
 Object.freeze(ValidationUtil);
