@@ -1,17 +1,17 @@
 import { atom, selector } from "recoil";
-
+import Storage from "@/storage/storage";
 export interface IUser {
   _id?: string;
   token?: string;
-  email: string;
-  nickname: string;
+  email?: string;
+  nickname?: string;
   password?: string;
   chnnels?: string[];
   description?: string;
   waitResList?: string[];
   waitReqList?: string[];
   following?: string[];
-  profPic: any;
+  profPic?: any;
 }
 
 export const authState = atom({
@@ -21,17 +21,16 @@ export const authState = atom({
   },
 });
 
-export const curUserState = atom<IUser | null>({
-  key: "cuUser",
-  default: null,
+export const curUserState = atom<IUser>({
+  key: "curUser",
+  default: {},
 });
 
 export const isLoginState = selector({
   key: "isLogin",
   get: ({ get }) => {
     const curUser = get(curUserState);
-    const checkLogin =
-      sessionStorage.getItem("userToken") && curUser?.token ? true : false;
+    const checkLogin = Storage.getToken() && curUser?.token ? true : false;
     return checkLogin;
   },
 });
