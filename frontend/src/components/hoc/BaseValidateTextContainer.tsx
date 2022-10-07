@@ -9,6 +9,7 @@ const BaseValidateTextContainer = ({ children }: BaseComponentType) => {
 
 const BaseContainer = styled.div`
   width: 100%;
+  text-align: center;
   font-size: ${GlobalTheme.fontSize.default};
   color: ${GlobalTheme.colors.lightRed};
 `;
