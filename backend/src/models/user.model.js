@@ -5,48 +5,51 @@ const UserSchema = new Schema(
     email: {
       type: String,
       required: true,
-      unique: true
+      unique: true,
     },
     password: {
       type: String,
-      required: true
+      required: true,
     },
     nickname: {
       type: String,
       required: true,
-      unique: true
+      unique: true,
+    },
+    description: {
+      type: String,
+      required: false,
+      default: "자기소개",
     },
     profPic: {
       type: String,
-      required: false
+      required: false,
+      default:
+        "https://elice-8seconds.s3.ap-northeast-2.amazonaws.com/1665109688589_image_1648301949725_750.jpeg",
     },
     channels: {
       type: Array,
       required: false,
-      default: []
+      default: [],
     },
     waitResList: {
       type: Array,
       required: false,
-      default: []
+      default: [],
     },
     waitReqList: {
       type: Array,
       required: false,
-      default: []
+      default: [],
     },
     following: {
       type: Array,
       required: false,
-      default: []
+      default: [],
     },
-    description: {
-      type: String,
-      required: false
-    }
   },
   {
-    timestamps: true
+    timestamps: true,
   }
 );
 
