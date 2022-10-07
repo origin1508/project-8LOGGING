@@ -21,7 +21,7 @@ const Login = () => {
     confirmPassword: "",
   });
 
-  const [loginValue, handleLoginFormChange] = useLoginForm({
+  const [loginValue, handleLoginFormChange, isValid] = useLoginForm({
     email: "",
     password: "",
   });
@@ -85,6 +85,7 @@ const Login = () => {
               loginValue={loginValue}
               onLoginFormChangeEvent={handleLoginFormChange}
               onLoginSubmitEvent={handleLoginSubmit}
+              isValid={isValid}
             />
           ) : (
             <AuthReigster
