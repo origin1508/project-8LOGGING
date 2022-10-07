@@ -12,9 +12,9 @@ module.exports = {
         ...user,
       };
       
-      res.status(200).json({
+      res.status(201).json({
         success: true,
-        status: 200,
+        status: 201,
         message: "login success",
         datas: userData,
       });

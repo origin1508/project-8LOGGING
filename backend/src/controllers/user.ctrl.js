@@ -90,4 +90,42 @@ module.exports = {
       next(err);
     }
   },
+
+  async modifyDescription(req, res, next) {
+    const userId = req.userId;
+    const { newDescription } = req.body;
+
+    try {
+      const description = await userService.updateUserDescription(
+        userId,
+        newDescription
+      );
+
+      res.status(201).json({
+        success: true,
+        status: 201,
+        message: "description modification success",
+        datas: description,
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  async getUserAllData(req, res, next) {
+    const userId = req.userId;
+    
+    try {
+      let user = await userService.findUserAllData(userId);
+    
+      res.status(200).json({
+        success: true,
+        status:200,
+        message: 'success getting user all datas',
+        datas: user,
+      })
+    } catch {
+      next(err);
+    }
+  }
 };
