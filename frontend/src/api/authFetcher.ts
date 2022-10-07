@@ -32,6 +32,7 @@ export async function authLoginRequest(
     });
     const { datas } = res.data;
     Storage.setToken(datas.token);
+
     return datas;
   } catch (e) {
     return null;
@@ -41,7 +42,7 @@ export async function authLoginRequest(
 export async function get(endpoint: string, params = "") {
   return axios.get(baseUrl + endpoint + "/" + params, {
     headers: {
-      Authorization: `Bearer ${sessionStorage.getItem("userToken")}`,
+      Authorization: `Bearer ${Storage.getToken()}`,
     },
   });
 }

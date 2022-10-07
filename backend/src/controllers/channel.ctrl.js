@@ -22,5 +22,53 @@ module.exports = {
     } catch (err) {
       next(err);
     }
-  }
+  },
+
+  async showRecruitChannels(req, res, next) {
+    try {
+      const recruitChannels = await channelService.getRecruitChannels();
+
+      res.status(200).json({
+        success: true,
+        message: "Channel list load success",
+        datas: recruitChannels
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  async showChannelInfo(req, res, next) {
+    const { channelId }= req.params;
+    try {
+      const channelInfo = await channelService.getChannelInfo(channelId)
+
+      res.status(200).json({
+        success: true,
+        message: "Channel info load success.",
+        datas: channelInfo
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  async changeChannelStatus(req, res, next) {
+    const userId = req.userId;
+    const channelId = req.params.channelId;
+    const { newStatus } = req.body;
+    try {
+      const updatedChannelId = await channelService.updateChannelStatus(userId, channelId, newStatus);
+
+      res.status(201).json({
+        success: true,
+        message: "Channel status change success",
+        datas: {
+          _id: updatedChannelId,
+        }
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
 };

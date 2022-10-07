@@ -109,8 +109,6 @@ const InforContainer = styled.div`
   }
 `;
 
-const UserNameInput = styled.input``;
-
 const UserNickNameIntput = styled.input``;
 
 const UserEmailIntput = styled.input``;

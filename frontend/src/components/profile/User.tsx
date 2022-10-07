@@ -2,11 +2,11 @@ import React from "react";
 import UserCard from "./UserCard";
 import UserEditForm from "./UserEditForm";
 import styled from "styled-components";
-import { IUser } from "@/recoil/atoms/authState";
 
 interface UserProps {
   isEditing: boolean;
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
+  userId?: string;
 }
 
 function User({ isEditing, setIsEditing }: UserProps) {

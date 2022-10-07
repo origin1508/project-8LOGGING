@@ -51,5 +51,92 @@ module.exports = {
     )
 
     return channel._id;
-  }
+  },
+
+  /**
+   * 모집 중인 채널 목록 반환
+   * 
+   * @returns 
+   */
+  async getRecruitChannels() {
+    const channels = await Channel.find({status: 0});
+
+    const recruitChannels = await Promise.all(channels.map( async (channel) => { 
+      // ownerId에 해당되는 nickname 찾기용
+      const user = await User.findById(channel.ownerId)
+
+      return {
+        _id: channel._id, 
+        title: channel.title,
+        imgUrl: channel.img,
+        locationDist: channel.locationDist,
+        locationCity: channel.locationCity,
+        memberNum: channel.memberNum,
+        curMemberNum: channel.members.length,
+        ownerNickname: user.nickname
+      }
+    }));
+
+    return recruitChannels
+  },
+
+  /**
+   * 채널 정보 확인
+   * 
+   * @param {String} channelId 
+   */
+  async getChannelInfo(channelId) {
+    const channel = await Channel.findById(channelId);
+    const owner = await User.findById(channel.ownerId);
+
+    // 멤버들 정보 불어오기
+    const membersInfo = await Promise.all(channel.members.map( async (memberId) => {
+      const member = await User.findById(memberId);
+      return {
+        memberId,
+        memberNickname: member.nickname,
+        memberPic: member.profPic
+      }
+    }))
+
+    // 채널 정보 모으기
+    const channelInfo = {
+      _id: channel._id,
+      title: channel.title,
+      ownerInfo: {
+        ownerId: channel.ownerId,
+        ownerNickname: owner.nickname,
+        ownerPic: owner.profPic, 
+      },
+      locationDist: channel.locationDist, 
+      locationCity: channel.locationCity,
+      imgUrl: channel.img,
+      spec: channel.spec,
+      memberNum: channel.memberNum,
+      membersInfo
+    }
+
+    return channelInfo
+  },
+
+  /**
+   * 채널 상태 변경
+   * 
+   * @param {String} userId 
+   * @param {String} channelId 
+   * @param {Number} newStatus 
+   * @returns 
+   */
+  async updateChannelStatus(userId, channelId, newStatus) {
+    // 채널 소유권 확인
+    const channel = await Channel.findById(channelId);
+    if (channel.ownerId!=userId) {
+      throw ApiError.badRequest("채널의 수정 권한이 없습니다.");
+    }    
+
+    // 채널 상태 수정
+    const updatedChannel = await Channel.findByIdAndUpdate(channelId, { status: newStatus });
+
+    return updatedChannel._id
+  },
 };
