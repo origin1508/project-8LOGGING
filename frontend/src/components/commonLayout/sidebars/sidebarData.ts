@@ -1,5 +1,9 @@
 export const SidebarData = [
   {
+    title: "My profile",
+    path: "/profile",
+  },
+  {
     title: "About plogging",
     path: "/about",
   },

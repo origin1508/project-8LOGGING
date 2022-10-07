@@ -48,9 +48,10 @@ const Auth = () => {
       password,
     });
 
-    setCurUserId(res.userId);
-    console.log(curUserId);
-    if (res) navigate("/");
+    if (res) {
+      setCurUserId(res.userId);
+      navigate("/");
+    }
   };
 
   return (
