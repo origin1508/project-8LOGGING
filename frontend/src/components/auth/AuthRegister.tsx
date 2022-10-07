@@ -4,6 +4,7 @@ import GlobalTheme from "@/styles/theme";
 import BaseIntputContainer from "@/components/hoc/BaseInputContainer";
 import BaseValidateTextContainer from "@/components/hoc/BaseValidateTextContainer";
 import { AuthFormInitialType } from "@/types/auth/authTypes";
+import ValidationUtil from "@/util/validationUtil";
 
 interface Props {
   setTabIndex: React.Dispatch<React.SetStateAction<number>>;
@@ -25,6 +26,22 @@ const AuthReigster: React.FC<Props> = ({
   onRegisterFormValueChaneEvent,
   onRegisterSubmitEvent,
 }) => {
+  const isValidEmail = ValidationUtil.checkEmailValidate(authFormState.email);
+  const isValidNickname = ValidationUtil.checkNicknameValidate(
+    authFormState.nickname || ""
+  );
+  const isValidPassword = ValidationUtil.checkPasswordValidate(
+    authFormState.password
+  );
+  const isPasswordSame =
+    authFormState.password === authFormState.confirmPassword;
+  const isValid = [
+    isValidEmail,
+    isValidNickname,
+    isValidPassword,
+    isPasswordSame,
+  ].every((v) => v === true);
+
   return (
     <RegistrationFormContainer>
       <BaseIntputContainer>
@@ -34,9 +51,11 @@ const AuthReigster: React.FC<Props> = ({
           value={authFormState.email}
           onChange={onRegisterFormValueChaneEvent}
         />
-        <BaseValidateTextContainer>
-          ㅁㅇㄻㄴㄹㄴㅁㅇㄹ
-        </BaseValidateTextContainer>
+        {!isValidEmail && (
+          <BaseValidateTextContainer>
+            Please check your email
+          </BaseValidateTextContainer>
+        )}
       </BaseIntputContainer>
       <BaseIntputContainer>
         <RegistrationInput
@@ -45,6 +64,11 @@ const AuthReigster: React.FC<Props> = ({
           value={authFormState.nickname}
           onChange={onRegisterFormValueChaneEvent}
         />
+        {!isValidNickname && (
+          <BaseValidateTextContainer>
+            Please check your nickname
+          </BaseValidateTextContainer>
+        )}
       </BaseIntputContainer>
       <BaseIntputContainer>
         <RegistrationInput
@@ -54,6 +78,11 @@ const AuthReigster: React.FC<Props> = ({
           value={authFormState.password}
           onChange={onRegisterFormValueChaneEvent}
         />
+        {!isValidPassword && (
+          <BaseValidateTextContainer>
+            Special characters and numbers from 8 to 15.
+          </BaseValidateTextContainer>
+        )}
       </BaseIntputContainer>
       <BaseIntputContainer>
         <RegistrationInput
@@ -63,9 +92,18 @@ const AuthReigster: React.FC<Props> = ({
           value={authFormState.confirmPassword}
           onChange={onRegisterFormValueChaneEvent}
         />
+        {!isPasswordSame && (
+          <BaseValidateTextContainer>
+            Please check your password and confirm password
+          </BaseValidateTextContainer>
+        )}
       </BaseIntputContainer>
       <RegistrationButtonContainer>
-        <RegistrationButton type="submit" onClick={onRegisterSubmitEvent}>
+        <RegistrationButton
+          disabled={isValid ? false : true}
+          type="submit"
+          onClick={onRegisterSubmitEvent}
+        >
           Register
         </RegistrationButton>
         <RegistrationButton
