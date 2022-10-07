@@ -129,8 +129,9 @@ module.exports = {
   },
 
   async findUserAllData(userId) {
-    const user = await User.findOne({ _id: userId });
-    
+    const user = await User.findOne({ _id: userId }).lean();
+    delete user.password;
+
     return user;
   },
 };
