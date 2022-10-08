@@ -19,7 +19,9 @@ const CustomRouter = () => {
   return (
     <React.Fragment>
       <SidebarComponent />
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense
+        fallback={<div>Loading... 이 친구도 따로 디자인 필요 Spinner?</div>}
+      >
         <Routes>
           <Route path="/" element={<MainComponentPage />} />
           <Route path="/auth" element={<LoginComponentPage />} />
