@@ -80,8 +80,8 @@ module.exports = {
   //   return recruitChannels
   // },
 
-  async getRecruitChannels(page, perPage) {
-    const channels = await Channel.find({}).skip((page - 1) * perPage).limit(perPage);
+  async getRecruitChannels(page, perPage, status) {
+    const channels = await Channel.find({status}).sort({_id: -1}).skip((page - 1) * perPage).limit(perPage);
     
     return channels;
   },
