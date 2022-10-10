@@ -1,5 +1,6 @@
 export interface ChartProps {
   dataName: string;
   labels: Array<string>;
-  datas: Array<number>;
+  datas?: Array<number>;
+  multiDatas?: Array<number[]>;
 }
