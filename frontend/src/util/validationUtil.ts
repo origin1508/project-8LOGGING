@@ -39,14 +39,6 @@ class ValidationUtil {
     return true;
   }
 
-  static checkChannelLocationCityValidate(locationCity: string) {
-    if (locationCity.includes(" ")) return false;
-    const city = ["시", "군", "구"];
-    if (!city.some((c) => c === locationCity.charAt(locationCity.length - 1)))
-      return false;
-    return true;
-  }
-
   static checkDescriptionValidate(description: string) {
     const myDescription = description.trim();
     if (myDescription.length < 5) return false;
