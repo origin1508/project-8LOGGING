@@ -2,11 +2,46 @@ const ApiError = require("../utils/ApiError");
 const { userService } = require("../services");
 
 module.exports = {
+  // 이메일 중복 체크
+  async getEmailDuplValidationResult(req, res, next) {
+    const { email } = req.params;
+    try {
+      await userService.checkEmailDuplication(email);
+
+      res.status(200).json({
+        success: true,
+        status: 200,
+        message: "available email",
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  // 닉네임 중복 체크
+  async getNicknameDuplValidationResult(req, res, next) {
+    const { nickname } = req.params;
+    try {
+      await userService.checkNicknameDuplication(nickname);
+
+      res.status(200).json({
+        success: true,
+        status: 200,
+        message: "available nickname",
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
+
   // 유저 닉네임 수정
   async modifyNickname(req, res, next) {
     const userId = req.userId;
     const { newNickname } = req.body;
     try {
+      // 중복 체크
+      await userService.checkNicknameDuplication(newNickname);
+
       const user = await userService.updateUserNickname(userId, newNickname);
 
       res.status(201).json({
@@ -20,34 +55,20 @@ module.exports = {
     }
   },
 
-  // 현재 비밀번호와 입려한 비밀번호 비교
-  async confirmPassword(req, res, next) {
-    const userId = req.userId;
-    const { confirmationPassword } = req.body;
-
-    try {
-      const isCorrectPassword = await userService.confirmUserPassword(
-        userId,
-        confirmationPassword
-      );
-
-      res.status(200).json({
-        success: true,
-        status: 200,
-        message: "Verification completed.",
-      });
-    } catch (err) {
-      next(err);
-    }
-  },
-
   // 유저 비밀번호 수정
   async modifyPassword(req, res, next) {
     const userId = req.userId;
-    const { newPassword } = req.body;
+    const { currentPassword, newPassword } = req.body;
 
     try {
-      const user = await userService.updateUserPassword(userId, newPassword);
+      // 유저 비밀번호가 currentPassword와 일치하는지 비교
+      await userService.checkPasswordCoincidence(userId, currentPassword);
+
+      // 기존 비밀번호와 새로운 비밀번호 일치 비교
+      await userService.checkPasswordDuplication(userId, newPassword);
+
+      // 비밀번호 수정
+      await userService.updateUserPassword(userId, newPassword);
 
       res.status(201).json({
         success: true,

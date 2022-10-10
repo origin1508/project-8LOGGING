@@ -1,6 +1,5 @@
 import axios from "axios";
 import Storage from "@/storage/storage";
-import { constSelector } from "recoil";
 
 const serverUrl = process.env.REACT_APP_SERVER_BASE_URL;
 interface ApiType {
@@ -8,6 +7,7 @@ interface ApiType {
   newDescription?: string;
   newPassword?: string;
   newProfPic?: string;
+  currentPassword?: string;
 }
 
 export async function put(endpoint: string, data: ApiType) {

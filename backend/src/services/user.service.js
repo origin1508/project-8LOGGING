@@ -5,6 +5,22 @@ const ApiError = require("../utils/ApiError");
 const { User, Channel } = require("../models");
 
 module.exports = {
+  async checkEmailDuplication(email) {
+    const exUser = await User.findOne({ email });
+    console.log(exUser);
+    console.log(email);
+    if (exUser) {
+      throw ApiError.badRequest("이미 존재하는 이메일입니다.");
+    }
+  },
+
+  async checkNicknameDuplication(nickname) {
+    const exUser = await User.findOne({ nickname });
+    if (exUser) {
+      throw ApiError.badRequest("이미 존재하는 닉네임입니다.");
+    }
+  },
+
   /**
    * 유저 닉네임 수정
    *
@@ -13,12 +29,6 @@ module.exports = {
    * @returns
    */
   async updateUserNickname(userId, newNickname) {
-    // 중복된 닉네임 체크
-    const exUser = await User.findOne({ nickname: newNickname });
-    if (exUser) {
-      throw ApiError.badRequest("이미 존재하는 닉네임 입니다.");
-    }
-
     const user = await User.findByIdAndUpdate(
       userId,
       { nickname: newNickname },
@@ -33,25 +43,40 @@ module.exports = {
   },
 
   /**
-   * 기존 비밀번호와 확인 비밀번호 일치 확인
-   *
+   * 기존 비밀번호와 currentPassword 비교
+   * 
    * @param {String} userId
-   * @param {String} confirmationPassword
+   * @param {String} currentPassword
    * @returns
    */
-  async confirmUserPassword(userId, confirmationPassword) {
-    const user = await User.findOne({ _id: userId });
+  async checkPasswordCoincidence(userId, currentPassword) {
+    const user = await User.findById(userId);
 
     // 비밀번호 비교
     const isCorrectPassword = await bcrypt.compare(
-      confirmationPassword,
+      currentPassword,
       user.password
     );
     if (!isCorrectPassword) {
       throw ApiError.badRequest("비밀번호가 일치하지 않습니다.");
     }
+  },
 
-    return isCorrectPassword;
+  /**
+   * 기존 비밀번호와 newPassword 비교
+   * 
+   * @param {String} userId 
+   * @param {String} newPassword 
+   */
+  async checkPasswordDuplication(userId, newPassword) {
+    const user = await User.findById(userId);
+
+    // 기존 비밀번호와 새로운 비밀번호가 같은 지 비교
+    const isDuplicated = await bcrypt.compare(newPassword, user.password);
+
+    if (isDuplicated) {
+      throw ApiError.badRequest("기존의 비밀번호와 같은 비밀번호입니다.");
+    }
   },
 
   /**
@@ -62,24 +87,14 @@ module.exports = {
    * @returns
    */
   async updateUserPassword(userId, newPassword) {
-    // 기존 비밀번호와 새로운 비밀번호가 같은지 비교
-    const user = await User.findOne({ _id: userId });
-    const isSamePassword = await bcrypt.compare(newPassword, user.password);
-
-    if (isSamePassword) {
-      throw ApiError.badRequest("기존 비밀번호와 같은 비밀번호 입니다.");
-    }
-
     // 비밀번호 암호화
     const modifiedPassword = await bcrypt.hash(newPassword, 12);
 
-    const result = await User.findByIdAndUpdate(
+    await User.findByIdAndUpdate(
       userId,
       { password: modifiedPassword },
       { new: true }
     );
-
-    return result;
   },
 
   /**
@@ -143,9 +158,9 @@ module.exports = {
 
   /**
    * 유저가 참여했던(활동이 끝난) 채널 정보 조회
-   * 
-   * @param {String} userId 
-   * @returns 
+   *
+   * @param {String} userId
+   * @returns
    */
   async findChannelHistory(userId) {
     const channelsOfUser = await User.findById(userId, "channels");

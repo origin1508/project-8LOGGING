@@ -29,21 +29,13 @@ class ValidationUtil {
   }
 
   static checkChannelTitleValidate(title: string) {
-    const myTitle = title.trim();
-    if (myTitle.length > 15) return false;
+    console.log(title);
+    if (title.length > 15 || title.length === 0) return false;
     return true;
   }
 
   static checkChannelMemberCountValidate(memberNum: number) {
     if (memberNum > 25) return false;
-    return true;
-  }
-
-  static checkChannelLocationCityValidate(locationCity: string) {
-    if (locationCity.includes(" ")) return false;
-    const city = ["시", "군", "구"];
-    if (!city.some((c) => c === locationCity.charAt(locationCity.length - 1)))
-      return false;
     return true;
   }
 
