@@ -12,7 +12,7 @@ export async function createChannelRequest(
   {
     title,
     locationDist,
-    locationCity,
+    selectedCity,
     memberNum,
     spec,
     image,
@@ -21,7 +21,7 @@ export async function createChannelRequest(
   const formData = new FormData();
   formData.append("title", title);
   formData.append("locationDist", locationDist);
-  formData.append("locationCity", locationCity);
+  selectedCity && formData.append("locationCity", selectedCity);
   formData.append("memberNum", memberNum.toString());
   formData.append("spec", spec);
   formData.append("image", image as File);
