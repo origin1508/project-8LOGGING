@@ -3,7 +3,7 @@ import { EditFormInitialType } from "@/types/auth/authTypes";
 import { ValidationType } from "@/types/auth/validationTypes";
 import ValidationUtil from "@/util/validationUtil";
 
-const UseEditForm = (
+const useEditForm = (
   initialState: EditFormInitialType
 ): [
   EditFormInitialType,
@@ -33,4 +33,4 @@ const UseEditForm = (
   return [values, handleEditFormChange, isValid];
 };
 
-export default UseEditForm;
+export default useEditForm;
