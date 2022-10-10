@@ -1,26 +1,28 @@
 import React, { useEffect, useState } from "react";
-import { EditFormInitialType } from "@/types/auth/authTypes";
+import { PsEditFormInitialType } from "@/types/auth/authTypes";
 import { ValidationType } from "@/types/auth/validationTypes";
 import ValidationUtil from "@/util/validationUtil";
 
-const useEditForm = (
-  initialState: EditFormInitialType
+const usePsEditForm = (
+  initialState: PsEditFormInitialType
 ): [
-  EditFormInitialType,
+  PsEditFormInitialType,
   (e: React.ChangeEvent<HTMLInputElement>) => void,
   ValidationType
 ] => {
   const [values, setValues] = useState(initialState);
   const [isValid, setIsValid] = useState({
-    nickname: false,
-    description: false,
+    currentPassword: false,
+    newPassword: false,
+    confirmPassword: false,
   });
-  const { checkNicknameValidate, checkDescriptionValidate } = ValidationUtil;
+  const { checkPasswordValidate } = ValidationUtil;
 
   useEffect(() => {
     setIsValid({
-      nickname: checkNicknameValidate(values.nickname),
-      description: checkDescriptionValidate(values.description),
+      currentPassword: checkPasswordValidate(values.currentPassword),
+      newPassword: checkPasswordValidate(values.currentPassword),
+      confirmPassword: checkPasswordValidate(values.currentPassword),
     });
   }, [values]);
 
@@ -33,4 +35,4 @@ const useEditForm = (
   return [values, handleEditFormChange, isValid];
 };
 
-export default useEditForm;
+export default usePsEditForm;
