@@ -4,7 +4,6 @@ import GlobalTheme from "@/styles/theme";
 import { ChannelFormInitialType } from "@/types/channel/channelTypes";
 import BaseIntputContainer from "@/components/hoc/BaseInputContainer";
 import BaseValidateTextContainer from "../hoc/BaseValidateTextContainer";
-import ValidationUtil from "@/util/validationUtil";
 
 interface CardImageProp {
   backgroundImg: string;
@@ -14,8 +13,9 @@ interface ChannelFormCardProps {
   channelForm: ChannelFormInitialType;
   distOptions: Array<string>;
   channelListData: { [key: string]: Array<string> };
-  selectedCity?: string;
   imagePreview: string | ArrayBuffer | null | any;
+  isValidTitle: boolean;
+  isValidMemberCount: boolean;
   onChannelFormValueChangeEvent: (
     e:
       | React.ChangeEvent<HTMLInputElement>
@@ -38,35 +38,20 @@ const ChannelFormCard = ({
   channelForm,
   distOptions,
   channelListData,
-  selectedCity,
   imagePreview,
+  isValidTitle,
+  isValidMemberCount,
   onChannelFormValueChangeEvent,
   onChannelImageUploadClickEvent,
   onChangeSelectChangeEvent,
   onChannelFormCreateClickEvent,
 }: ChannelFormCardProps) => {
-  const isValidTitle = ValidationUtil.checkChannelTitleValidate(
-    channelForm.title
-  );
-
-  const isValidMemberCount = ValidationUtil.checkChannelMemberCountValidate(
-    channelForm.memberNum
-  );
-
-  const isValid = [isValidTitle, isValidMemberCount].every(
-    (valid) => valid === true
-  );
-
   return (
     <ChannelFormWrapper>
       <ChannelHeaderWrapper>
         <ChannelTitle>CREATE CHANNEL</ChannelTitle>
         <ChannelButtonContainer>
-          <ChannelButton
-            type="submit"
-            disabled={isValid ? false : true}
-            onClick={onChannelFormCreateClickEvent}
-          >
+          <ChannelButton type="submit" onClick={onChannelFormCreateClickEvent}>
             CREATE CHANNEL
           </ChannelButton>
           <ChannelImageLabel>Image upload</ChannelImageLabel>
