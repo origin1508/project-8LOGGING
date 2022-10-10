@@ -11,12 +11,17 @@ const ChannelFormComponentPage = React.lazy(
 const ProfileComponentPage = React.lazy(
   () => import("@/components/pages/Profile")
 );
+const ChannelListPageComponent = React.lazy(
+  () => import("@/components/pages/ChannelList")
+);
 
 const CustomRouter = () => {
   return (
     <React.Fragment>
       <SidebarComponent />
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense
+        fallback={<div>Loading... 이 친구도 따로 디자인 필요 Spinner?</div>}
+      >
         <Routes>
           <Route path="/" element={<MainComponentPage />} />
           <Route path="/auth" element={<LoginComponentPage />} />
@@ -26,6 +31,7 @@ const CustomRouter = () => {
           />
           <Route path="/profile" element={<ProfileComponentPage />} />
           <Route path="/profile/:id" element={<ProfileComponentPage />} />
+          <Route path="/channels" element={<ChannelListPageComponent />} />
         </Routes>
       </Suspense>
       <Footer />

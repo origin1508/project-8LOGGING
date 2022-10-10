@@ -9,6 +9,10 @@ export const SidebarData = [
   },
   {
     title: "Recruiting channel",
+    path: "/channels",
+  },
+  {
+    title: "Create channel",
     path: "/channels/create",
   },
   {
