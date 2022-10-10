@@ -23,7 +23,7 @@ function UserCard({
     setIsEditing(true);
   };
   return (
-    <BaseCardContainer>
+    <BaseCardContainer width="40rem">
       <TitleContainer>
         <BigTitle>MY PROFILE</BigTitle>
       </TitleContainer>
