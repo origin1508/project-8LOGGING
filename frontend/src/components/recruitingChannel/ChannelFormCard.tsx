@@ -104,9 +104,11 @@ const ChannelFormCard = ({
               ))}
             </ChannelSelector>
             <ChannelSelector onChange={onChangeSelectChangeEvent}>
-              {channelListData[channelForm.locationDist].map((city) => (
-                <ChannelOption key={city}>{city}</ChannelOption>
-              ))}
+              {channelListData[channelForm.locationDist]
+                .sort((a, b) => (a < b ? -1 : 1))
+                .map((city) => (
+                  <ChannelOption key={city}>{city}</ChannelOption>
+                ))}
             </ChannelSelector>
           </BaseIntputContainer>
         </ChannelInputWrapper>

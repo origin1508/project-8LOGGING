@@ -37,7 +37,9 @@ const ChannelForm = () => {
 
   const navigate = useNavigate();
 
-  const distOptions = Object.keys(channelListData);
+  const distOptions = Object.keys(channelListData).sort(
+    (a: string, b: string) => (a < b ? -1 : 1)
+  );
 
   const { checkChannelTitleValidate, checkChannelMemberCountValidate } =
     ValidationUtil;
