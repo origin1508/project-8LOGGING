@@ -2,10 +2,16 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import UserInfoEditForm from "./UserInfoEditForm";
 import UserPsEditForm from "./UserPsEditForm";
+
 interface UserCardEditProps {
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
+  onModalOpenButtonClickEvent: () => void;
 }
-function UserEdit({ setIsEditing }: UserCardEditProps) {
+
+function UserEdit({
+  setIsEditing,
+  onModalOpenButtonClickEvent,
+}: UserCardEditProps) {
   const [isPsEditing, setIsPsEditing] = useState(false);
   return (
     <EditCardContainer>
@@ -18,6 +24,7 @@ function UserEdit({ setIsEditing }: UserCardEditProps) {
         <UserInfoEditForm
           setIsEditing={setIsEditing}
           setIsPsEditing={setIsPsEditing}
+          onModalOpenButtonClickEvent={onModalOpenButtonClickEvent}
         />
       )}
     </EditCardContainer>
