@@ -9,7 +9,11 @@ import AuthReigster from "../auth/AuthRegister";
 import BasePageComponent from "@/components/hoc/BasePageComponent";
 import Modal from "@/components/modal/Modal";
 import useModal from "@/hooks/useModal";
-import { authRegisterRequest, authLoginRequest } from "@/api/authFetcher";
+import {
+  authRegisterRequest,
+  authLoginRequest,
+  checkDuplicationRequest,
+} from "@/api/authFetcher";
 import { useSetRecoilState } from "recoil";
 import { curUserIdState } from "@/recoil/atoms/authState";
 const TapMenu = ["Sign in", "Registration"];
@@ -66,6 +70,24 @@ const Auth = () => {
     }
   };
 
+  const handleCheckDuplication = async (
+    e: React.MouseEvent<HTMLElement>,
+    endPoint: string,
+    checkData: string
+  ) => {
+    e.preventDefault();
+    try {
+      const res = await checkDuplicationRequest(
+        "api/users/validation/duplication/" + endPoint,
+        checkData
+      );
+      console.log(res);
+    } catch (error) {
+      setErrMessage("Already Exist");
+    }
+    handleModalOpenButtonClick();
+  };
+
   return (
     <BasePageComponent>
       <LoginContainer tabIndex={tabIndex}>
@@ -109,6 +131,7 @@ const Auth = () => {
               authFormState={authFormState}
               onRegisterFormValueChaneEvent={handleAuthFormValueChange}
               onRegisterSubmitEvent={handleRegisterSubmit}
+              onCheckDuplicationEvent={handleCheckDuplication}
             />
           )}
         </FormContainer>

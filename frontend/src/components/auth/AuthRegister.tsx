@@ -12,12 +12,18 @@ interface Props {
     e: React.ChangeEvent<HTMLInputElement>
   ) => void;
   onRegisterSubmitEvent: (e: React.FormEvent) => void;
+  onCheckDuplicationEvent: (
+    e: React.MouseEvent<HTMLElement>,
+    endPoint: string,
+    checkData: string
+  ) => void;
 }
 
 const AuthReigster: React.FC<Props> = ({
   authFormState,
   onRegisterFormValueChaneEvent,
   onRegisterSubmitEvent,
+  onCheckDuplicationEvent,
 }) => {
   const isValidEmail = ValidationUtil.checkEmailValidate(authFormState.email);
   const isValidNickname = ValidationUtil.checkNicknameValidate(
@@ -44,6 +50,15 @@ const AuthReigster: React.FC<Props> = ({
           value={authFormState.email}
           onChange={onRegisterFormValueChaneEvent}
         />
+        <CheckDuplicationButton
+          onClick={(e) => {
+            onCheckDuplicationEvent(e, "email", authFormState.email);
+          }}
+          disabled={!isValidEmail && true}
+        >
+          check
+        </CheckDuplicationButton>
+
         {!isValidEmail && (
           <BaseValidateTextContainer>
             Please check your email
@@ -57,6 +72,18 @@ const AuthReigster: React.FC<Props> = ({
           value={authFormState.nickname}
           onChange={onRegisterFormValueChaneEvent}
         />
+        <CheckDuplicationButton
+          onClick={(e) => {
+            onCheckDuplicationEvent(
+              e,
+              "nickname",
+              authFormState.nickname || ""
+            );
+          }}
+          disabled={!isValidNickname && true}
+        >
+          check
+        </CheckDuplicationButton>
         {!isValidNickname && (
           <BaseValidateTextContainer>
             Please check your nickname
@@ -124,6 +151,21 @@ const RegistrationInput = styled.input`
   box-shadow: 1px 1px 3px ${GlobalTheme.colors.gray};
 `;
 
+const CheckDuplicationButton = styled.button`
+  ${GlobalTheme.buttons}
+  position: absolute;
+  right: 6rem;
+  margin-top: 1rem;
+  width: 5rem;
+  color: ${GlobalTheme.colors.white};
+  background-color: ${GlobalTheme.colors.theme};
+  line-height: 3rem;
+  cursor: pointer;
+  &:disabled {
+    color: ${GlobalTheme.colors.gray};
+    background-color: ${GlobalTheme.colors.lightTwoGray};
+  }
+`;
 const RegistrationButtonContainer = styled.div`
   display: flex;
   flex-direction: column;
