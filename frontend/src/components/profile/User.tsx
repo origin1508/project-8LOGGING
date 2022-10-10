@@ -7,14 +7,22 @@ interface UserProps {
   isEditing: boolean;
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
   userId?: string;
+  onModalOpenButtonClickEvent: () => void;
 }
 
-function User({ isEditing, setIsEditing }: UserProps) {
+function User({
+  isEditing,
+  setIsEditing,
+  onModalOpenButtonClickEvent,
+}: UserProps) {
   return (
     <UserContainer>
       <UserCardContainer>
         {isEditing ? (
-          <UserEdit setIsEditing={setIsEditing} />
+          <UserEdit
+            setIsEditing={setIsEditing}
+            onModalOpenButtonClickEvent={onModalOpenButtonClickEvent}
+          />
         ) : (
           <UserCard setIsEditing={setIsEditing} />
         )}

@@ -24,6 +24,7 @@ interface ButtonProps {
 interface UserInfoEditProps {
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
   setIsPsEditing: React.Dispatch<React.SetStateAction<boolean>>;
+  onModalOpenButtonClickEvent: () => void;
 }
 const EditInput = css`
   background-color: ${GlobalTheme.colors.lightGray};
@@ -36,7 +37,11 @@ const EditInput = css`
   }
 `;
 
-function UserInfoEditForm({ setIsEditing, setIsPsEditing }: UserInfoEditProps) {
+function UserInfoEditForm({
+  setIsEditing,
+  setIsPsEditing,
+  onModalOpenButtonClickEvent,
+}: UserInfoEditProps) {
   const [curUser, setCurUser] = useRecoilState(curUserState);
 
   const handlerClick = () => {
@@ -79,7 +84,7 @@ function UserInfoEditForm({ setIsEditing, setIsPsEditing }: UserInfoEditProps) {
       <TitleContainer>
         <BigTitle>EDIT USER INFORMATION</BigTitle>
       </TitleContainer>
-      <Img img={curUser?.profPic}></Img>
+      <Img img={curUser?.profPic} onClick={onModalOpenButtonClickEvent}></Img>
       <InpurForm onSubmit={handleSubmitClick}>
         <InputContainer>
           닉네임변경
@@ -131,6 +136,7 @@ function UserInfoEditForm({ setIsEditing, setIsPsEditing }: UserInfoEditProps) {
 const Img = styled.div<ImgProps>`
   width: 7rem;
   height: 7rem;
+  cursor: pointer;
   background-image: url(${(props) => props.img});
   background-size: cover;
   border-radius: 100%;

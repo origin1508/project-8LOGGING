@@ -6,14 +6,14 @@ import BaseIntputContainer from "@/components/hoc/BaseInputContainer";
 import BaseValidateTextContainer from "../hoc/BaseValidateTextContainer";
 
 interface CardImageProp {
-  backgroundImg: string;
+  backgroundImg?: string;
 }
 
 interface ChannelFormCardProps {
   channelForm: ChannelFormInitialType;
   distOptions: Array<string>;
   channelListData: { [key: string]: Array<string> };
-  imagePreview: string | ArrayBuffer | null | any;
+  imagePreview: string | ArrayBuffer | FileReader | null | undefined;
   isValidTitle: boolean;
   isValidMemberCount: boolean;
   onChannelFormValueChangeEvent: (
@@ -110,7 +110,7 @@ const ChannelFormCard = ({
             </ChannelSelector>
           </BaseIntputContainer>
         </ChannelInputWrapper>
-        <ChannelImageBox backgroundImg={imagePreview} />
+        <ChannelImageBox backgroundImg={imagePreview as string} />
       </ChannelWrapper>
       <ChannelTextArea
         placeholder="Please enter your channel description"
