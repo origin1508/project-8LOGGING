@@ -4,20 +4,21 @@ import useChannelForm from "@/hooks/useChannelForm";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import ChannelFormCard from "@/components/recruitingChannel/ChannelFormCard";
-import BasePageComponent from "@/components/hoc/BasePageComponent";
+import BaseChannelComponent from "@/components/hoc/BaseChannelComponent";
 import { createChannelRequest } from "@/api/channelFetcher";
 import { imageResize } from "@/util/imageResizeUtil";
+import { channelListData } from "@/components/recruitingChannel/channelListData";
 
 const ChannelForm = () => {
   const [image, setImage] = useState<Blob>();
+  const [selectedCity, setSelectedCity] = useState<string>("");
   const [imagePreview, setImagePreview] = useState<
     string | ArrayBuffer | null
   >();
 
   const { channelForm, handleChannelFormValueChange } = useChannelForm({
     title: "",
-    locationDist: "Gyeonggi",
-    locationCity: "",
+    locationDist: "경기도",
     memberNum: 1,
     spec: "",
     image: "",
@@ -25,13 +26,7 @@ const ChannelForm = () => {
 
   const navigate = useNavigate();
 
-  const distOptions = [
-    "Gyeonggi",
-    "Gangwon",
-    "Chungcheong",
-    "Jeolla",
-    "Gyeongsang",
-  ];
+  const distOptions = Object.keys(channelListData);
 
   const handleImageUploadClick = async (
     e: React.ChangeEvent<HTMLInputElement>
@@ -41,20 +36,33 @@ const ChannelForm = () => {
       const compress = await imageResize(file);
       setImage(compress);
       const preview = new FileReader();
-      preview.readAsDataURL(file);
+      preview.readAsDataURL(compress);
       preview.onload = () => {
         setImagePreview(preview.result);
       };
     }
   };
 
+  const hanldeSelecCityChange = (
+    e:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLTextAreaElement>
+      | React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    setSelectedCity(e.target.value);
+  };
+
   const handleChannelFormCreateClick = async (e: React.FormEvent) => {
     e.preventDefault();
-    const { title, locationDist, locationCity, memberNum, spec } = channelForm;
+    const { title, locationDist, memberNum, spec } = channelForm;
+    const city = !selectedCity
+      ? channelListData[channelForm.locationDist][0]
+      : selectedCity;
+    setSelectedCity(city);
     const { datas } = await createChannelRequest("/api/channels", {
       title,
       locationDist,
-      locationCity,
+      selectedCity,
       memberNum,
       spec,
       image,
@@ -63,18 +71,21 @@ const ChannelForm = () => {
   };
 
   return (
-    <BasePageComponent>
+    <BaseChannelComponent>
       <ChannelContainer>
         <ChannelFormCard
           channelForm={channelForm}
           distOptions={distOptions}
+          channelListData={channelListData}
+          selectedCity={selectedCity}
           imagePreview={imagePreview}
           onChannelFormValueChangeEvent={handleChannelFormValueChange}
           onChannelImageUploadClickEvent={handleImageUploadClick}
+          onChangeSelectChangeEvent={hanldeSelecCityChange}
           onChannelFormCreateClickEvent={handleChannelFormCreateClick}
         />
       </ChannelContainer>
-    </BasePageComponent>
+    </BaseChannelComponent>
   );
 };
 
