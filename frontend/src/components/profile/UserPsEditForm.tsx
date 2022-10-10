@@ -64,7 +64,7 @@ function UserPsEditForm({ setIsEditing, setIsPsEditing }: UserInfoEditProps) {
     }
   };
   return (
-    <BaseCardContainer>
+    <BaseCardContainer width="40rem">
       <TitleContainer>
         <BigTitle>Change Password</BigTitle>
       </TitleContainer>
