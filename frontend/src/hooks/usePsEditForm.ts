@@ -14,7 +14,6 @@ const usePsEditForm = (
   const [isValid, setIsValid] = useState({
     currentPassword: false,
     newPassword: false,
-    confirmPassword: false,
   });
   const { checkPasswordValidate } = ValidationUtil;
 
@@ -22,7 +21,6 @@ const usePsEditForm = (
     setIsValid({
       currentPassword: checkPasswordValidate(values.currentPassword),
       newPassword: checkPasswordValidate(values.currentPassword),
-      confirmPassword: checkPasswordValidate(values.currentPassword),
     });
   }, [values]);
 
