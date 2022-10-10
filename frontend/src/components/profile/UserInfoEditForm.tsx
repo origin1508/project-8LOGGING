@@ -78,7 +78,7 @@ function UserInfoEditForm({
   };
 
   return (
-    <BaseCardContainer>
+    <BaseCardContainer width="40rem">
       <TitleContainer>
         <BigTitle>EDIT USER INFORMATION</BigTitle>
       </TitleContainer>
