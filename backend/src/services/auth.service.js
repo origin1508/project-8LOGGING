@@ -75,7 +75,7 @@ module.exports = {
       { userId },
       process.env.JWT_SECRET_KEY || "q23gh3214fg",
       {
-        expiresIn: "365d",
+        expiresIn: "7d",
         issuer: "HHS",
       }
     );
