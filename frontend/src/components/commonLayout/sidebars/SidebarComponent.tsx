@@ -51,7 +51,7 @@ const SidebarComponent = () => {
               }
             )}
       </MenuContainer>
-      <Channel />
+      {Storage.getToken() && <Channel />}
     </SidebarContainer>
   );
 };
