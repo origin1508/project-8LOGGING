@@ -49,8 +49,7 @@ export async function checkDuplicationRequest(
   checkData: string
 ) {
   const res = await customAxios.get(endPoint + `/${checkData}`);
-  const { datas } = res.data;
-  return datas;
+  return res.data.message;
 }
 
 export async function get(endpoint: string, params = "") {

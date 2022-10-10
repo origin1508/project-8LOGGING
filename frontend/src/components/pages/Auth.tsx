@@ -81,7 +81,7 @@ const Auth = () => {
         "api/users/validation/duplication/" + endPoint,
         checkData
       );
-      console.log(res);
+      setErrMessage(res);
     } catch (error) {
       setErrMessage("Already Exist");
     }
@@ -99,6 +99,7 @@ const Auth = () => {
                 <Tab
                   onClick={() => {
                     setTabIndex(index);
+                    setErrMessage("");
                   }}
                   key={index}
                   style={{
