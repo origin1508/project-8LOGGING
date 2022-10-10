@@ -67,7 +67,7 @@ const ChannelForm = () => {
       spec,
       image,
     });
-    if (datas) navigate("/");
+    if (datas) navigate("/channels");
   };
 
   return (
