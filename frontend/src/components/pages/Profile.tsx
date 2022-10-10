@@ -8,8 +8,10 @@ import Modal from "@/components/modal/Modal";
 import UserImageUpdate from "@/components/profile/UserImageUpdate";
 import ChannelHistory from "../profile/ChannelHistory";
 import BasePageComponent from "@/components/hoc/BasePageComponent";
+import { authProfileImageUpdate } from "@/api/authFetcher";
 import * as Api from "../../api/api";
 import Storage from "@/storage/storage";
+import { imageResize } from "@/util/imageResizeUtil";
 
 function Profile() {
   const navigate = useNavigate();
@@ -17,6 +19,7 @@ function Profile() {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [curUser, setCurUser] = useRecoilState(curUserState);
   const [isFetchCompleted, setIsFetchCompleted] = useState(false);
+  const [image, setImage] = useState<Blob>();
   const [profileImagePreview, setProfileImagePreview] = useState<
     string | ArrayBuffer | null
   >();
@@ -38,16 +41,27 @@ function Profile() {
     setIsFetchCompleted(true);
   };
 
-  const handleProfileImageUploadChange = (
+  const handleProfileImageUploadChange = async (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     if (e.target.files) {
       const file = e.target.files[0];
+      const compress = await imageResize(file);
+      setImage(compress);
       const preview = new FileReader();
       preview.readAsDataURL(file);
       preview.onload = () => {
         setProfileImagePreview(preview.result);
       };
+    }
+  };
+
+  const handleProfileImageUploadClick = async () => {
+    if (image) {
+      await authProfileImageUpdate("api/users/profpic", image);
+      handleModalCloseButtonClick();
+      setIsEditing(false);
+      navigate("/profile", { replace: true });
     }
   };
 
@@ -75,12 +89,13 @@ function Profile() {
       <ChannelHistory />
       <Modal
         isOpenModal={isOpenModal}
-        isAlertModal={false}
+        isAlertModal={true}
         onModalCancelButtonClickEvent={handleModalCloseButtonClick}
       >
         <UserImageUpdate
           profileImagePreview={profileImagePreview}
           onChannelImageUploadClickEvent={handleProfileImageUploadChange}
+          onProfileImageUploadClickEvent={handleProfileImageUploadClick}
         />
       </Modal>
     </BasePageComponent>
