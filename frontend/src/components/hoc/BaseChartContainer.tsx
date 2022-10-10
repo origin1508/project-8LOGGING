@@ -7,7 +7,9 @@ const BaseChartContainer = ({ children }: BaseComponentType) => {
 };
 
 const ChartContainer = styled.div`
-  width: 80%;
+  width: 50%;
+  margin: 0 auto;
+  margin-bottom: 3rem;
 `;
 
 export default BaseChartContainer;
