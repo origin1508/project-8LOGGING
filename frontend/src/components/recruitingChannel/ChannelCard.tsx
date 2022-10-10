@@ -59,7 +59,7 @@ const CardContainer = styled.div`
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 `;
 
 const CardImg = styled.img`
