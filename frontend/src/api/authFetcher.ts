@@ -6,6 +6,11 @@ const baseHeaders = {
   "Content-Type": "application/json",
 };
 
+const multiFormhHeaders = {
+  "Content-Type": "multipart/form-data",
+  Authorization: `Bearer ${Storage.getToken()}`,
+};
+
 export async function authRegisterRequest(
   endPoint: string,
   { email, nickname, password }: AuthFormInitialType
@@ -41,6 +46,19 @@ export async function authLoginRequest(
   );
   const { datas } = res.data;
   Storage.setToken(datas.token);
+  return datas;
+}
+
+export async function authProfileImageUpdate(
+  endPoint: string,
+  image: Blob
+): Promise<string> {
+  const formData = new FormData();
+  formData.append("image", image);
+  const res = await customAxios.put(endPoint, formData, {
+    headers: multiFormhHeaders,
+  });
+  const { datas } = res.data;
   return datas;
 }
 
