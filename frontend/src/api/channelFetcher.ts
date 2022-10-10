@@ -1,11 +1,10 @@
-import axios from "axios";
+import customAxios from "@/util/customAxios";
+import Storage from "@/storage/storage";
 import { ChannelFormInitialType } from "@/types/channel/channelTypes";
 
-const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
-
-const headers = {
-  "Content-Type": "application/json",
-  Authorization: `Bearer `,
+const multiFormhHeaders = {
+  "Content-Type": "multipart/form-data",
+  Authorization: `Bearer ${Storage.getToken()}`,
 };
 
 export async function createChannelRequest(
@@ -19,16 +18,20 @@ export async function createChannelRequest(
     image,
   }: ChannelFormInitialType
 ) {
-  const res = await axios.post(
-    baseUrl + endPoint,
-    {
-      title: title,
-      locationDist: locationDist,
-      locationCity: locationCity,
-      memberNum: memberNum,
-      spec: spec,
-      image: image,
-    },
-    { headers: headers }
-  );
+  const formData = new FormData();
+  formData.append("title", title);
+  formData.append("locationDist", locationDist);
+  formData.append("locationCity", locationCity);
+  formData.append("memberNum", memberNum.toString());
+  formData.append("spec", spec);
+  formData.append("image", image as File);
+  const res = await customAxios.post(endPoint, formData, {
+    headers: multiFormhHeaders,
+  });
+  return res.data;
+}
+
+export async function currentChannelListRequest(endPoint: string) {
+  const res = await customAxios.get(endPoint);
+  return res.data;
 }

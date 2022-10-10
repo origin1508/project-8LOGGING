@@ -1,6 +1,14 @@
 import { useState } from "react";
 
-const useModal = (initialState: boolean) => {
+type ModalReturnType = [
+  isOpenModal: boolean,
+  isAccepted: boolean,
+  handleModalOpenButtonClick: () => void,
+  handleAcceptButtonClick: () => void,
+  handleModalCloseButtonClick: () => void
+];
+
+const useModal = (initialState: boolean): ModalReturnType => {
   const [isOpenModal, setIsOpenModal] = useState(initialState);
   const [isAccepted, setIsAccepted] = useState(initialState);
 
@@ -24,7 +32,7 @@ const useModal = (initialState: boolean) => {
     handleModalOpenButtonClick,
     handleAcceptButtonClick,
     handleModalCloseButtonClick,
-  ] as const;
+  ];
 };
 
 export default useModal;

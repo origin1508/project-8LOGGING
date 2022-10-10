@@ -4,3 +4,8 @@ export interface AuthFormInitialType {
   password: string;
   confirmPassword?: string;
 }
+
+export interface EditFormInitialType {
+  description: string;
+  nickname: string;
+}

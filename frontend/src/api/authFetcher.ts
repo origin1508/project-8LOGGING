@@ -1,48 +1,49 @@
-import axios from "axios";
+import customAxios from "@/util/customAxios";
 import Storage from "@/storage/storage";
 import { AuthFormInitialType } from "@/types/auth/authTypes";
 
-const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
+const baseHeaders = {
+  "Content-Type": "application/json",
+};
 
 export async function authRegisterRequest(
   endPoint: string,
   { email, nickname, password }: AuthFormInitialType
 ) {
-  try {
-    const res = await axios.post(baseUrl + endPoint, {
+  const res = await customAxios.post(
+    endPoint,
+    {
       email: email,
       nickname: nickname,
       password: password,
-    });
-    const { success } = res.data;
-    return success;
-  } catch (e) {
-    return null;
-  }
+    },
+    {
+      headers: baseHeaders,
+    }
+  );
+  const { success } = res.data;
+  return success;
 }
 
 export async function authLoginRequest(
   endPoint: string,
   { email, password }: AuthFormInitialType
 ) {
-  try {
-    const res = await axios.post(baseUrl + endPoint, {
+  const res = await customAxios.post(
+    endPoint,
+    {
       email: email,
       password: password,
-    });
-    const { datas } = res.data;
-    Storage.setToken(datas.token);
-
-    return datas;
-  } catch (e) {
-    return null;
-  }
+    },
+    {
+      headers: baseHeaders,
+    }
+  );
+  const { datas } = res.data;
+  Storage.setToken(datas.token);
+  return datas;
 }
 
 export async function get(endpoint: string, params = "") {
-  return axios.get(baseUrl + endpoint + "/" + params, {
-    headers: {
-      Authorization: `Bearer ${Storage.getToken()}`,
-    },
-  });
+  return customAxios.get(endpoint + "/" + params);
 }

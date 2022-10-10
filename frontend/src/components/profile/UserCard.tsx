@@ -22,11 +22,11 @@ function UserCard({ setIsEditing }: UserCardProps) {
       <TitleContainer>
         <Title>MY PROFILE</Title>
       </TitleContainer>
-      <Img img="mainPloggingImg2.png"></Img>
+      <Img img={curUser?.profPic}></Img>
       <InforContainer>
-        <UserNicname>${curUser?.nickname}</UserNicname>
-        <UserEmail>${curUser?.email}</UserEmail>
-        <UserDescription>${curUser?.description}</UserDescription>
+        <UserNicname>{curUser?.nickname}</UserNicname>
+        <UserEmail>{curUser?.email}</UserEmail>
+        <UserDescription>{curUser?.description}</UserDescription>
         <Button onClick={handlerEditClick}>Edit</Button>
       </InforContainer>
     </UserCardContainer>
