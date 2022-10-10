@@ -14,6 +14,7 @@ module.exports = {
 
       res.status(201).json({
         success: true,
+        status: 201,
         message: "Channel create success.",
         datas: {
           _id: channelId,
@@ -30,6 +31,7 @@ module.exports = {
 
       res.status(200).json({
         success: true,
+        status: 200,
         message: "Channel list load success",
         datas: recruitChannels
       });
@@ -45,6 +47,7 @@ module.exports = {
 
       res.status(200).json({
         success: true,
+        status: 200,
         message: "Channel info load success.",
         datas: channelInfo
       });
@@ -74,6 +77,7 @@ module.exports = {
 
       res.status(201).json({
         success: true,
+        status: 201,
         message: "Channel info change success",
         datas: {
           _id: updatedChannelId,
