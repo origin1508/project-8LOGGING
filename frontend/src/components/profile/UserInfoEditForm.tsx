@@ -4,11 +4,16 @@ import GlobalTheme from "@/styles/theme";
 import { curUserState } from "@/recoil/atoms/authState";
 import { useRecoilState } from "recoil";
 import BaseValidateTextContainer from "@/components/hoc/BaseValidateTextContainer";
-import UseEditForm from "@/hooks/useEditForm";
+import useEditForm from "@/hooks/useEditForm";
 import * as Api from "@/api/api";
 import BaseCardContainer from "../hoc/BaseCardContainer";
 
-import { BigTitle, TitleContainer } from "@/styles/commonStyle";
+import {
+  BigTitle,
+  TitleContainer,
+  EditButtonWrapper,
+  EditButton,
+} from "@/styles/commonStyle";
 
 interface ImgProps {
   img?: string;
@@ -37,7 +42,7 @@ function UserInfoEditForm({ setIsEditing, setIsPsEditing }: UserInfoEditProps) {
   const handlerClick = () => {
     setIsEditing(false);
   };
-  const [values, handleEditFormChange, isValid] = UseEditForm({
+  const [values, handleEditFormChange, isValid] = useEditForm({
     nickname: curUser.nickname,
     description: curUser.description,
   });
@@ -107,17 +112,17 @@ function UserInfoEditForm({ setIsEditing, setIsPsEditing }: UserInfoEditProps) {
             </BaseValidateTextContainer>
           )}
         </InputContainer>
-        <ButtonWrapper>
-          <Button width="60%" type="submit" disabled={!isValidAll}>
+        <EditButtonWrapper>
+          <EditButton width="60%" type="submit" disabled={!isValidAll}>
             CONFIRM
-          </Button>
-          <Button width="60%" onClick={handlerClick}>
+          </EditButton>
+          <EditButton width="60%" onClick={handlerClick}>
             CANCEL
-          </Button>
-        </ButtonWrapper>
-        <Button width="60%" onClick={() => setIsPsEditing(true)}>
+          </EditButton>
+        </EditButtonWrapper>
+        <EditButton width="60%" onClick={() => setIsPsEditing(true)}>
           비밀번호 변경하기
-        </Button>
+        </EditButton>
       </InpurForm>
     </BaseCardContainer>
   );
@@ -154,27 +159,4 @@ const UserNickNameIntput = styled.input``;
 
 const UserDescriptionInput = styled.input``;
 
-const ButtonWrapper = styled.div`
-  display: flex;
-  gap: 1rem;
-`;
-const Button = styled.button<ButtonProps>`
-  ${GlobalTheme.buttons}
-  background-color:${GlobalTheme.colors.theme};
-  color: ${GlobalTheme.colors.white};
-  width: ${(props) => props.width};
-  font-size: 1.5rem;
-  padding: 1rem 2rem;
-
-  &:hover {
-    transform: translateY(-0.3rem);
-  }
-  &::after {
-    transform: scale(1.5);
-    opacity: 0;
-  }
-  &:active {
-    transform: translateY(-0.1rem);
-  }
-`;
 export default UserInfoEditForm;

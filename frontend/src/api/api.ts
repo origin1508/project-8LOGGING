@@ -7,6 +7,7 @@ interface ApiType {
   newDescription?: string;
   newPassword?: string;
   newProfPic?: string;
+  currentPassword?: string;
 }
 
 export async function put(endpoint: string, data: ApiType) {

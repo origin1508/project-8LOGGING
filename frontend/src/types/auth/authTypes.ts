@@ -9,3 +9,9 @@ export interface EditFormInitialType {
   description: string;
   nickname: string;
 }
+
+export interface PsEditFormInitialType {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
