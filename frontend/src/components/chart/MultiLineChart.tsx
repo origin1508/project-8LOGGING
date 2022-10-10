@@ -8,14 +8,14 @@ chartRegistry();
 
 const MultiLineChart = ({ dataName, labels, multiDatas }: ChartProps) => {
   const options = chartOptions("Korea sea microplastic");
+  const datasetLabel = [
+    "플라스틱 배출 속도 2050년까지 증가",
+    "플라스틱 배출 속도 2020년 수준 유지",
+    "플라스틱 배출 2020년에 중지",
+  ];
+  const borderColor = ["#FA7070", "#2192FF", "#7DCE13"];
 
   const dataForChartRender = () => {
-    const datasetLabel = [
-      "플라스틱 배출 속도 2050년까지 증가",
-      "플라스틱 배출 속도 2020년 수준 유지",
-      "플라스틱 배출 2020년에 중지",
-    ];
-    const borderColor = ["red", "blue", "green"];
     const data: {
       labels: string[];
       datasets: Array<{
