@@ -29,8 +29,8 @@ class ValidationUtil {
   }
 
   static checkChannelTitleValidate(title: string) {
-    const myTitle = title.trim();
-    if (myTitle.length > 15) return false;
+    console.log(title);
+    if (title.length > 15 || title.length === 0) return false;
     return true;
   }
 
