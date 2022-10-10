@@ -3,6 +3,8 @@ import {
   CategoryScale,
   LinearScale,
   BarElement,
+  PointElement,
+  LineElement,
   Title,
   Tooltip,
   Legend,
@@ -13,6 +15,8 @@ export function chartRegistry() {
     CategoryScale,
     LinearScale,
     BarElement,
+    PointElement,
+    LineElement,
     Title,
     Tooltip,
     Legend
