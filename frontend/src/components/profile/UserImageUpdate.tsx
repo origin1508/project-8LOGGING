@@ -11,11 +11,13 @@ interface UserImageUpdateProps {
   onChannelImageUploadClickEvent: (
     e: React.ChangeEvent<HTMLInputElement>
   ) => void;
+  onProfileImageUploadClickEvent: () => void;
 }
 
 const UserImageUpdate = ({
   profileImagePreview,
   onChannelImageUploadClickEvent,
+  onProfileImageUploadClickEvent,
 }: UserImageUpdateProps) => {
   return (
     <UserImageContainer>
@@ -27,6 +29,9 @@ const UserImageUpdate = ({
         />
       </UserImageInputWrapper>
       <ProfileImageBox backgroundImg={profileImagePreview as string} />
+      <ProfileButton onClick={onProfileImageUploadClickEvent}>
+        CHANGE PROFILE IMAGE
+      </ProfileButton>
     </UserImageContainer>
   );
 };
@@ -61,7 +66,18 @@ const ProfileImageBox = styled.div<ProfileImageProp>`
   width: 100%;
   height: 330px;
   text-align: center;
+  margin-bottom: 1rem;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+`;
+
+const ProfileButton = styled.div`
+  line-height: 4rem;
+  font-size: ${GlobalTheme.fontSize.littleBig};
+  color: ${GlobalTheme.colors.white};
+  background-color: ${GlobalTheme.colors.theme};
+  padding: 0.875rem;
+  text-align: center;
+  cursor: pointer;
 `;
 
 export default UserImageUpdate;
