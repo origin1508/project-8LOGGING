@@ -7,6 +7,7 @@ import BaseValidateTextContainer from "@/components/hoc/BaseValidateTextContaine
 import UseEditForm from "@/hooks/useEditForm";
 import * as Api from "@/api/api";
 import BaseCardContainer from "../hoc/BaseCardContainer";
+
 import { BigTitle, TitleContainer } from "@/styles/commonStyle";
 
 interface ImgProps {
@@ -15,8 +16,9 @@ interface ImgProps {
 interface ButtonProps {
   width?: string;
 }
-interface UserCardEditProps {
+interface UserInfoEditProps {
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsPsEditing: React.Dispatch<React.SetStateAction<boolean>>;
 }
 const EditInput = css`
   background-color: ${GlobalTheme.colors.lightGray};
@@ -29,9 +31,9 @@ const EditInput = css`
   }
 `;
 
-function UserCardEditForm({ setIsEditing }: UserCardEditProps) {
+function UserInfoEditForm({ setIsEditing, setIsPsEditing }: UserInfoEditProps) {
   const [curUser, setCurUser] = useRecoilState(curUserState);
-  const [isShowPsEdit, setIsShowPsEdit] = useState(false);
+
   const handlerClick = () => {
     setIsEditing(false);
   };
@@ -75,6 +77,7 @@ function UserCardEditForm({ setIsEditing }: UserCardEditProps) {
       <Img img={curUser?.profPic}></Img>
       <InpurForm onSubmit={handleSubmitClick}>
         <InputContainer>
+          닉네임변경
           <UserNickNameIntput
             type="text"
             placeholder="NickName..."
@@ -88,7 +91,9 @@ function UserCardEditForm({ setIsEditing }: UserCardEditProps) {
             </BaseValidateTextContainer>
           )}
         </InputContainer>
+
         <InputContainer>
+          한줄소개 변경
           <UserDescriptionInput
             type="text"
             placeholder="Description..."
@@ -102,7 +107,6 @@ function UserCardEditForm({ setIsEditing }: UserCardEditProps) {
             </BaseValidateTextContainer>
           )}
         </InputContainer>
-
         <ButtonWrapper>
           <Button width="60%" type="submit" disabled={!isValidAll}>
             CONFIRM
@@ -111,7 +115,7 @@ function UserCardEditForm({ setIsEditing }: UserCardEditProps) {
             CANCEL
           </Button>
         </ButtonWrapper>
-        <Button width="60%" onClick={() => setIsShowPsEdit(true)}>
+        <Button width="60%" onClick={() => setIsPsEditing(true)}>
           비밀번호 변경하기
         </Button>
       </InpurForm>
@@ -173,4 +177,4 @@ const Button = styled.button<ButtonProps>`
     transform: translateY(-0.1rem);
   }
 `;
-export default UserCardEditForm;
+export default UserInfoEditForm;
