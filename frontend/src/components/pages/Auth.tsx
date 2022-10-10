@@ -7,6 +7,8 @@ import useLoginForm from "@/hooks/useLoginForm";
 import AuthLogin from "@/components/auth/AuthLogin";
 import AuthReigster from "../auth/AuthRegister";
 import BasePageComponent from "@/components/hoc/BasePageComponent";
+import Modal from "@/components/modal/Modal";
+import useModal from "@/hooks/useModal";
 import { authRegisterRequest, authLoginRequest } from "@/api/authFetcher";
 import { useSetRecoilState } from "recoil";
 import { curUserIdState } from "@/recoil/atoms/authState";
@@ -15,6 +17,12 @@ const TapMenu = ["Sign in", "Registration"];
 const Auth = () => {
   const [tabIndex, setTabIndex] = useState(0);
   const [errMessage, setErrMessage] = useState("");
+  const [
+    isOpenModal,
+    ,
+    handleModalOpenButtonClick,
+    handleModalCloseButtonClick,
+  ] = useModal(false);
 
   const { authFormState, handleAuthFormValueChange } = useRegisterForm({
     email: "",
@@ -45,18 +53,17 @@ const Auth = () => {
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const { email, password } = loginValue;
-    const res = await authLoginRequest("/api/auth/login", {
-      email,
-      password,
-    });
-
-    setCurUserId(res.userId);
-
-    if (res) {
+    try {
+      const res = await authLoginRequest("/api/auth/login", {
+        email,
+        password,
+      });
       setCurUserId(res.userId);
       navigate("/");
+    } catch (error) {
+      setErrMessage("Incorret email or password");
+      handleModalOpenButtonClick();
     }
-    if (!res) setErrMessage("Incorret email or password");
   };
 
   return (
@@ -96,11 +103,9 @@ const Auth = () => {
               onLoginFormChangeEvent={handleLoginFormChange}
               onLoginSubmitEvent={handleLoginSubmit}
               isValid={isValid}
-              errMessage={errMessage}
             />
           ) : (
             <AuthReigster
-              setTabIndex={setTabIndex}
               authFormState={authFormState}
               onRegisterFormValueChaneEvent={handleAuthFormValueChange}
               onRegisterSubmitEvent={handleRegisterSubmit}
@@ -108,6 +113,13 @@ const Auth = () => {
           )}
         </FormContainer>
       </LoginContainer>
+      <Modal
+        isOpenModal={isOpenModal}
+        isAlertModal={true}
+        onModalCancelButtonClickEvent={handleModalCloseButtonClick}
+      >
+        {errMessage}
+      </Modal>
     </BasePageComponent>
   );
 };
@@ -124,7 +136,7 @@ const LoginContainer = styled.div`
   background-color: ${GlobalTheme.colors.white};
   box-shadow: 1px 4px 5px ${GlobalTheme.colors.gray};
   width: 50rem;
-  height: ${(props) => (props.tabIndex === 0 ? "45rem" : "65rem")};
+  height: ${(props) => (props.tabIndex === 0 ? "45rem" : "60rem")};
 `;
 const LoginHeader = styled.div`
   width: 100%;
