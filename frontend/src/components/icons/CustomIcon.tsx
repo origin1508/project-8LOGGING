@@ -1,6 +1,6 @@
 import React from "react";
 import { BsPeopleFill, BsMapFill, BsCalendarDateFill } from "react-icons/bs";
-
+import { VscTriangleDown, VscTriangleUp } from "react-icons/vsc";
 interface CustomIconProps {
   name: string;
   size: string;
@@ -19,6 +19,11 @@ const CustomIcon = ({ name, size, color }: CustomIconProps) => {
       case "date":
         return <BsCalendarDateFill size={size} color={color} />;
 
+      case "toggleDown":
+        return <VscTriangleDown size={size} color={color}></VscTriangleDown>;
+
+      case "toggleUp":
+        return <VscTriangleUp size={size} color={color}></VscTriangleUp>;
       default:
         console.log("Not implemented!");
         return;
