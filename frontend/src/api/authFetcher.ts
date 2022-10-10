@@ -49,6 +49,14 @@ export async function authLoginRequest(
   return datas;
 }
 
+export async function checkDuplicationRequest(
+  endPoint: string,
+  checkData: string
+) {
+  const res = await customAxios.get(endPoint + `/${checkData}`);
+  return res.data.message;
+}
+
 export async function authProfileImageUpdate(
   endPoint: string,
   image: Blob

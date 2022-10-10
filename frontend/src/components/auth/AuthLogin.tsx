@@ -11,7 +11,6 @@ interface AuthLoginProps {
   onLoginFormChangeEvent: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onLoginSubmitEvent: (e: React.FormEvent) => void;
   isValid: ValidationType;
-  errMessage: string;
 }
 
 const AuthLogin = ({
@@ -19,7 +18,6 @@ const AuthLogin = ({
   onLoginFormChangeEvent,
   onLoginSubmitEvent,
   isValid,
-  errMessage,
 }: AuthLoginProps) => {
   const isValidAll = isValid.email && isValid.password;
   return (
@@ -34,7 +32,7 @@ const AuthLogin = ({
         />
         {loginValue.email && !isValid.email && (
           <BaseValidateTextContainer>
-            please check your email
+            Please check your email
           </BaseValidateTextContainer>
         )}
       </BaseIntputContainer>
@@ -48,7 +46,7 @@ const AuthLogin = ({
         />
         {loginValue.password && !isValid.password && (
           <BaseValidateTextContainer>
-            please check your password
+            Please check your password
           </BaseValidateTextContainer>
         )}
       </BaseIntputContainer>
@@ -56,7 +54,6 @@ const AuthLogin = ({
         <AuthLoginButton type="submit" disabled={!isValidAll && true}>
           Sign in
         </AuthLoginButton>
-        <AuthErrorMessage>{errMessage}</AuthErrorMessage>
       </AuthLoginButtonContainer>
     </AuthLoginFormContainer>
   );
@@ -98,9 +95,4 @@ const AuthLoginButton = styled.button`
   cursor: pointer;
 `;
 
-const AuthErrorMessage = styled.div`
-  color: red;
-  font-size: ${GlobalTheme.fontSize.default};
-  margin-top: 3rem;
-`;
 export default AuthLogin;
