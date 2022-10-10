@@ -2,13 +2,20 @@ import React from "react";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import { BaseComponentType } from "@/types/common/baseComponentType";
+import { isTemplateExpression } from "typescript";
 
-const BaseCardContainer = ({ children }: BaseComponentType) => {
-  return <BaseCardContainerStyle>{children}</BaseCardContainerStyle>;
+interface BaseCardContaineProps extends BaseComponentType {
+  width: string;
+}
+
+const BaseCardContainer = ({ children, width }: BaseCardContaineProps) => {
+  return (
+    <BaseCardContainerStyle itemProp={width}>{children}</BaseCardContainerStyle>
+  );
 };
 
 const BaseCardContainerStyle = styled.div`
-  width: 40rem;
+  width: ${(props) => props.itemProp};
   overflow: hidden;
   height: 65rem;
   border-radius: 1rem;
