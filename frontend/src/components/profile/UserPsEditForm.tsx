@@ -14,6 +14,7 @@ import {
 } from "@/styles/commonStyle";
 import Storage from "@/storage/storage";
 import Modal from "../modal/Modal";
+import ValidationUtil from "@/util/validationUtil";
 
 const EditInput = css`
   background-color: ${GlobalTheme.colors.lightGray};
@@ -35,13 +36,24 @@ function UserPsEditForm({ setIsEditing, setIsPsEditing }: UserInfoEditProps) {
   const navigate = useNavigate();
   const [erorrMessage, setErorrMessage] = useState("");
   const [isOppenModal, setIsOpenModal] = useState(false);
-  const [values, handleEditFormChange, isValid] = usePsEditForm({
+  const [values, handleEditFormChange] = usePsEditForm({
     currentPassword: "",
     newPassword: "",
     confirmPassword: "",
   });
+  const isValidCurPassword = ValidationUtil.checkPasswordValidate(
+    values.currentPassword
+  );
+  const isValidNewPassword = ValidationUtil.checkPasswordValidate(
+    values.newPassword
+  );
+
   const isPasswordSame = values.newPassword === values.confirmPassword;
-  const isValidAll = isValid.currentPassword && isValid.newPassword;
+  const isValid = [
+    isValidCurPassword,
+    isValidNewPassword,
+    isPasswordSame,
+  ].every((v) => v === true);
 
   const onModalCancelButtonClickEvent = () => {
     setIsOpenModal(false);
@@ -88,9 +100,9 @@ function UserPsEditForm({ setIsEditing, setIsPsEditing }: UserInfoEditProps) {
             name="newPassword"
             onChange={handleEditFormChange}
           />
-          {values.newPassword && !isValid.newPassword && (
+          {values.newPassword && !isValidNewPassword && (
             <BaseValidateTextContainer>
-              please check new password
+              Special characters and numbers from 8 to 15.
             </BaseValidateTextContainer>
           )}
         </InputContainer>
@@ -114,7 +126,7 @@ function UserPsEditForm({ setIsEditing, setIsPsEditing }: UserInfoEditProps) {
         </InputContainer>
 
         <EditButtonWrapper>
-          <EditButton width="60%" type="submit" disabled={!isValidAll}>
+          <EditButton width="60%" type="submit" disabled={!isValid}>
             CONFIRM
           </EditButton>
           <EditButton width="60%" onClick={() => setIsPsEditing(false)}>

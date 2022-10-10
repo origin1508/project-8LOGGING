@@ -1,6 +1,8 @@
 // 참고: google
 // email 정규식, password 정규식
 
+import { title } from "process";
+
 class ValidationUtil {
   static checkEmailValidate(email: string) {
     const isValid = email
@@ -30,6 +32,11 @@ class ValidationUtil {
 
   static checkChannelTitleValidate(title: string) {
     if (title.length > 15 || title.length === 0) return false;
+    return true;
+  }
+
+  static checkChannelSpecValidate(spec: string) {
+    if (spec.length < 1) return false;
     return true;
   }
 

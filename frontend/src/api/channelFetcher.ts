@@ -2,11 +2,6 @@ import customAxios from "@/util/customAxios";
 import Storage from "@/storage/storage";
 import { ChannelFormInitialType } from "@/types/channel/channelTypes";
 
-const multiFormhHeaders = {
-  "Content-Type": "multipart/form-data",
-  Authorization: `Bearer ${Storage.getToken()}`,
-};
-
 export async function createChannelRequest(
   endPoint: string,
   {
@@ -26,12 +21,20 @@ export async function createChannelRequest(
   formData.append("spec", spec);
   formData.append("image", image as File);
   const res = await customAxios.post(endPoint, formData, {
-    headers: multiFormhHeaders,
+    headers: {
+      "Content-Type": "multipart/form-data",
+      Authorization: `Bearer ${Storage.getToken()}`,
+    },
   });
   return res.data;
 }
 
 export async function currentChannelListRequest(endPoint: string) {
-  const res = await customAxios.get(endPoint);
+  const res = await customAxios.get(endPoint, {
+    headers: {
+      "Content-Type": "aplication/json",
+      Authorization: `Bearer ${Storage.getToken()}`,
+    },
+  });
   return res.data;
 }
