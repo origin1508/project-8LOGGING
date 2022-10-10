@@ -24,14 +24,14 @@ module.exports = {
     }
   },
 
-  async showRecruitChannelList(req, res, next) {
+  async showChannelList(req, res, next) {
     try {
       // status == 0 : 모집 중인 채널
       // status == 1 : 모집 완료된 채널
       // status == 2 : 활동 종료된 채널
-      const { page, perPage, status } = req.query;
+      const { page, status } = req.query;
 
-      const recruitChannels = await channelService.getRecruitChannels(page, perPage, status);
+      const recruitChannels = await channelService.getChannelList(page, status);
 
       res.status(200).json({
         success: true,

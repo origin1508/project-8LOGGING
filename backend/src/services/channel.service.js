@@ -80,7 +80,8 @@ module.exports = {
   //   return recruitChannels
   // },
 
-  async getRecruitChannels(page, perPage, status) {
+  async getChannelList(page, status) {
+    const perPage = 9; // 페이지당 9개씩 보여주기
     const channels = await Channel.find({status}).sort({_id: -1}).skip((page - 1) * perPage).limit(perPage);
     
     return channels;
