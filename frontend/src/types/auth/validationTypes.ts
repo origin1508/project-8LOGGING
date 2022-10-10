@@ -5,4 +5,5 @@ export interface ValidationType {
   password?: boolean;
   newPassword?: boolean;
   confirmPassword?: boolean;
+  currentPassword?: boolean;
 }
