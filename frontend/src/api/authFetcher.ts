@@ -45,6 +45,9 @@ export async function authLoginRequest(
     }
   );
   const { datas } = res.data;
+  customAxios.defaults.headers.common[
+    "Authorization"
+  ] = `Bearer ${datas.token}`;
   Storage.setToken(datas.token);
   return datas;
 }
