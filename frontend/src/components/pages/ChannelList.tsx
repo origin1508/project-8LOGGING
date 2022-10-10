@@ -35,8 +35,8 @@ const ChannelList = () => {
 const ChannelListContainer = styled.div`
   padding: 2rem 1rem 1rem 1rem;
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 2rem;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
 `;
 
 export default ChannelList;

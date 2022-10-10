@@ -1,19 +1,29 @@
-import React from "react";
+import React, { useState } from "react";
 import styled, { css } from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import { curUserState } from "@/recoil/atoms/authState";
 import { useRecoilState } from "recoil";
 import BaseValidateTextContainer from "@/components/hoc/BaseValidateTextContainer";
-import UseEditForm from "@/hooks/useEditForm";
+import useEditForm from "@/hooks/useEditForm";
 import * as Api from "@/api/api";
+import BaseCardContainer from "../hoc/BaseCardContainer";
+
+import {
+  BigTitle,
+  TitleContainer,
+  EditButtonWrapper,
+  EditButton,
+} from "@/styles/commonStyle";
+
 interface ImgProps {
   img?: string;
 }
 interface ButtonProps {
   width?: string;
 }
-interface UserCardEditProps {
+interface UserInfoEditProps {
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsPsEditing: React.Dispatch<React.SetStateAction<boolean>>;
 }
 const EditInput = css`
   background-color: ${GlobalTheme.colors.lightGray};
@@ -26,12 +36,13 @@ const EditInput = css`
   }
 `;
 
-function UserCardEditForm({ setIsEditing }: UserCardEditProps) {
+function UserInfoEditForm({ setIsEditing, setIsPsEditing }: UserInfoEditProps) {
   const [curUser, setCurUser] = useRecoilState(curUserState);
+
   const handlerClick = () => {
     setIsEditing(false);
   };
-  const [values, handleEditFormChange, isValid] = UseEditForm({
+  const [values, handleEditFormChange, isValid] = useEditForm({
     nickname: curUser.nickname,
     description: curUser.description,
   });
@@ -41,19 +52,22 @@ function UserCardEditForm({ setIsEditing }: UserCardEditProps) {
   const handleSubmitClick = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await Api.put(`/api/users/description`, {
-        newDescription: values.description,
-      });
-      const res2 = await Api.put(`/api/users/nickname`, {
+      const res = await Api.put(`/api/users/nickname`, {
         newNickname: values.nickname,
       });
-      const newDescription = res.data.datas.description;
-      const newNickname = res2.data.datas.nickname;
+      const res2 = await Api.put(`/api/users/description`, {
+        newDescription: values.description,
+      });
+
+      const newNickname = res.data.datas.nickname;
+      const newDescription = res2.data.datas.description;
+
       setCurUser({
         ...curUser,
-        description: newDescription,
         nickname: newNickname,
+        description: newDescription,
       });
+
       setIsEditing(false);
     } catch (e) {
       console.log(e);
@@ -61,13 +75,14 @@ function UserCardEditForm({ setIsEditing }: UserCardEditProps) {
   };
 
   return (
-    <EditContainer>
+    <BaseCardContainer>
       <TitleContainer>
-        <Title>EDIT USER INFORMATION</Title>
+        <BigTitle>EDIT USER INFORMATION</BigTitle>
       </TitleContainer>
       <Img img={curUser?.profPic}></Img>
       <InpurForm onSubmit={handleSubmitClick}>
         <InputContainer>
+          닉네임변경
           <UserNickNameIntput
             type="text"
             placeholder="NickName..."
@@ -81,7 +96,9 @@ function UserCardEditForm({ setIsEditing }: UserCardEditProps) {
             </BaseValidateTextContainer>
           )}
         </InputContainer>
+
         <InputContainer>
+          한줄소개 변경
           <UserDescriptionInput
             type="text"
             placeholder="Description..."
@@ -95,43 +112,21 @@ function UserCardEditForm({ setIsEditing }: UserCardEditProps) {
             </BaseValidateTextContainer>
           )}
         </InputContainer>
-
-        <ButtonWrapper>
-          <Button width="60%" type="submit" disabled={!isValidAll}>
+        <EditButtonWrapper>
+          <EditButton width="60%" type="submit" disabled={!isValidAll}>
             CONFIRM
-          </Button>
-          <Button width="60%" onClick={handlerClick}>
+          </EditButton>
+          <EditButton width="60%" onClick={handlerClick}>
             CANCEL
-          </Button>
-        </ButtonWrapper>
-        <Button width="60%">비밀번호 변경하기</Button>
+          </EditButton>
+        </EditButtonWrapper>
+        <EditButton width="60%" onClick={() => setIsPsEditing(true)}>
+          비밀번호 변경하기
+        </EditButton>
       </InpurForm>
-    </EditContainer>
+    </BaseCardContainer>
   );
 }
-
-const EditContainer = styled.div`
-  width: 40rem;
-  height: 65rem;
-  border-radius: 1rem;
-  background-color: white;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-`;
-const TitleContainer = styled.div`
-  padding: 2rem;
-  height: 20%;
-  width: 100%;
-  border-bottom: solid 1px ${GlobalTheme.colors.lightTwoGray};
-  margin-bottom: 2rem;
-`;
-const Title = styled.h1`
-  margin-left: 2rem;
-  font-size: ${GlobalTheme.fontSize.moreBig};
-  font-family: ${GlobalTheme.fontStyle.bold};
-`;
 
 const Img = styled.div<ImgProps>`
   width: 7rem;
@@ -164,27 +159,4 @@ const UserNickNameIntput = styled.input``;
 
 const UserDescriptionInput = styled.input``;
 
-const ButtonWrapper = styled.div`
-  display: flex;
-  gap: 1rem;
-`;
-const Button = styled.button<ButtonProps>`
-  ${GlobalTheme.buttons}
-  background-color:${GlobalTheme.colors.theme};
-  color: ${GlobalTheme.colors.white};
-  width: ${(props) => props.width};
-  font-size: 1.5rem;
-  padding: 1rem 2rem;
-
-  &:hover {
-    transform: translateY(-0.3rem);
-  }
-  &::after {
-    transform: scale(1.5);
-    opacity: 0;
-  }
-  &:active {
-    transform: translateY(-0.1rem);
-  }
-`;
-export default UserCardEditForm;
+export default UserInfoEditForm;

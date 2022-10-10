@@ -4,12 +4,18 @@ import GlobalTheme from "@/styles/theme";
 import { ChannelFormInitialType } from "@/types/channel/channelTypes";
 import BaseIntputContainer from "@/components/hoc/BaseInputContainer";
 import BaseValidateTextContainer from "../hoc/BaseValidateTextContainer";
-import ValidationUtil from "@/util/validationUtil";
+
+interface CardImageProp {
+  backgroundImg: string;
+}
 
 interface ChannelFormCardProps {
   channelForm: ChannelFormInitialType;
   distOptions: Array<string>;
+  channelListData: { [key: string]: Array<string> };
   imagePreview: string | ArrayBuffer | null | any;
+  isValidTitle: boolean;
+  isValidMemberCount: boolean;
   onChannelFormValueChangeEvent: (
     e:
       | React.ChangeEvent<HTMLInputElement>
@@ -19,45 +25,36 @@ interface ChannelFormCardProps {
   onChannelImageUploadClickEvent: (
     e: React.ChangeEvent<HTMLInputElement>
   ) => void;
+  onChangeSelectChangeEvent: (
+    e:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLTextAreaElement>
+      | React.ChangeEvent<HTMLSelectElement>
+  ) => void;
   onChannelFormCreateClickEvent: (e: React.FormEvent) => void;
 }
 
 const ChannelFormCard = ({
   channelForm,
   distOptions,
+  channelListData,
   imagePreview,
+  isValidTitle,
+  isValidMemberCount,
   onChannelFormValueChangeEvent,
   onChannelImageUploadClickEvent,
+  onChangeSelectChangeEvent,
   onChannelFormCreateClickEvent,
 }: ChannelFormCardProps) => {
-  const isValidTitle = ValidationUtil.checkChannelTitleValidate(
-    channelForm.title
-  );
-
-  const isValidMemberCount = ValidationUtil.checkChannelMemberCountValidate(
-    channelForm.memberNum
-  );
-
-  const isValidLocationCity = ValidationUtil.checkChannelLocationCityValidate(
-    channelForm.locationCity
-  );
-
-  const isValid = [isValidTitle, isValidMemberCount, isValidLocationCity].every(
-    (valid) => valid === true
-  );
-
   return (
     <ChannelFormWrapper>
       <ChannelHeaderWrapper>
         <ChannelTitle>CREATE CHANNEL</ChannelTitle>
         <ChannelButtonContainer>
-          <ChannelButton
-            type="submit"
-            disabled={isValid ? false : true}
-            onClick={onChannelFormCreateClickEvent}
-          >
+          <ChannelButton type="submit" onClick={onChannelFormCreateClickEvent}>
             CREATE CHANNEL
           </ChannelButton>
+          <ChannelImageLabel>Image upload</ChannelImageLabel>
           <ChannelImageUploadInput
             type="file"
             onChange={onChannelImageUploadClickEvent}
@@ -66,6 +63,7 @@ const ChannelFormCard = ({
       </ChannelHeaderWrapper>
       <ChannelWrapper>
         <ChannelInputWrapper>
+          <ChannelLabel>Title</ChannelLabel>
           <BaseIntputContainer>
             <ChannelInput
               placeholder="Channel title"
@@ -79,6 +77,7 @@ const ChannelFormCard = ({
               </BaseValidateTextContainer>
             )}
           </BaseIntputContainer>
+          <ChannelLabel>Member count</ChannelLabel>
           <BaseIntputContainer>
             <ChannelInput
               placeholder="Number of recruits"
@@ -93,22 +92,9 @@ const ChannelFormCard = ({
               </BaseValidateTextContainer>
             )}
           </BaseIntputContainer>
-          <BaseIntputContainer>
-            <ChannelInput
-              placeholder="Location city"
-              name="locationCity"
-              value={channelForm.locationCity}
-              onChange={onChannelFormValueChangeEvent}
-            />
-            {!isValidLocationCity && (
-              <BaseValidateTextContainer>
-                Please check your channel location city
-              </BaseValidateTextContainer>
-            )}
-          </BaseIntputContainer>
+          <ChannelLabel>Location</ChannelLabel>
           <BaseIntputContainer>
             <ChannelSelector
-              placeholder="Location district"
               name="locationDist"
               value={channelForm.locationDist}
               onChange={onChannelFormValueChangeEvent}
@@ -117,11 +103,14 @@ const ChannelFormCard = ({
                 <ChannelOption key={dist}>{dist}</ChannelOption>
               ))}
             </ChannelSelector>
+            <ChannelSelector onChange={onChangeSelectChangeEvent}>
+              {channelListData[channelForm.locationDist].map((city) => (
+                <ChannelOption key={city}>{city}</ChannelOption>
+              ))}
+            </ChannelSelector>
           </BaseIntputContainer>
         </ChannelInputWrapper>
-        <ChannelImageBox>
-          <ChannelImage src={imagePreview} />
-        </ChannelImageBox>
+        <ChannelImageBox backgroundImg={imagePreview} />
       </ChannelWrapper>
       <ChannelTextArea
         placeholder="Please enter your channel description"
@@ -135,7 +124,8 @@ const ChannelFormCard = ({
 
 const ChannelFormWrapper = styled.form`
   margin: 0 auto;
-  padding: 1.75rem;
+  margin-top: 2rem;
+  padding: 1.725rem;
   background-color: ${GlobalTheme.colors.white};
   border-radius: 4px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
@@ -159,6 +149,7 @@ const ChannelTitle = styled.p`
 const ChannelWrapper = styled.div`
   display: flex;
   justify-content: space-between;
+  margin-bottom: 1rem;
 `;
 
 const ChannelInputWrapper = styled.div`
@@ -166,8 +157,18 @@ const ChannelInputWrapper = styled.div`
 `;
 
 const ChannelImageUploadInput = styled.input`
-  display: block;
+  display: inline-block;
   padding: 1rem;
+`;
+
+const ChannelImageLabel = styled.label`
+  display: inline-block;
+`;
+
+const ChannelLabel = styled.label`
+  display: block;
+  width: auto;
+  padding-bottom: 1.25rem;
 `;
 
 const ChannelInput = styled.input`
@@ -181,6 +182,7 @@ const ChannelInput = styled.input`
 
 const ChannelSelector = styled.select`
   cursor: pointer;
+  margin-right: 1rem;
   padding: ${GlobalTheme.input.padding};
   border-radius: ${GlobalTheme.input.borderRadius};
   border: ${GlobalTheme.input.border};
@@ -192,17 +194,16 @@ const ChannelOption = styled.option`
   padding: 0.875rem;
 `;
 
-const ChannelImageBox = styled.div`
+const ChannelImageBox = styled.div<CardImageProp>`
+  background-image: url(${(props) => props.backgroundImg});
+  background-size: cover;
+  background-position: center;
   cursor: pointer;
   display: block;
   width: 45%;
-  height: 230px;
+  height: 330px;
   text-align: center;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-`;
-
-const ChannelImage = styled.img`
-  width: auto;
 `;
 
 const ChannelTextArea = styled.textarea`

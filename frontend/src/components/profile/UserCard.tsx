@@ -3,7 +3,8 @@ import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import { curUserState } from "@/recoil/atoms/authState";
 import { useRecoilValue } from "recoil";
-
+import BaseCardContainer from "@/components/hoc/BaseCardContainer";
+import { BigTitle, TitleContainer } from "@/styles/commonStyle";
 interface ImgProps {
   img?: string;
 }
@@ -18,9 +19,9 @@ function UserCard({ setIsEditing }: UserCardProps) {
     setIsEditing(true);
   };
   return (
-    <UserCardContainer>
+    <BaseCardContainer>
       <TitleContainer>
-        <Title>MY PROFILE</Title>
+        <BigTitle>MY PROFILE</BigTitle>
       </TitleContainer>
       <Img img={curUser?.profPic}></Img>
       <InforContainer>
@@ -29,33 +30,9 @@ function UserCard({ setIsEditing }: UserCardProps) {
         <UserDescription>{curUser?.description}</UserDescription>
         <Button onClick={handlerEditClick}>Edit</Button>
       </InforContainer>
-    </UserCardContainer>
+    </BaseCardContainer>
   );
 }
-
-const UserCardContainer = styled.div`
-  width: 40rem;
-  overflow: hidden;
-  height: 65rem;
-  border-radius: 1rem;
-  background-color: white;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-`;
-const TitleContainer = styled.div`
-  padding: 2rem;
-  height: 20%;
-  width: 100%;
-  border-bottom: solid 1px ${GlobalTheme.colors.lightTwoGray};
-  margin-bottom: 2rem;
-`;
-const Title = styled.h1`
-  margin-left: 2rem;
-  font-size: ${GlobalTheme.fontSize.moreBig};
-  font-family: ${GlobalTheme.fontStyle.bold};
-`;
 
 const Img = styled.div<ImgProps>`
   width: 7rem;

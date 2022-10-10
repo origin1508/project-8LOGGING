@@ -3,5 +3,6 @@ export interface ValidationType {
   nickname?: boolean;
   description?: boolean;
   password?: boolean;
+  newPassword?: boolean;
   confirmPassword?: boolean;
 }

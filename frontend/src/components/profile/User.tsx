@@ -1,6 +1,6 @@
 import React from "react";
 import UserCard from "./UserCard";
-import UserEditForm from "./UserEditForm";
+import UserEdit from "./UserEdit";
 import styled from "styled-components";
 
 interface UserProps {
@@ -14,7 +14,7 @@ function User({ isEditing, setIsEditing }: UserProps) {
     <UserContainer>
       <UserCardContainer>
         {isEditing ? (
-          <UserEditForm setIsEditing={setIsEditing} />
+          <UserEdit setIsEditing={setIsEditing} />
         ) : (
           <UserCard setIsEditing={setIsEditing} />
         )}

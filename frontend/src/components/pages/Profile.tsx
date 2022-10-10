@@ -5,7 +5,7 @@ import { curUserState, curUserIdState } from "@/recoil/atoms/authState";
 import User from "../profile/User";
 import ChannelHistory from "../profile/ChannelHistory";
 import BasePageComponent from "@/components/hoc/BasePageComponent";
-import * as Api from "@/api/authFetcher";
+import * as Api from "../../api/api";
 import Storage from "@/storage/storage";
 
 function Profile() {
