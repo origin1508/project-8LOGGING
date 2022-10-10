@@ -7,7 +7,6 @@ import { AuthFormInitialType } from "@/types/auth/authTypes";
 import ValidationUtil from "@/util/validationUtil";
 
 interface Props {
-  setTabIndex: React.Dispatch<React.SetStateAction<number>>;
   authFormState: AuthFormInitialType;
   onRegisterFormValueChaneEvent: (
     e: React.ChangeEvent<HTMLInputElement>
@@ -15,13 +14,7 @@ interface Props {
   onRegisterSubmitEvent: (e: React.FormEvent) => void;
 }
 
-interface RegistrationButtonProps {
-  bgColor?: string;
-  Color?: string;
-}
-
 const AuthReigster: React.FC<Props> = ({
-  setTabIndex,
   authFormState,
   onRegisterFormValueChaneEvent,
   onRegisterSubmitEvent,
@@ -106,13 +99,6 @@ const AuthReigster: React.FC<Props> = ({
         >
           Register
         </RegistrationButton>
-        <RegistrationButton
-          bgColor={GlobalTheme.colors.white}
-          color={GlobalTheme.colors.theme}
-          onClick={() => setTabIndex(0)}
-        >
-          sign in
-        </RegistrationButton>
       </RegistrationButtonContainer>
     </RegistrationFormContainer>
   );
@@ -144,13 +130,13 @@ const RegistrationButtonContainer = styled.div`
   justify-content: center;
   align-items: center;
 `;
-const RegistrationButton = styled.button<RegistrationButtonProps>`
+const RegistrationButton = styled.button`
   ${GlobalTheme.buttons}
   width: 70%;
   line-height: 4rem;
   font-size: ${GlobalTheme.fontSize.littleBig};
-  color: ${(props) => props.color || GlobalTheme.colors.white};
-  background-color: ${(props) => props.bgColor || GlobalTheme.colors.theme};
+  color: ${GlobalTheme.colors.white};
+  background-color: ${GlobalTheme.colors.theme};
   text-align: center;
   cursor: pointer;
   margin-bottom: 2rem;
