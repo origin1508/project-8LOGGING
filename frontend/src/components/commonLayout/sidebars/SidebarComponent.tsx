@@ -33,13 +33,23 @@ const SidebarComponent = () => {
         <LoginButton to="/auth">Login</LoginButton>
       )}
       <MenuContainer>
-        {SidebarData.map((item, index) => {
-          return (
-            <MenuItem key={index}>
-              <MenuLink to={item.path}>{item.title}</MenuLink>
-            </MenuItem>
-          );
-        })}
+        {Storage.getToken()
+          ? SidebarData.map((item, index) => {
+              return (
+                <MenuItem key={index}>
+                  <MenuLink to={item.path}>{item.title}</MenuLink>
+                </MenuItem>
+              );
+            })
+          : SidebarData.filter((item) => !item.loginRequired).map(
+              (item, index) => {
+                return (
+                  <MenuItem key={index}>
+                    <MenuLink to={item.path}>{item.title}</MenuLink>
+                  </MenuItem>
+                );
+              }
+            )}
       </MenuContainer>
       <Channel />
     </SidebarContainer>
