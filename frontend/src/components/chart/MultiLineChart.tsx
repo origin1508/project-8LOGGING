@@ -7,7 +7,7 @@ import { Line } from "react-chartjs-2";
 chartRegistry();
 
 const MultiLineChart = ({ dataName, labels, multiDatas }: ChartProps) => {
-  const options = chartOptions("Korea sea monitor");
+  const options = chartOptions("Korea sea microplastic");
 
   const dataForChartRender = () => {
     const datasetLabel = [
