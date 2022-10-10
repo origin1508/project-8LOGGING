@@ -27,7 +27,28 @@ export const EditButton = styled.button<ButtonProps>`
   background-color:${GlobalTheme.colors.theme};
   color: ${GlobalTheme.colors.white};
   width: ${(props) => props.width};
-  font-size: 1.5rem;
+  font-size: ${GlobalTheme.fontSize.littleBig};
+  padding: 1rem 2rem;
+
+  &:hover {
+    transform: translateY(-0.3rem);
+  }
+  &::after {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+  &:active {
+    transform: translateY(-0.1rem);
+  }
+`;
+
+export const BigButton = styled.button`
+  ${GlobalTheme.buttons}
+  background-color:${GlobalTheme.colors.theme};
+  color: ${GlobalTheme.colors.white};
+  width: ${(props) => props.itemProp};
+  font-size: ${GlobalTheme.fontSize.big};
+  cursor: pointer;
   padding: 1rem 2rem;
 
   &:hover {
