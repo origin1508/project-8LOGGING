@@ -5,7 +5,10 @@ module.exports = {
   async makeChannel(req, res, next) {
     const userId = req.userId;
     // location은 upload middleware 통해서 얻은 imageUrl임을 유의
-    const { location } = req.file; 
+    var location = "https://elice-8seconds.s3.ap-northeast-2.amazonaws.com/1665048675819_ex1.jpeg";
+    if(req.file) {
+      var { location } = req.file;
+    }
     const { title, locationDist, locationCity, memberNum, spec } = req.body;
     try {
       const channelId = await channelService.createChannel(
