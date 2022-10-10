@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import useModal from "@/hooks/useModal";
 import useChannelForm from "@/hooks/useChannelForm";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import ChannelFormCard from "@/components/recruitingChannel/ChannelFormCard";
 import BaseChannelComponent from "@/components/hoc/BaseChannelComponent";
+import Modal from "@/components/modal/Modal";
+import ValidationUtil from "@/util/validationUtil";
 import { createChannelRequest } from "@/api/channelFetcher";
 import { imageResize } from "@/util/imageResizeUtil";
 import { channelListData } from "@/components/recruitingChannel/channelListData";
@@ -15,6 +18,14 @@ const ChannelForm = () => {
   const [imagePreview, setImagePreview] = useState<
     string | ArrayBuffer | null
   >();
+
+  const [
+    isOpenModal,
+    isAccepted,
+    handleModalOpenButtonClick,
+    handleAcceptButtonClick,
+    handleModalCloseButtonClick,
+  ] = useModal(false);
 
   const { channelForm, handleChannelFormValueChange } = useChannelForm({
     title: "",
@@ -27,6 +38,18 @@ const ChannelForm = () => {
   const navigate = useNavigate();
 
   const distOptions = Object.keys(channelListData);
+
+  const { checkChannelTitleValidate, checkChannelMemberCountValidate } =
+    ValidationUtil;
+
+  const isValidTitle = checkChannelTitleValidate(channelForm.title);
+  const isValidMemberCount = checkChannelMemberCountValidate(
+    channelForm.memberNum
+  );
+
+  const isValid = [isValidTitle, isValidMemberCount].every(
+    (valid) => valid === true
+  );
 
   const handleImageUploadClick = async (
     e: React.ChangeEvent<HTMLInputElement>
@@ -54,6 +77,10 @@ const ChannelForm = () => {
 
   const handleChannelFormCreateClick = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isValid) {
+      handleModalOpenButtonClick();
+      return;
+    }
     const { title, locationDist, memberNum, spec } = channelForm;
     const city = !selectedCity
       ? channelListData[channelForm.locationDist][0]
@@ -77,13 +104,21 @@ const ChannelForm = () => {
           channelForm={channelForm}
           distOptions={distOptions}
           channelListData={channelListData}
-          selectedCity={selectedCity}
           imagePreview={imagePreview}
+          isValidTitle={isValidTitle}
+          isValidMemberCount={isValidMemberCount}
           onChannelFormValueChangeEvent={handleChannelFormValueChange}
           onChannelImageUploadClickEvent={handleImageUploadClick}
           onChangeSelectChangeEvent={hanldeSelecCityChange}
           onChannelFormCreateClickEvent={handleChannelFormCreateClick}
         />
+        <Modal
+          isOpenModal={isOpenModal}
+          isAlertModal={true}
+          onModalCancelButtonClickEvent={handleModalCloseButtonClick}
+        >
+          Please check your channel information
+        </Modal>
       </ChannelContainer>
     </BaseChannelComponent>
   );
