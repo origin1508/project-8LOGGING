@@ -8,12 +8,14 @@ interface UserProps {
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
   userId?: string;
   onModalOpenButtonClickEvent: () => void;
+  onDeleteAccountModalOpenClickEvent: () => void;
 }
 
 function User({
   isEditing,
   setIsEditing,
   onModalOpenButtonClickEvent,
+  onDeleteAccountModalOpenClickEvent,
 }: UserProps) {
   return (
     <UserContainer>
@@ -24,7 +26,12 @@ function User({
             onModalOpenButtonClickEvent={onModalOpenButtonClickEvent}
           />
         ) : (
-          <UserCard setIsEditing={setIsEditing} />
+          <UserCard
+            setIsEditing={setIsEditing}
+            onDeleteAccountModalOpenClickEvent={
+              onDeleteAccountModalOpenClickEvent
+            }
+          />
         )}
       </UserCardContainer>
     </UserContainer>

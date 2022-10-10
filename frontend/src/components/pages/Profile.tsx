@@ -5,7 +5,9 @@ import useModal from "@/hooks/useModal";
 import { curUserState, curUserIdState } from "@/recoil/atoms/authState";
 import User from "@/components/profile/User";
 import Modal from "@/components/modal/Modal";
+import DeleteAccountModal from "@/components/modal/Modal";
 import UserImageUpdate from "@/components/profile/UserImageUpdate";
+import UserDeleteAccount from "@/components/profile/UserDeleteAccount";
 import ChannelHistory from "../profile/ChannelHistory";
 import BasePageComponent from "@/components/hoc/BasePageComponent";
 import { authProfileImageUpdate } from "@/api/authFetcher";
@@ -17,6 +19,7 @@ function Profile() {
   const navigate = useNavigate();
   const params = useParams();
   const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [confirmCheck, setConfirmCheck] = useState("");
   const [curUser, setCurUser] = useRecoilState(curUserState);
   const [isFetchCompleted, setIsFetchCompleted] = useState(false);
   const [image, setImage] = useState<Blob>();
@@ -31,6 +34,14 @@ function Profile() {
     handleModalOpenButtonClick,
     handleAcceptButtonClick,
     handleModalCloseButtonClick,
+  ] = useModal(false);
+
+  const [
+    isOpenDeleteAccountlModal,
+    isAcceptedDelete,
+    handleDeleteAccountModalOpenButtonClick,
+    handleAcceptDeleteClick,
+    handleDeleteAccountModalCloseButtonClick,
   ] = useModal(false);
 
   const fetchProfileOwner = async (curUserId: string) => {
@@ -65,6 +76,20 @@ function Profile() {
     }
   };
 
+  const handleDeleteAccountAcceptClick = async () => {
+    if (curUser.email === confirmCheck) {
+      handleAcceptDeleteClick();
+      Storage.clearToken();
+      navigate("/", { replace: true });
+    } else alert("check your email");
+    setConfirmCheck("");
+  };
+
+  const handleDeleteAccountCancelClick = () => {
+    setConfirmCheck("");
+    handleDeleteAccountModalCloseButtonClick();
+  };
+
   useEffect(() => {
     if (!Storage.getToken()) {
       navigate("/auth", { replace: true });
@@ -84,6 +109,9 @@ function Profile() {
       <User
         isEditing={isEditing}
         setIsEditing={setIsEditing}
+        onDeleteAccountModalOpenClickEvent={
+          handleDeleteAccountModalOpenButtonClick
+        }
         onModalOpenButtonClickEvent={handleModalOpenButtonClick}
       />
       <ChannelHistory />
@@ -98,6 +126,16 @@ function Profile() {
           onProfileImageUploadClickEvent={handleProfileImageUploadClick}
         />
       </Modal>
+      <DeleteAccountModal
+        isOpenModal={isOpenDeleteAccountlModal}
+        onModalAcceptButtonClickEvent={handleDeleteAccountAcceptClick}
+        onModalCancelButtonClickEvent={handleDeleteAccountCancelClick}
+      >
+        <UserDeleteAccount
+          confirmCheck={confirmCheck}
+          setConfirmCheck={setConfirmCheck}
+        ></UserDeleteAccount>
+      </DeleteAccountModal>
     </BasePageComponent>
   );
 }
