@@ -150,4 +150,28 @@ module.exports = {
 
     return updatedChannel._id
   },
+
+  async requestEnter(userId, channelId) {
+    // 채널 소유권 확인
+    const channel = await Channel.findById(channelId);
+    if (channel.ownerId==userId) {
+      throw ApiError.badRequest("본인이 개설한 채널에 가입할 수 없습니다.");
+    }    
+
+    // waitList 수정
+    const waitList = await WaitList.findOne({ channelId });
+    if (waitList.waiting.includes(userId)) {
+      throw ApiError.badRequest("이미 가입 신청한 채널입니다.")
+    }
+    await WaitList.findOneAndUpdate( { channelId }, {
+      waiting: [ ...waitList.waiting, userId ]
+    });
+
+    // user waitReqList 수정
+    const user = await User.findById(userId);
+    await User.findByIdAndUpdate(userId, {
+      waitReqList: [ ...user.waitReqList, waitList._id ]
+    });
+
+  },
 };

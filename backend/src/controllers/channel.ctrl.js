@@ -83,4 +83,20 @@ module.exports = {
       next(err);
     }
   },
+
+  async requestChannelEnter(req, res, next) {
+    const userId = req.userId;
+    const channelId = req.params.channelId;
+    try {
+      
+      await channelService.requestEnter(userId, channelId);
+
+      res.status(201).json({
+        success: true,
+        message: "Channel enter request success"
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
 };
