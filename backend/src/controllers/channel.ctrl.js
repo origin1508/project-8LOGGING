@@ -26,7 +26,9 @@ module.exports = {
 
   async showRecruitChannels(req, res, next) {
     try {
-      const recruitChannels = await channelService.getRecruitChannels();
+      const { page, perPage } = req.query;
+
+      const recruitChannels = await channelService.getRecruitChannels(page, perPage);
 
       res.status(200).json({
         success: true,
