@@ -14,6 +14,9 @@ const ChannelList = () => {
   const handleClick = () => {
     navigate("/channels/create");
   };
+  const handleDetailClick = (channelUuid: string) => {
+    navigate(`/channels/${channelUuid}`);
+  };
 
   useEffect(() => {
     (async () => {
@@ -21,7 +24,6 @@ const ChannelList = () => {
       setChannels(datas);
     })();
   }, []);
-
   return (
     <BasePageComponent>
       <ChannelListContiner>
@@ -37,8 +39,10 @@ const ChannelList = () => {
                 key={ch._id}
                 imgUrl={ch.imgUrl}
                 title={ch.title}
+                channelUuid={ch._id}
                 curMemberNum={ch.curMemberNum}
                 locationDist={ch.locationDist}
+                onDetailClickEvent={handleDetailClick}
               />
             ))}
           </CardsContainer>

@@ -6,15 +6,19 @@ import CustomIcon from "@/components/icons/CustomIcon";
 interface ChannelCardPropsType {
   imgUrl: string;
   title: string;
+  channelUuid: string;
   curMemberNum: number;
   locationDist: string;
+  onDetailClickEvent: (channelUuid: string) => void;
 }
 
 function ChannelCard({
   imgUrl,
   title,
+  channelUuid,
   curMemberNum,
   locationDist,
+  onDetailClickEvent,
 }: ChannelCardPropsType) {
   return (
     <CardContainer>
@@ -45,7 +49,13 @@ function ChannelCard({
         </CardInfoList>
         <ButtonContainer>
           <Button>참가하기</Button>
-          <Button>More</Button>
+          <Button
+            onClick={() => {
+              onDetailClickEvent(channelUuid);
+            }}
+          >
+            More
+          </Button>
         </ButtonContainer>
       </CardContent>
     </CardContainer>
