@@ -59,6 +59,29 @@ module.exports = {
     } catch (err) {
       next(err);
     }
+  },
+
+  async checkEmailAuthCode(req, res, next) {
+    const { email, authCode } = req.body;
+    try {
+      const isCorrect = await emailService.checkAuthCode(email, authCode);
+      var message = "";
+      if (isCorrect) {
+        message = "email authCode correct"
+      } else {
+        message = "email authCode incorrect"
+      }
+
+      res.status(201).json({
+        success: isCorrect,
+        status: 201,
+        message
+      })
+    } catch (err) {
+      next(err);
+    }
   }
+
+
 
 };

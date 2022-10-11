@@ -7,5 +7,6 @@ const { authCtrl } = require("../controllers");
 router.post("/login", authCtrl.login);
 router.post("/register", authCtrl.register);
 router.post("/email", authCtrl.sendEmailAuthCode);
+router.delete("/email", authCtrl.checkEmailAuthCode);
 
 module.exports = router;

@@ -39,6 +39,12 @@ module.exports = {
     }
   },
 
+  /**
+   * 이메일 인증 번호 생성
+   * 
+   * @param {String} email 
+   * @returns 
+   */
   async createAuthCode(email) {
     // 인증 번호 생성
     const authCode = Math.random().toString(36).slice(-8);
@@ -56,6 +62,26 @@ module.exports = {
       throw ApiError.badRequest("인증 번호 생성 실패하였습니다.");
     }
   },
+
+  /**
+   * 이메일 인증 번호 확인
+   * 
+   * @param {String} email 
+   * @param {String} authCode 
+   */
+  async checkAuthCode(email, authCode) {
+    try {
+      const emailAuth = await EmailAuth.findOne({ email });
+      if (emailAuth.authCode == authCode) {
+        await EmailAuth.findOneAndDelete({ email });
+        return true
+      } else {
+        return false
+      }
+    } catch (error) {
+      throw ApiError.badRequest("이메일 인증 번호 확인 실패했습니다.")
+    }
+  }
 
 
 
