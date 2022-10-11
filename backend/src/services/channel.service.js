@@ -1,4 +1,5 @@
 const ApiError = require("../utils/ApiError");
+const { sendEmail } = require("../utils/EmailDelivery");
 
 // 모델 불러오기
 const { User, Channel, WaitList } = require("../models");
