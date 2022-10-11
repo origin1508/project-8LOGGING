@@ -75,7 +75,7 @@ const Auth = () => {
     handleModalOpenButtonClick,
   });
 
-  const setCurUserId = useSetRecoilState(curUserIdState);
+  const setLoginUserId = useSetRecoilState(loginUserIdState);
 
   const navigate = useNavigate();
 
