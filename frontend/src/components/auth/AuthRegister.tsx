@@ -49,7 +49,7 @@ const AuthReigster: React.FC<Props> = ({
             onCheckDuplicationEvent("email", e.target.value);
           }}
         />
-        {!isValidEmail && (
+        {authFormState.email && !isValidEmail && (
           <BaseValidateTextContainer>
             Please check your email
           </BaseValidateTextContainer>
@@ -65,7 +65,7 @@ const AuthReigster: React.FC<Props> = ({
             onCheckDuplicationEvent("nickname", e.target.value);
           }}
         />
-        {!isValidNickname && (
+        {authFormState.nickname && !isValidNickname && (
           <BaseValidateTextContainer>
             Please check your nickname
           </BaseValidateTextContainer>
@@ -79,7 +79,7 @@ const AuthReigster: React.FC<Props> = ({
           value={authFormState.password}
           onChange={onRegisterFormValueChaneEvent}
         />
-        {!isValidPassword && (
+        {authFormState.password && !isValidPassword && (
           <BaseValidateTextContainer>
             Special characters and numbers from 8 to 15.
           </BaseValidateTextContainer>
@@ -93,7 +93,7 @@ const AuthReigster: React.FC<Props> = ({
           value={authFormState.confirmPassword}
           onChange={onRegisterFormValueChaneEvent}
         />
-        {!isPasswordSame && (
+        {authFormState.confirmPassword && !isPasswordSame && (
           <BaseValidateTextContainer>
             Please check your password and confirm password
           </BaseValidateTextContainer>
