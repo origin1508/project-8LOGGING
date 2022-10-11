@@ -103,6 +103,15 @@ export async function authVerificationCodeCheck(
   return res.data;
 }
 
+export async function deleteAccountRequest(endPoint: string) {
+  const res = await customAxios.delete(endPoint, {
+    headers: {
+      Authorization: `Bearer ${Storage.getToken()}`,
+    },
+  });
+  return res.data;
+}
+
 export async function get(endpoint: string, params = "") {
   return customAxios.get(endpoint + "/" + params);
 }
