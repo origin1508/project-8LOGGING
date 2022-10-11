@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 
 const ApiError = require("../utils/ApiError");
 
-const { User } = require("../models");
+const { User, EmailAuth } = require("../models");
 
 module.exports = {
   /**
@@ -24,6 +24,12 @@ module.exports = {
     const exUserNickname = await User.findOne({ nickname });
     if (exUserNickname) {
       throw ApiError.badRequest("중복된 닉네임이 존재합니다.");
+    }
+
+    // 이메일 인증 여부 확인
+    const emailAuth = await EmailAuth.findOne({ email });
+    if (emailAuth) {
+      throw ApiError.badRequest("이메일 인증이 완료되지 않았습니다.")
     }
 
     // 비밀번호 암호화
