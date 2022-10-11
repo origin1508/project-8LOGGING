@@ -18,7 +18,7 @@ import {
   authVerificationCodeCheck,
 } from "@/api/authFetcher";
 import { useSetRecoilState } from "recoil";
-import { curUserIdState } from "@/recoil/atoms/authState";
+import { loginUserIdState } from "@/recoil/atoms/authState";
 const TapMenu = ["Sign in", "Registration"];
 
 const Auth = () => {
@@ -103,7 +103,7 @@ const Auth = () => {
         email,
         password,
       });
-      setCurUserId(res.userId);
+      setLoginUserId(res.userId);
       navigate("/", { replace: true });
     } catch (error) {
       setErrMessage("Incorret email or password");
@@ -142,6 +142,7 @@ const Auth = () => {
         setErrMessage(res.message);
       }
     }
+    handleModalOpenButtonClick();
   };
 
   return (

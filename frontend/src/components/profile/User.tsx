@@ -7,12 +7,14 @@ interface UserProps {
   isEditing: boolean;
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
   userId?: string;
+  isEditable?: boolean;
   onModalOpenButtonClickEvent: () => void;
   onDeleteAccountModalOpenClickEvent: () => void;
 }
 
 function User({
   isEditing,
+  isEditable,
   setIsEditing,
   onModalOpenButtonClickEvent,
   onDeleteAccountModalOpenClickEvent,
