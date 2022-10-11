@@ -13,7 +13,7 @@ interface Props {
   ) => void;
   onRegisterSubmitEvent: (e: React.FormEvent) => void;
   onCheckDuplicationEvent: (endPoint: string, checkData: string) => void;
-  onVerifyEmailClickEvent: (
+  onSendVerficationCodeClickEvent: (
     e: React.MouseEvent<HTMLButtonElement>,
     email: string
   ) => void;
@@ -21,6 +21,7 @@ interface Props {
     email: boolean;
     nickname: boolean;
   };
+  isVerifiedEmail: boolean;
 }
 
 const AuthReigster: React.FC<Props> = ({
@@ -28,8 +29,9 @@ const AuthReigster: React.FC<Props> = ({
   onRegisterFormValueChaneEvent,
   onRegisterSubmitEvent,
   onCheckDuplicationEvent,
-  onVerifyEmailClickEvent,
+  onSendVerficationCodeClickEvent,
   isDuplicated,
+  isVerifiedEmail,
 }) => {
   const isValidEmail = ValidationUtil.checkEmailValidate(authFormState.email);
   const isValidNickname = ValidationUtil.checkNicknameValidate(
@@ -47,8 +49,8 @@ const AuthReigster: React.FC<Props> = ({
     isPasswordSame,
     !isDuplicated.email,
     !isDuplicated.nickname,
+    !isVerifiedEmail,
   ].every((v) => v === true);
-  console.log(isDuplicated.email);
   return (
     <RegistrationFormContainer>
       <BaseIntputContainer>
@@ -67,13 +69,15 @@ const AuthReigster: React.FC<Props> = ({
             Please check your email
           </BaseValidateTextContainer>
         )}
-        <EmailCheckButton
+        <EmailVerificationButton
+          isVerifiedEmail={isVerifiedEmail}
           onClick={(e) => {
-            onVerifyEmailClickEvent(e, authFormState.email);
+            onSendVerficationCodeClickEvent(e, authFormState.email);
           }}
+          disabled={!isValidEmail && true}
         >
           Verify
-        </EmailCheckButton>
+        </EmailVerificationButton>
       </BaseIntputContainer>
       <BaseIntputContainer>
         <RegistrationInput
@@ -176,15 +180,22 @@ const RegistrationButton = styled.button`
   }
 `;
 
-const EmailCheckButton = styled.button`
+const EmailVerificationButton = styled.button<{ isVerifiedEmail: boolean }>`
   ${GlobalTheme.buttons}
+  border: 1px solid ${GlobalTheme.colors.theme};
   position: absolute;
   top: 18.5rem;
   font-size: ${GlobalTheme.fontSize.littleBig};
-  color: ${GlobalTheme.colors.white};
-  background-color: ${GlobalTheme.colors.theme};
+  color: ${GlobalTheme.colors.theme};
+  background-color: ${GlobalTheme.colors.white};
   right: 6rem;
   height: 3rem;
+  cursor: pointer;
+  &:disabled {
+    color: ${GlobalTheme.colors.gray};
+    border-color: ${GlobalTheme.colors.gray};
+  }
+  ${(props) => props.isVerifiedEmail && "color: green; border-color: green"}
 `;
 
 export default AuthReigster;
