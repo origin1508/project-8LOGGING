@@ -15,13 +15,12 @@ import {
   checkDuplicationRequest,
 } from "@/api/authFetcher";
 import { useSetRecoilState } from "recoil";
-import { curUserIdState } from "@/recoil/atoms/authState";
+import { loginUserIdState } from "@/recoil/atoms/authState";
 const TapMenu = ["Sign in", "Registration"];
 
 const Auth = () => {
   const [tabIndex, setTabIndex] = useState(0);
   const [errMessage, setErrMessage] = useState("");
-  const [isChecked, setIsChecked] = useState({ email: true, nickname: true });
   const [
     isOpenModal,
     ,
@@ -40,7 +39,7 @@ const Auth = () => {
     email: "",
     password: "",
   });
-  const setCurUserId = useSetRecoilState(curUserIdState);
+  const setLoginUserId = useSetRecoilState(loginUserIdState);
 
   const navigate = useNavigate();
 
@@ -64,7 +63,7 @@ const Auth = () => {
         email,
         password,
       });
-      setCurUserId(res.userId);
+      setLoginUserId(res.userId);
       navigate("/", { replace: true });
     } catch (error) {
       setErrMessage("Incorret email or password");
@@ -73,20 +72,21 @@ const Auth = () => {
   };
 
   const handleCheckDuplication = async (
+    e: React.MouseEvent<HTMLElement>,
     endPoint: string,
     checkData: string
   ) => {
+    e.preventDefault();
     try {
-      if (checkData) {
-        await checkDuplicationRequest(
-          "api/users/validation/duplication/" + endPoint,
-          checkData
-        );
-      }
+      const res = await checkDuplicationRequest(
+        "api/users/validation/duplication/" + endPoint,
+        checkData
+      );
+      setErrMessage(res);
     } catch (error) {
-      setErrMessage(`${endPoint} already exist`);
-      handleModalOpenButtonClick();
+      setErrMessage("Already Exist");
     }
+    handleModalOpenButtonClick();
   };
 
   return (
