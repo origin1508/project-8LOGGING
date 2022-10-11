@@ -39,6 +39,16 @@ export async function currentChannelListRequest(endPoint: string) {
   return res.data;
 }
 
+export async function currentChannelDetailRequest(endPoint: string) {
+  const res = await customAxios.get(endPoint, {
+    headers: {
+      "Content-Type": "aplication/json",
+      Authorization: `Bearer ${Storage.getToken()}`,
+    },
+  });
+  return res.data;
+}
+
 export async function channelEnterRequest(endPoint: string, message: string) {
   const res = await customAxios.put(
     endPoint,
