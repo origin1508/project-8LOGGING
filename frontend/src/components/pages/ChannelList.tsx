@@ -14,6 +14,7 @@ import {
   currentChannelListRequest,
   channelEnterRequest,
 } from "@/api/channelFetcher";
+import CustomIcon from "@/components/icons/CustomIcon";
 
 const ChannelList = () => {
   const [channels, setChannels] = useState<Array<ChannelsType>>([]);
@@ -86,6 +87,18 @@ const ChannelList = () => {
               채널생성하기
             </BigButton>
           </TitleContainer>
+          <Search>
+            <SearchInput type="text" placeholder="Search"></SearchInput>
+            <SearchButton>
+              <CustomIcon name="SeachIcon" size="20" color="black"></CustomIcon>
+            </SearchButton>
+            <Select>
+              <option value="All">All</option>
+              <option value="Title">Title</option>
+              <option value="Regin">Regin</option>
+            </Select>
+          </Search>
+
           <CardsContainer>
             {channels.map((ch) => (
               <ChannelCard
@@ -124,17 +137,19 @@ const ChannelList = () => {
 
 const ChannelListContiner = styled.div`
   display: flex;
+  width: 100%;
   justify-content: center;
   align-itmes: center;
 `;
 const CardsContainer = styled.div`
-  padding-left: 7rem;
+  margin-top: 2rem;
+  padding: 4rem;
   overflow-y: scroll;
   display: flex;
   height: 80%;
   align-itmes: center;
   flex-wrap: wrap;
-  gap: 5rem;
+  gap: 3rem;
 `;
 const TitleContainer = styled.div`
   padding: 3rem 0rem;
@@ -152,5 +167,51 @@ const ChannelListForm = styled.div`
   align-items: center;
   flex-direction: column;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+`;
+
+const Search = styled.form`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+const SearchInput = styled.input`
+  font-family: inherit;
+  font-size: ${GlobalTheme.fontSize.big};
+  color: inherit;
+  background-color: ${GlobalTheme.colors.lightTwoGray};
+  border: none;
+  border-radius: 1rem;
+  padding: 0.7rem 2rem;
+  width: 50%;
+  transition: all 0.2s;
+  margin-right: -3.25rem; // 서치아이콘 인풋위에 올라감
+  box-shadow: 0px 5px 6px -3px rgb(145 158 171 / 20%),
+    0px 9px 12px 1px rgb(145 158 171 / 14%),
+    0px 3px 16px 2px rgb(145 158 171 / 12%);
+`;
+const SearchButton = styled.button`
+  border: none;
+  background: none;
+
+  &:focus {
+    outline: none;
+  }
+  &:active {
+    transform: translateY(2px);
+  }
+`;
+const Select = styled.select`
+  font-size: ${GlobalTheme.fontSize.littleBig};
+  background-color: ${GlobalTheme.colors.lightTwoGray};
+  margin-left: 2rem;
+  height: 4rem;
+  border: none;
+  border-radius: 1rem;
+  padding: 0.7rem 2rem;
+  box-shadow: 0px 5px 6px -3px rgb(145 158 171 / 20%),
+    0px 9px 12px 1px rgb(145 158 171 / 14%),
+    0px 3px 16px 2px rgb(145 158 171 / 12%);
+  padding: 10px;
 `;
 export default ChannelList;
