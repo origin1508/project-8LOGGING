@@ -101,23 +101,23 @@ module.exports = {
     }
   },
 
-  // 유저의 친구 목록 조회
-  async getFollowingList(req, res, next) {
-    const userId = req.userId;
+  // // 유저의 친구 목록 조회
+  // async getFollowingList(req, res, next) {
+  //   const userId = req.userId;
 
-    try {
-      const followingList = await userService.findFollowingList(userId);
+  //   try {
+  //     const followingList = await userService.findFollowingList(userId);
 
-      res.status(200).json({
-        success: true,
-        status: 200,
-        message: "success getting following list",
-        datas: followingList,
-      });
-    } catch (err) {
-      next(err);
-    }
-  },
+  //     res.status(200).json({
+  //       success: true,
+  //       status: 200,
+  //       message: "success getting following list",
+  //       datas: followingList,
+  //     });
+  //   } catch (err) {
+  //     next(err);
+  //   }
+  // },
 
   // 유저 자기소개 수정
   async modifyDescription(req, res, next) {
