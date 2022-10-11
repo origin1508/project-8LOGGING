@@ -49,7 +49,6 @@ const AuthReigster: React.FC<Props> = ({
     isPasswordSame,
     !isDuplicated.email,
     !isDuplicated.nickname,
-    !isVerifiedEmail,
   ].every((v) => v === true);
   return (
     <RegistrationFormContainer>
