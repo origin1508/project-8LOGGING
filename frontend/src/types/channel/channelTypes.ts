@@ -12,6 +12,7 @@ export interface ChannelsType {
   title: string;
   ownerNickname: string;
   locationDist: string;
+  locationCity: string;
   selectedCity: string;
   imgUrl: string;
   memberNum: number;
