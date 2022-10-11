@@ -6,8 +6,10 @@ const GlobalTheme = {
   fontSize: {
     small: "0.8rem",
     default: "1rem",
+    medium: "1.2rem",
     littleBig: "1.5rem",
     big: "2rem",
+    big2: "2.5rem",
     moreBig: "3rem",
     realBig: "4rem",
     hyperBig: "5rem",
