@@ -5,17 +5,19 @@ import CustomIcon from "@/components/icons/CustomIcon";
 
 interface ChannelCardPropsType {
   id: string;
-  imgUrl: string;
+  ownerId: string;
+  img: string;
   title: string;
   curMemberNum: number;
   locationDist: string;
   locationCity: string;
-  onChannelEnterClick: (id: string) => () => void;
+  onChannelEnterClick: (id: string, ownerId: string) => () => void;
 }
 
 function ChannelCard({
   id,
-  imgUrl,
+  ownerId,
+  img,
   title,
   curMemberNum,
   locationDist,
@@ -24,7 +26,7 @@ function ChannelCard({
 }: ChannelCardPropsType) {
   return (
     <CardContainer>
-      <CardImg src={imgUrl} />
+      <CardImg src={img} />
       <CardContent>
         <CardTitle>{title}</CardTitle>
         <CardInfoList>
@@ -51,7 +53,7 @@ function ChannelCard({
           </List>
         </CardInfoList>
         <ButtonContainer>
-          <Button onClick={onChannelEnterClick(id)}>참가하기</Button>
+          <Button onClick={onChannelEnterClick(id, ownerId)}>참가하기</Button>
           <Button>More</Button>
         </ButtonContainer>
       </CardContent>
