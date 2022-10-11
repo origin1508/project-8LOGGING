@@ -68,6 +68,17 @@ export async function authProfileImageUpdate(
   return datas;
 }
 
+export async function getAuthInformationById(endPoint: string, id: string) {
+  const res = await customAxios.get(`${endPoint}/${id}`, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${Storage.getToken()}`,
+    },
+  });
+  const { datas } = res.data;
+  return datas;
+}
+
 export async function get(endpoint: string, params = "") {
   return customAxios.get(endpoint + "/" + params);
 }
