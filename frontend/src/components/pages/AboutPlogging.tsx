@@ -4,13 +4,14 @@ import GlobalTheme from "@/styles/theme";
 import useChartData from "@/hooks/useChartData";
 import BarChart from "@/components/chart/BarChart";
 import MultiLineChart from "@/components/chart/MultiLineChart";
+import Dots from "../../styles/Dots";
 const DIVIDER_HEIGHT = 5;
 const AboutPlogging = () => {
   const outerDivRef: any = useRef();
   const [scrollIndex, setScrollIndex] = useState(1);
 
   useEffect(() => {
-    const wheelHandler = (e: any) => {
+    const wheelHandler = (e: WheelEvent) => {
       e.preventDefault();
       const { deltaY } = e;
       const { scrollTop } = outerDivRef.current; // 스크롤 위쪽 끝부분 위치
@@ -122,6 +123,7 @@ const AboutPlogging = () => {
   return (
     <ChartContainer>
       <Outer ref={outerDivRef}>
+        <Dots scrollIndex={scrollIndex} />
         <AboutWrapper>
           <TitleContainer itemProp="start">
             <AboutTitle>
