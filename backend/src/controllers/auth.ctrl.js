@@ -1,4 +1,4 @@
-const { authService, emailService } = require("../services");
+const { authService, emailService, userService } = require("../services");
 
 module.exports = {
   async login(req, res, next) {
@@ -61,14 +61,7 @@ module.exports = {
   async sendEmailAuthCode(req, res, next) {
     const { email } = req.body;
     try {
-      const authCode = await emailService.createAuthCode(email);
-      const from = '"8LOGGING" <wnsdml0120@gmail.com>';
-      const to = email;
-      const subject = "8LOGGING 회원가입 이메일 인증 번호";
-      const text = `인증번호는 ${authCode} 입니다.`;
-      const html = `인증번호는 <b>${authCode}</b> 입니다.`;
-
-      const emailSent = await emailService.sendEmail(from, to, subject, text, html);
+      await emailService.createAuthCode(email);
 
       res.status(201).json({
         success: true,
