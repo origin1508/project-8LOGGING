@@ -5,7 +5,10 @@ module.exports = {
   async makeChannel(req, res, next) {
     const userId = req.userId;
     // location은 upload middleware 통해서 얻은 imageUrl임을 유의
-    const { location } = req.file; 
+    var location = "https://elice-8seconds.s3.ap-northeast-2.amazonaws.com/1665048675819_ex1.jpeg";
+    if(req.file) {
+      var { location } = req.file;
+    }
     const { title, locationDist, locationCity, memberNum, spec } = req.body;
     try {
       const channelId = await channelService.createChannel(
@@ -14,6 +17,7 @@ module.exports = {
 
       res.status(201).json({
         success: true,
+        status: 201,
         message: "Channel create success.",
         datas: {
           _id: channelId,
@@ -30,6 +34,7 @@ module.exports = {
 
       res.status(200).json({
         success: true,
+        status: 200,
         message: "Channel list load success",
         datas: recruitChannels
       });
@@ -45,6 +50,7 @@ module.exports = {
 
       res.status(200).json({
         success: true,
+        status: 200,
         message: "Channel info load success.",
         datas: channelInfo
       });
@@ -74,6 +80,7 @@ module.exports = {
 
       res.status(201).json({
         success: true,
+        status: 201,
         message: "Channel info change success",
         datas: {
           _id: updatedChannelId,

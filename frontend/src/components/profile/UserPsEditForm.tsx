@@ -1,9 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import BaseCardContainer from "@/components/hoc/BaseCardContainer";
+import { useNavigate } from "react-router-dom";
 import GlobalTheme from "@/styles/theme";
-import { curUserState } from "@/recoil/atoms/authState";
 import styled, { css } from "styled-components";
-import { useRecoilState } from "recoil";
 import usePsEditForm from "@/hooks/usePsEditForm";
 import * as Api from "@/api/api";
 import BaseValidateTextContainer from "@/components/hoc/BaseValidateTextContainer";
@@ -13,6 +12,9 @@ import {
   EditButtonWrapper,
   EditButton,
 } from "@/styles/commonStyle";
+import Storage from "@/storage/storage";
+import Modal from "../modal/Modal";
+import ValidationUtil from "@/util/validationUtil";
 
 const EditInput = css`
   background-color: ${GlobalTheme.colors.lightGray};
@@ -31,37 +33,54 @@ interface UserInfoEditProps {
 }
 
 function UserPsEditForm({ setIsEditing, setIsPsEditing }: UserInfoEditProps) {
-  const [curUser, setCurUser] = useRecoilState(curUserState);
-  const [values, handleEditFormChange, isValid] = usePsEditForm({
+  const navigate = useNavigate();
+  const [erorrMessage, setErorrMessage] = useState("");
+  const [isOppenModal, setIsOpenModal] = useState(false);
+  const [values, handleEditFormChange] = usePsEditForm({
     currentPassword: "",
     newPassword: "",
     confirmPassword: "",
   });
+  const isValidCurPassword = ValidationUtil.checkPasswordValidate(
+    values.currentPassword
+  );
+  const isValidNewPassword = ValidationUtil.checkPasswordValidate(
+    values.newPassword
+  );
+
+  const isPasswordSame = values.newPassword === values.confirmPassword;
+  const isValid = [
+    isValidCurPassword,
+    isValidNewPassword,
+    isPasswordSame,
+  ].every((v) => v === true);
+
+  const onModalCancelButtonClickEvent = () => {
+    setIsOpenModal(false);
+  };
   const handleSubmitClick = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await Api.put(`/api/users/password`, {
+      await Api.put("/api/users/password", {
         currentPassword: values.currentPassword,
         newPassword: values.newPassword,
       });
-      const newPassword = res.data.dats;
-
-      setCurUser({
-        ...curUser,
-        password: newPassword,
-      });
-
+      Storage.clearToken();
       setIsEditing(false);
-    } catch (e) {
-      console.log(e);
+      navigate("/auth", { replace: true });
+    } catch (e: any) {
+      const erorrMessage = e.response.data.message;
+      console.log(erorrMessage);
+      setErorrMessage(erorrMessage);
+      setIsOpenModal(true);
     }
   };
   return (
-    <BaseCardContainer>
+    <BaseCardContainer width="40rem">
       <TitleContainer>
         <BigTitle>Change Password</BigTitle>
       </TitleContainer>
-      <InpurForm>
+      <InpurForm onSubmit={handleSubmitClick}>
         <InputContainer>
           Password
           <UserNickNameIntput
@@ -81,9 +100,9 @@ function UserPsEditForm({ setIsEditing, setIsPsEditing }: UserInfoEditProps) {
             name="newPassword"
             onChange={handleEditFormChange}
           />
-          {values.newPassword && !isValid.newPassword && (
+          {values.newPassword && !isValidNewPassword && (
             <BaseValidateTextContainer>
-              please check new password
+              Special characters and numbers from 8 to 15.
             </BaseValidateTextContainer>
           )}
         </InputContainer>
@@ -97,7 +116,7 @@ function UserPsEditForm({ setIsEditing, setIsPsEditing }: UserInfoEditProps) {
             name="confirmPassword"
             onChange={handleEditFormChange}
           />
-          {values.newPassword !== values.confirmPassword ? (
+          {!isPasswordSame ? (
             <BaseValidateTextContainer>
               비밀번호가 일치하지 않습니다.
             </BaseValidateTextContainer>
@@ -107,7 +126,7 @@ function UserPsEditForm({ setIsEditing, setIsPsEditing }: UserInfoEditProps) {
         </InputContainer>
 
         <EditButtonWrapper>
-          <EditButton width="60%" type="submit">
+          <EditButton width="60%" type="submit" disabled={!isValid}>
             CONFIRM
           </EditButton>
           <EditButton width="60%" onClick={() => setIsPsEditing(false)}>
@@ -115,6 +134,13 @@ function UserPsEditForm({ setIsEditing, setIsPsEditing }: UserInfoEditProps) {
           </EditButton>
         </EditButtonWrapper>
       </InpurForm>
+      <Modal
+        isOpenModal={isOppenModal}
+        isAlertModal={true}
+        onModalCancelButtonClickEvent={onModalCancelButtonClickEvent}
+      >
+        {erorrMessage}
+      </Modal>
     </BaseCardContainer>
   );
 }

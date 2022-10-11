@@ -7,24 +7,9 @@ const usePsEditForm = (
   initialState: PsEditFormInitialType
 ): [
   PsEditFormInitialType,
-  (e: React.ChangeEvent<HTMLInputElement>) => void,
-  ValidationType
+  (e: React.ChangeEvent<HTMLInputElement>) => void
 ] => {
   const [values, setValues] = useState(initialState);
-  const [isValid, setIsValid] = useState({
-    currentPassword: false,
-    newPassword: false,
-    confirmPassword: false,
-  });
-  const { checkPasswordValidate } = ValidationUtil;
-
-  useEffect(() => {
-    setIsValid({
-      currentPassword: checkPasswordValidate(values.currentPassword),
-      newPassword: checkPasswordValidate(values.currentPassword),
-      confirmPassword: checkPasswordValidate(values.currentPassword),
-    });
-  }, [values]);
 
   const handleEditFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -32,7 +17,7 @@ const usePsEditForm = (
     setValues({ ...values, [name]: value });
   };
 
-  return [values, handleEditFormChange, isValid];
+  return [values, handleEditFormChange];
 };
 
 export default usePsEditForm;

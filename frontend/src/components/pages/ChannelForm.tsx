@@ -14,7 +14,7 @@ import { channelListData } from "@/components/recruitingChannel/channelListData"
 
 const ChannelForm = () => {
   const [image, setImage] = useState<Blob>();
-  const [selectedCity, setSelectedCity] = useState<string>("");
+  const [selectedCity, setSelectedCity] = useState<string>("가평군");
   const [imagePreview, setImagePreview] = useState<
     string | ArrayBuffer | null
   >();
@@ -37,17 +37,23 @@ const ChannelForm = () => {
 
   const navigate = useNavigate();
 
-  const distOptions = Object.keys(channelListData);
+  const distOptions = Object.keys(channelListData).sort(
+    (a: string, b: string) => (a < b ? -1 : 1)
+  );
 
-  const { checkChannelTitleValidate, checkChannelMemberCountValidate } =
-    ValidationUtil;
+  const {
+    checkChannelTitleValidate,
+    checkChannelMemberCountValidate,
+    checkChannelSpecValidate,
+  } = ValidationUtil;
 
   const isValidTitle = checkChannelTitleValidate(channelForm.title);
   const isValidMemberCount = checkChannelMemberCountValidate(
     channelForm.memberNum
   );
+  const isValidSpec = checkChannelSpecValidate(channelForm.spec);
 
-  const isValid = [isValidTitle, isValidMemberCount].every(
+  const isValid = [isValidTitle, isValidMemberCount, isValidSpec].every(
     (valid) => valid === true
   );
 
@@ -107,6 +113,7 @@ const ChannelForm = () => {
           imagePreview={imagePreview}
           isValidTitle={isValidTitle}
           isValidMemberCount={isValidMemberCount}
+          isValidSpec={isValidSpec}
           onChannelFormValueChangeEvent={handleChannelFormValueChange}
           onChannelImageUploadClickEvent={handleImageUploadClick}
           onChangeSelectChangeEvent={hanldeSelecCityChange}

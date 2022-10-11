@@ -13,10 +13,12 @@ const GlobalStyle = createGlobalStyle`
         font-family: "eBold";
         src: local("EliceDigitalBaeumOTF_Bold"), url(${EliceDigitalBaeumOTF_Bold}) format('opentype'); 
     }
-    * { 
-        margin: 0; 
-        padding: 0; 
-    } 
+   
+    h1,h2,h3,h4,h5,ul{
+        margin:0;
+        padding:0;
+    }
+  
     html,
     body, 
     #root, 

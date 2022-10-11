@@ -63,7 +63,7 @@ export const ModalImage = styled.img`
 `;
 export const ModalTextContainer = styled.div`
   width: 100%;
-  line-height: 10rem;
+  margin: 3rem 0 3rem 0;
   font-size: ${GlobalTheme.fontSize.moreBig};
 `;
 export const ModalButtonContainer = styled.div`

@@ -2,10 +2,6 @@ import customAxios from "@/util/customAxios";
 import Storage from "@/storage/storage";
 import { AuthFormInitialType } from "@/types/auth/authTypes";
 
-const baseHeaders = {
-  "Content-Type": "application/json",
-};
-
 export async function authRegisterRequest(
   endPoint: string,
   { email, nickname, password }: AuthFormInitialType
@@ -18,7 +14,9 @@ export async function authRegisterRequest(
       password: password,
     },
     {
-      headers: baseHeaders,
+      headers: {
+        "Content-Type": "application/json",
+      },
     }
   );
   const { success } = res.data;
@@ -36,11 +34,37 @@ export async function authLoginRequest(
       password: password,
     },
     {
-      headers: baseHeaders,
+      headers: {
+        "Content-Type": "application/json",
+      },
     }
   );
   const { datas } = res.data;
   Storage.setToken(datas.token);
+  return datas;
+}
+
+export async function checkDuplicationRequest(
+  endPoint: string,
+  checkData: string
+) {
+  const res = await customAxios.get(endPoint + `/${checkData}`);
+  return res.data.message;
+}
+
+export async function authProfileImageUpdate(
+  endPoint: string,
+  image: Blob
+): Promise<string> {
+  const formData = new FormData();
+  formData.append("image", image);
+  const res = await customAxios.put(endPoint, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+      Authorization: `Bearer ${Storage.getToken()}`,
+    },
+  });
+  const { datas } = res.data;
   return datas;
 }
 

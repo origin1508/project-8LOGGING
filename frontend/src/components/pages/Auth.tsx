@@ -1,13 +1,19 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 import GlobalTheme from "@/styles/theme";
 import useRegisterForm from "@/hooks/useRegisterForm";
 import useLoginForm from "@/hooks/useLoginForm";
 import AuthLogin from "@/components/auth/AuthLogin";
 import AuthReigster from "../auth/AuthRegister";
 import BasePageComponent from "@/components/hoc/BasePageComponent";
-import { authRegisterRequest, authLoginRequest } from "@/api/authFetcher";
+import Modal from "@/components/modal/Modal";
+import useModal from "@/hooks/useModal";
+import {
+  authRegisterRequest,
+  authLoginRequest,
+  checkDuplicationRequest,
+} from "@/api/authFetcher";
 import { useSetRecoilState } from "recoil";
 import { curUserIdState } from "@/recoil/atoms/authState";
 const TapMenu = ["Sign in", "Registration"];
@@ -15,6 +21,12 @@ const TapMenu = ["Sign in", "Registration"];
 const Auth = () => {
   const [tabIndex, setTabIndex] = useState(0);
   const [errMessage, setErrMessage] = useState("");
+  const [
+    isOpenModal,
+    ,
+    handleModalOpenButtonClick,
+    handleModalCloseButtonClick,
+  ] = useModal(false);
 
   const { authFormState, handleAuthFormValueChange } = useRegisterForm({
     email: "",
@@ -28,6 +40,7 @@ const Auth = () => {
     password: "",
   });
   const setCurUserId = useSetRecoilState(curUserIdState);
+
   const navigate = useNavigate();
 
   const handleRegisterSubmit = async (e: React.FormEvent) => {
@@ -45,18 +58,35 @@ const Auth = () => {
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const { email, password } = loginValue;
-    const res = await authLoginRequest("/api/auth/login", {
-      email,
-      password,
-    });
-
-    setCurUserId(res.userId);
-
-    if (res) {
+    try {
+      const res = await authLoginRequest("/api/auth/login", {
+        email,
+        password,
+      });
       setCurUserId(res.userId);
-      navigate("/");
+      navigate("/", { replace: true });
+    } catch (error) {
+      setErrMessage("Incorret email or password");
+      handleModalOpenButtonClick();
     }
-    if (!res) setErrMessage("Incorret email or password");
+  };
+
+  const handleCheckDuplication = async (
+    e: React.MouseEvent<HTMLElement>,
+    endPoint: string,
+    checkData: string
+  ) => {
+    e.preventDefault();
+    try {
+      const res = await checkDuplicationRequest(
+        "api/users/validation/duplication/" + endPoint,
+        checkData
+      );
+      setErrMessage(res);
+    } catch (error) {
+      setErrMessage("Already Exist");
+    }
+    handleModalOpenButtonClick();
   };
 
   return (
@@ -70,6 +100,7 @@ const Auth = () => {
                 <Tab
                   onClick={() => {
                     setTabIndex(index);
+                    setErrMessage("");
                   }}
                   key={index}
                   style={{
@@ -96,18 +127,24 @@ const Auth = () => {
               onLoginFormChangeEvent={handleLoginFormChange}
               onLoginSubmitEvent={handleLoginSubmit}
               isValid={isValid}
-              errMessage={errMessage}
             />
           ) : (
             <AuthReigster
-              setTabIndex={setTabIndex}
               authFormState={authFormState}
               onRegisterFormValueChaneEvent={handleAuthFormValueChange}
               onRegisterSubmitEvent={handleRegisterSubmit}
+              onCheckDuplicationEvent={handleCheckDuplication}
             />
           )}
         </FormContainer>
       </LoginContainer>
+      <Modal
+        isOpenModal={isOpenModal}
+        isAlertModal={true}
+        onModalCancelButtonClickEvent={handleModalCloseButtonClick}
+      >
+        {errMessage}
+      </Modal>
     </BasePageComponent>
   );
 };
@@ -124,7 +161,7 @@ const LoginContainer = styled.div`
   background-color: ${GlobalTheme.colors.white};
   box-shadow: 1px 4px 5px ${GlobalTheme.colors.gray};
   width: 50rem;
-  height: ${(props) => (props.tabIndex === 0 ? "45rem" : "65rem")};
+  height: ${(props) => (props.tabIndex === 0 ? "45rem" : "60rem")};
 `;
 const LoginHeader = styled.div`
   width: 100%;

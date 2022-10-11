@@ -6,16 +6,17 @@ import BaseIntputContainer from "@/components/hoc/BaseInputContainer";
 import BaseValidateTextContainer from "../hoc/BaseValidateTextContainer";
 
 interface CardImageProp {
-  backgroundImg: string;
+  backgroundImg?: string;
 }
 
 interface ChannelFormCardProps {
   channelForm: ChannelFormInitialType;
   distOptions: Array<string>;
   channelListData: { [key: string]: Array<string> };
-  imagePreview: string | ArrayBuffer | null | any;
+  imagePreview: string | ArrayBuffer | FileReader | null | undefined;
   isValidTitle: boolean;
   isValidMemberCount: boolean;
+  isValidSpec: boolean;
   onChannelFormValueChangeEvent: (
     e:
       | React.ChangeEvent<HTMLInputElement>
@@ -41,6 +42,7 @@ const ChannelFormCard = ({
   imagePreview,
   isValidTitle,
   isValidMemberCount,
+  isValidSpec,
   onChannelFormValueChangeEvent,
   onChannelImageUploadClickEvent,
   onChangeSelectChangeEvent,
@@ -104,13 +106,15 @@ const ChannelFormCard = ({
               ))}
             </ChannelSelector>
             <ChannelSelector onChange={onChangeSelectChangeEvent}>
-              {channelListData[channelForm.locationDist].map((city) => (
-                <ChannelOption key={city}>{city}</ChannelOption>
-              ))}
+              {channelListData[channelForm.locationDist]
+                .sort((a, b) => (a < b ? -1 : 1))
+                .map((city) => (
+                  <ChannelOption key={city}>{city}</ChannelOption>
+                ))}
             </ChannelSelector>
           </BaseIntputContainer>
         </ChannelInputWrapper>
-        <ChannelImageBox backgroundImg={imagePreview} />
+        <ChannelImageBox backgroundImg={imagePreview as string} />
       </ChannelWrapper>
       <ChannelTextArea
         placeholder="Please enter your channel description"
@@ -118,6 +122,11 @@ const ChannelFormCard = ({
         value={channelForm.spec}
         onChange={onChannelFormValueChangeEvent}
       />
+      {!isValidSpec && (
+        <BaseValidateTextContainer>
+          Please check your channel description
+        </BaseValidateTextContainer>
+      )}
     </ChannelFormWrapper>
   );
 };

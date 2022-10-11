@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import styled, { css } from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import { curUserState } from "@/recoil/atoms/authState";
@@ -18,12 +18,11 @@ import {
 interface ImgProps {
   img?: string;
 }
-interface ButtonProps {
-  width?: string;
-}
+
 interface UserInfoEditProps {
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
   setIsPsEditing: React.Dispatch<React.SetStateAction<boolean>>;
+  onModalOpenButtonClickEvent: () => void;
 }
 const EditInput = css`
   background-color: ${GlobalTheme.colors.lightGray};
@@ -36,7 +35,11 @@ const EditInput = css`
   }
 `;
 
-function UserInfoEditForm({ setIsEditing, setIsPsEditing }: UserInfoEditProps) {
+function UserInfoEditForm({
+  setIsEditing,
+  setIsPsEditing,
+  onModalOpenButtonClickEvent,
+}: UserInfoEditProps) {
   const [curUser, setCurUser] = useRecoilState(curUserState);
 
   const handlerClick = () => {
@@ -52,10 +55,10 @@ function UserInfoEditForm({ setIsEditing, setIsPsEditing }: UserInfoEditProps) {
   const handleSubmitClick = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await Api.put(`/api/users/nickname`, {
+      const res = await Api.put("/api/users/nickname", {
         newNickname: values.nickname,
       });
-      const res2 = await Api.put(`/api/users/description`, {
+      const res2 = await Api.put("/api/users/description", {
         newDescription: values.description,
       });
 
@@ -75,11 +78,11 @@ function UserInfoEditForm({ setIsEditing, setIsPsEditing }: UserInfoEditProps) {
   };
 
   return (
-    <BaseCardContainer>
+    <BaseCardContainer width="40rem">
       <TitleContainer>
         <BigTitle>EDIT USER INFORMATION</BigTitle>
       </TitleContainer>
-      <Img img={curUser?.profPic}></Img>
+      <Img img={curUser?.profPic} onClick={onModalOpenButtonClickEvent}></Img>
       <InpurForm onSubmit={handleSubmitClick}>
         <InputContainer>
           닉네임변경
@@ -120,7 +123,11 @@ function UserInfoEditForm({ setIsEditing, setIsPsEditing }: UserInfoEditProps) {
             CANCEL
           </EditButton>
         </EditButtonWrapper>
-        <EditButton width="60%" onClick={() => setIsPsEditing(true)}>
+        <EditButton
+          width="60%"
+          type="button"
+          onClick={() => setIsPsEditing(true)}
+        >
           비밀번호 변경하기
         </EditButton>
       </InpurForm>
@@ -131,6 +138,7 @@ function UserInfoEditForm({ setIsEditing, setIsPsEditing }: UserInfoEditProps) {
 const Img = styled.div<ImgProps>`
   width: 7rem;
   height: 7rem;
+  cursor: pointer;
   background-image: url(${(props) => props.img});
   background-size: cover;
   border-radius: 100%;

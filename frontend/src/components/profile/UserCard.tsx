@@ -10,16 +10,20 @@ interface ImgProps {
 }
 interface UserCardProps {
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
+  onDeleteAccountModalOpenClickEvent: () => void;
 }
 
-function UserCard({ setIsEditing }: UserCardProps) {
+function UserCard({
+  setIsEditing,
+  onDeleteAccountModalOpenClickEvent,
+}: UserCardProps) {
   const curUser = useRecoilValue(curUserState);
 
   const handlerEditClick = () => {
     setIsEditing(true);
   };
   return (
-    <BaseCardContainer>
+    <BaseCardContainer width="40rem">
       <TitleContainer>
         <BigTitle>MY PROFILE</BigTitle>
       </TitleContainer>
@@ -29,6 +33,9 @@ function UserCard({ setIsEditing }: UserCardProps) {
         <UserEmail>{curUser?.email}</UserEmail>
         <UserDescription>{curUser?.description}</UserDescription>
         <Button onClick={handlerEditClick}>Edit</Button>
+        <Button onClick={onDeleteAccountModalOpenClickEvent}>
+          Delete Account
+        </Button>
       </InforContainer>
     </BaseCardContainer>
   );
