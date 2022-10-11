@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import GlobalTheme from "@/styles/theme";
 import useRegisterForm from "@/hooks/useRegisterForm";
 import useLoginForm from "@/hooks/useLoginForm";
+import useCheckDuplication from "@/hooks/useCheckDuplication";
 import AuthLogin from "@/components/auth/AuthLogin";
 import AuthReigster from "../auth/AuthRegister";
 import AuthEmailCheck from "@/components/auth/AuthEmailCheck";
@@ -24,7 +25,6 @@ const Auth = () => {
   const [tabIndex, setTabIndex] = useState(0);
   const [errMessage, setErrMessage] = useState("");
   const [isVerifiedEmail, setIsVerifiedEmail] = useState(false);
-  const [isDuplicated, setIsDuplicated] = useState("");
   const [
     isOpenModal,
     ,
@@ -50,6 +50,12 @@ const Auth = () => {
     email: "",
     password: "",
   });
+
+  const { isDuplicated, handleCheckDuplication } = useCheckDuplication({
+    setErrMessage,
+    handleModalOpenButtonClick,
+  });
+
   const setCurUserId = useSetRecoilState(curUserIdState);
 
   const navigate = useNavigate();
@@ -78,23 +84,6 @@ const Auth = () => {
       navigate("/", { replace: true });
     } catch (error) {
       setErrMessage("Incorret email or password");
-      handleModalOpenButtonClick();
-    }
-  };
-
-  const handleCheckDuplication = async (
-    endPoint: string,
-    checkData: string
-  ) => {
-    try {
-      if (checkData) {
-        await checkDuplicationRequest(
-          "api/users/validation/duplication/" + endPoint,
-          checkData
-        );
-      }
-    } catch (error) {
-      setErrMessage(`${endPoint} already exist`);
       handleModalOpenButtonClick();
     }
   };
@@ -154,6 +143,7 @@ const Auth = () => {
               onRegisterSubmitEvent={handleRegisterSubmit}
               onCheckDuplicationEvent={handleCheckDuplication}
               onVerifyEmailClickEvent={handleVerifyEmailClick}
+              isDuplicated={isDuplicated}
             />
           )}
         </FormContainer>
