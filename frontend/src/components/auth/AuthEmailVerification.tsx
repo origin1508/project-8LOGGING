@@ -4,17 +4,23 @@ import GlobalTheme from "@/styles/theme";
 import BaseValidateTextContainer from "@/components/hoc/BaseValidateTextContainer";
 
 interface Props {
+  verificationCode: string;
   setVerificationCode: React.Dispatch<React.SetStateAction<string>>;
   errMessage: string;
 }
 
-const AuthEmailVerification = ({ setVerificationCode, errMessage }: Props) => {
+const AuthEmailVerification = ({
+  verificationCode,
+  setVerificationCode,
+  errMessage,
+}: Props) => {
   return (
     <EmailVerificationContainer>
       <Title>Email Verification</Title>
       <Text>Please enter the verification code sent to email</Text>
       <CodeInput
         placeholder="enter code"
+        value={verificationCode}
         onChange={(e) => {
           setVerificationCode(e.target.value);
         }}

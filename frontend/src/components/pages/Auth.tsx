@@ -61,6 +61,7 @@ const Auth = () => {
       email: "",
       password: "",
     });
+    setVerificationCode("");
   };
 
   const [loginValue, handleLoginFormChange, isValid, setLoginValue] =
@@ -126,6 +127,7 @@ const Auth = () => {
   const handleEmailVerificationCheck = async (
     e: React.MouseEvent<HTMLButtonElement>
   ) => {
+    e.preventDefault();
     const { email } = authFormState;
     if (verificationCode) {
       const res = await authVerificationCodeCheck(
@@ -206,11 +208,12 @@ const Auth = () => {
         isOpenModal={isOpenVerifyEmailModal}
         onModalAcceptButtonClickEvent={handleEmailVerificationCheck}
         onModalCancelButtonClickEvent={() => {
+          setVerificationCode("");
           handleEmailVerificationModalCloseButtonClick();
-          setErrMessage("");
         }}
       >
         <AuthEmailVerification
+          verificationCode={verificationCode}
           setVerificationCode={setVerificationCode}
           errMessage={errMessage}
         />
