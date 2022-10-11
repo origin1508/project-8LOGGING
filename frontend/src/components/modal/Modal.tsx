@@ -6,7 +6,9 @@ interface ModalProps extends BaseComponentType {
   isOpenModal: boolean;
   isAlertModal?: boolean;
   isShowImage?: boolean;
-  onModalAcceptButtonClickEvent?: () => void;
+  onModalAcceptButtonClickEvent?:
+    | (() => void)
+    | ((e: React.MouseEvent<HTMLButtonElement>) => Promise<void>);
   onModalCancelButtonClickEvent: () => void;
 }
 
