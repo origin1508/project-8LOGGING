@@ -141,6 +141,7 @@ const Auth = () => {
       <Modal
         isOpenModal={isOpenModal}
         isAlertModal={true}
+        isShowImage={true}
         onModalCancelButtonClickEvent={handleModalCloseButtonClick}
       >
         {errMessage}
