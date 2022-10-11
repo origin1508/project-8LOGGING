@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import GlobalTheme from "@/styles/theme";
@@ -40,15 +40,8 @@ const Auth = () => {
     handleEmailVerificationAcceptButtonClick,
     handleEmailVerificationModalCloseButtonClick,
   ] = useModal(false);
-  const { authFormState, handleAuthFormValueChange, setAuthForm } =
-    useRegisterForm({
-      email: "",
-      nickname: "",
-      password: "",
-      confirmPassword: "",
-    });
 
-  const stateInitialize = () => {
+  useEffect(() => {
     setAuthForm({
       email: "",
       nickname: "",
@@ -62,7 +55,15 @@ const Auth = () => {
       password: "",
     });
     setVerificationCode("");
-  };
+  }, [tabIndex]);
+
+  const { authFormState, handleAuthFormValueChange, setAuthForm } =
+    useRegisterForm({
+      email: "",
+      nickname: "",
+      password: "",
+      confirmPassword: "",
+    });
 
   const [loginValue, handleLoginFormChange, isValid, setLoginValue] =
     useLoginForm({
@@ -155,7 +156,6 @@ const Auth = () => {
                 <Tab
                   onClick={() => {
                     setTabIndex(index);
-                    stateInitialize();
                   }}
                   key={index}
                   style={{
