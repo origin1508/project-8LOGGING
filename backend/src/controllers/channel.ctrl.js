@@ -93,7 +93,7 @@ module.exports = {
 
   async requestChannelEnter(req, res, next) {
     const userId = req.userId;
-    const channelId = req.params.channelId;
+    const { channelId } = req.body;
     try {
       
       await channelService.requestEnter(userId, channelId);
