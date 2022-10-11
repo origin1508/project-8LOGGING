@@ -6,6 +6,7 @@ import useRegisterForm from "@/hooks/useRegisterForm";
 import useLoginForm from "@/hooks/useLoginForm";
 import AuthLogin from "@/components/auth/AuthLogin";
 import AuthReigster from "../auth/AuthRegister";
+import AuthEmailCheck from "@/components/auth/AuthEmailCheck";
 import BasePageComponent from "@/components/hoc/BasePageComponent";
 import Modal from "@/components/modal/Modal";
 import useModal from "@/hooks/useModal";
@@ -13,6 +14,7 @@ import {
   authRegisterRequest,
   authLoginRequest,
   checkDuplicationRequest,
+  authVerifyEmailCodeSend,
 } from "@/api/authFetcher";
 import { useSetRecoilState } from "recoil";
 import { curUserIdState } from "@/recoil/atoms/authState";
@@ -21,14 +23,22 @@ const TapMenu = ["Sign in", "Registration"];
 const Auth = () => {
   const [tabIndex, setTabIndex] = useState(0);
   const [errMessage, setErrMessage] = useState("");
-  const [isChecked, setIsChecked] = useState({ email: true, nickname: true });
+  const [isVerifiedEmail, setIsVerifiedEmail] = useState(false);
+  const [isDuplicated, setIsDuplicated] = useState("");
   const [
     isOpenModal,
     ,
     handleModalOpenButtonClick,
+    ,
     handleModalCloseButtonClick,
   ] = useModal(false);
-
+  const [
+    isOpenVerifyEmailModal,
+    ,
+    handleVerifyEmailModalOpenButtonClick,
+    handleVerifyEmailAcceptButtonClick,
+    handleVerifyEmailModalCloseButtonClick,
+  ] = useModal(false);
   const { authFormState, handleAuthFormValueChange } = useRegisterForm({
     email: "",
     nickname: "",
@@ -89,6 +99,15 @@ const Auth = () => {
     }
   };
 
+  const handleVerifyEmailClick = async (
+    e: React.MouseEvent<HTMLButtonElement>,
+    email: string
+  ) => {
+    e.preventDefault();
+    const res = await authVerifyEmailCodeSend(email);
+    handleVerifyEmailModalOpenButtonClick();
+  };
+
   return (
     <BasePageComponent>
       <LoginContainer tabIndex={tabIndex}>
@@ -134,6 +153,7 @@ const Auth = () => {
               onRegisterFormValueChaneEvent={handleAuthFormValueChange}
               onRegisterSubmitEvent={handleRegisterSubmit}
               onCheckDuplicationEvent={handleCheckDuplication}
+              onVerifyEmailClickEvent={handleVerifyEmailClick}
             />
           )}
         </FormContainer>
@@ -145,6 +165,13 @@ const Auth = () => {
         onModalCancelButtonClickEvent={handleModalCloseButtonClick}
       >
         {errMessage}
+      </Modal>
+      <Modal
+        isOpenModal={isOpenVerifyEmailModal}
+        onModalAcceptButtonClickEvent={handleVerifyEmailAcceptButtonClick}
+        onModalCancelButtonClickEvent={handleVerifyEmailModalCloseButtonClick}
+      >
+        <AuthEmailCheck />
       </Modal>
     </BasePageComponent>
   );

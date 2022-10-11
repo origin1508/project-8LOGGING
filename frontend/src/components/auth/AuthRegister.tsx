@@ -13,6 +13,10 @@ interface Props {
   ) => void;
   onRegisterSubmitEvent: (e: React.FormEvent) => void;
   onCheckDuplicationEvent: (endPoint: string, checkData: string) => void;
+  onVerifyEmailClickEvent: (
+    e: React.MouseEvent<HTMLButtonElement>,
+    email: string
+  ) => void;
 }
 
 const AuthReigster: React.FC<Props> = ({
@@ -20,6 +24,7 @@ const AuthReigster: React.FC<Props> = ({
   onRegisterFormValueChaneEvent,
   onRegisterSubmitEvent,
   onCheckDuplicationEvent,
+  onVerifyEmailClickEvent,
 }) => {
   const isValidEmail = ValidationUtil.checkEmailValidate(authFormState.email);
   const isValidNickname = ValidationUtil.checkNicknameValidate(
@@ -54,6 +59,13 @@ const AuthReigster: React.FC<Props> = ({
             Please check your email
           </BaseValidateTextContainer>
         )}
+        <EmailCheckButton
+          onClick={(e) => {
+            onVerifyEmailClickEvent(e, authFormState.email);
+          }}
+        >
+          Verify
+        </EmailCheckButton>
       </BaseIntputContainer>
       <BaseIntputContainer>
         <RegistrationInput
@@ -148,6 +160,17 @@ const RegistrationButton = styled.button`
   text-align: center;
   cursor: pointer;
   margin-bottom: 2rem;
+`;
+
+const EmailCheckButton = styled.button`
+  ${GlobalTheme.buttons}
+  position: absolute;
+  top: 18.5rem;
+  font-size: ${GlobalTheme.fontSize.littleBig};
+  color: ${GlobalTheme.colors.white};
+  background-color: ${GlobalTheme.colors.theme};
+  right: 6rem;
+  height: 3rem;
 `;
 
 export default AuthReigster;
