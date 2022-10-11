@@ -16,6 +16,7 @@ interface ChannelFormCardProps {
   imagePreview: string | ArrayBuffer | FileReader | null | undefined;
   isValidTitle: boolean;
   isValidMemberCount: boolean;
+  isValidSpec: boolean;
   onChannelFormValueChangeEvent: (
     e:
       | React.ChangeEvent<HTMLInputElement>
@@ -41,6 +42,7 @@ const ChannelFormCard = ({
   imagePreview,
   isValidTitle,
   isValidMemberCount,
+  isValidSpec,
   onChannelFormValueChangeEvent,
   onChannelImageUploadClickEvent,
   onChangeSelectChangeEvent,
@@ -120,6 +122,11 @@ const ChannelFormCard = ({
         value={channelForm.spec}
         onChange={onChannelFormValueChangeEvent}
       />
+      {!isValidSpec && (
+        <BaseValidateTextContainer>
+          Please check your channel description
+        </BaseValidateTextContainer>
+      )}
     </ChannelFormWrapper>
   );
 };

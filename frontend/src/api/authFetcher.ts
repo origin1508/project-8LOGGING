@@ -2,15 +2,6 @@ import customAxios from "@/util/customAxios";
 import Storage from "@/storage/storage";
 import { AuthFormInitialType } from "@/types/auth/authTypes";
 
-const baseHeaders = {
-  "Content-Type": "application/json",
-};
-
-const multiFormhHeaders = {
-  "Content-Type": "multipart/form-data",
-  Authorization: `Bearer ${Storage.getToken()}`,
-};
-
 export async function authRegisterRequest(
   endPoint: string,
   { email, nickname, password }: AuthFormInitialType
@@ -23,7 +14,9 @@ export async function authRegisterRequest(
       password: password,
     },
     {
-      headers: baseHeaders,
+      headers: {
+        "Content-Type": "application/json",
+      },
     }
   );
   const { success } = res.data;
@@ -41,7 +34,9 @@ export async function authLoginRequest(
       password: password,
     },
     {
-      headers: baseHeaders,
+      headers: {
+        "Content-Type": "application/json",
+      },
     }
   );
   const { datas } = res.data;
@@ -64,7 +59,10 @@ export async function authProfileImageUpdate(
   const formData = new FormData();
   formData.append("image", image);
   const res = await customAxios.put(endPoint, formData, {
-    headers: multiFormhHeaders,
+    headers: {
+      "Content-Type": "multipart/form-data",
+      Authorization: `Bearer ${Storage.getToken()}`,
+    },
   });
   const { datas } = res.data;
   return datas;

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 import GlobalTheme from "@/styles/theme";
 import useRegisterForm from "@/hooks/useRegisterForm";
 import useLoginForm from "@/hooks/useLoginForm";
@@ -41,6 +41,7 @@ const Auth = () => {
     password: "",
   });
   const setCurUserId = useSetRecoilState(curUserIdState);
+
   const navigate = useNavigate();
 
   const handleRegisterSubmit = async (e: React.FormEvent) => {
@@ -64,7 +65,7 @@ const Auth = () => {
         password,
       });
       setCurUserId(res.userId);
-      navigate("/");
+      navigate("/", { replace: true });
     } catch (error) {
       setErrMessage("Incorret email or password");
       handleModalOpenButtonClick();
