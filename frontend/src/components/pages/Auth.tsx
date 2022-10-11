@@ -127,16 +127,18 @@ const Auth = () => {
     e: React.MouseEvent<HTMLButtonElement>
   ) => {
     const { email } = authFormState;
-    const res = await authVerificationCodeCheck(
-      "api/auth/email",
-      email,
-      verificationCode
-    );
-    if (res.success) {
-      setIsVerifiedEmail(true);
-      handleEmailVerificationAcceptButtonClick();
-    } else {
-      setErrMessage(res.message);
+    if (verificationCode) {
+      const res = await authVerificationCodeCheck(
+        "api/auth/email",
+        email,
+        verificationCode
+      );
+      if (res.success) {
+        setIsVerifiedEmail(true);
+        handleEmailVerificationAcceptButtonClick();
+      } else {
+        setErrMessage(res.message);
+      }
     }
   };
 
