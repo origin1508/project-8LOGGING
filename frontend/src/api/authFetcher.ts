@@ -79,6 +79,13 @@ export async function getAuthInformationById(endPoint: string, id: string) {
   return datas;
 }
 
+export async function authVerifyEmailCodeSend(email: string) {
+  const res = await customAxios.post("/api/auth/email", {
+    email: email,
+  });
+  return res.data;
+}
+
 export async function get(endpoint: string, params = "") {
   return customAxios.get(endpoint + "/" + params);
 }
