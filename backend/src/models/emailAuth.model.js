@@ -1,20 +1,15 @@
 const { Schema } = require("mongoose");
 
-const emailAuthSchema = new Schema(
+const EmailAuthSchema = new Schema(
   {
     email: {
       type: String,
       required: true,
       unique: true
     },
-    ownerId: {
+    authCode: {
       type: String,
       required: true
-    },
-    waiting: {
-      type: Array,
-      required: false,
-      default: []
     }
   },
   {
@@ -22,4 +17,4 @@ const emailAuthSchema = new Schema(
   }
 );
 
-module.exports = WaitListSchema;
+module.exports = EmailAuthSchema;
