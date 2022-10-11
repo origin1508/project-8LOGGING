@@ -5,6 +5,8 @@ import { curUserState } from "@/recoil/atoms/authState";
 import { useRecoilValue } from "recoil";
 import BaseCardContainer from "@/components/hoc/BaseCardContainer";
 import { BigTitle, TitleContainer } from "@/styles/commonStyle";
+import CustomIcon from "@/components/icons/CustomIcon";
+
 interface ImgProps {
   img?: string;
 }
@@ -28,6 +30,17 @@ function UserCard({
         <BigTitle>MY PROFILE</BigTitle>
       </TitleContainer>
       <Img img={curUser?.profPic}></Img>
+      <FriendListContainer>
+        <FriendList>
+          <CustomIcon
+            name="following"
+            size="15"
+            color={GlobalTheme.colors.white}
+          />
+        </FriendList>
+        <Following>following</Following>
+      </FriendListContainer>
+
       <InforContainer>
         <UserNicname>{curUser?.nickname}</UserNicname>
         <UserEmail>{curUser?.email}</UserEmail>
@@ -59,7 +72,7 @@ const InforContainer = styled.div`
   justify-content: space-around;
   flex-direction: column;
   padding: 1rem;
-  font-size: ${GlobalTheme.fontSize.littleBig};
+  font-size: ${GlobalTheme.fontSize.medium};
 `;
 
 const UserNicname = styled.h3``;
@@ -86,5 +99,27 @@ const Button = styled.button`
   &:active {
     transform: translateY(-0.1rem);
   }
+`;
+const FriendListContainer = styled.div`
+  display: flex;
+  margin-bottom: 3rem;
+  gap: 1rem;
+`;
+const FriendList = styled.div`
+  width: 3rem;
+  height: 2.5rem;
+  border-radius: 0.4rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: ${GlobalTheme.colors.theme};
+`;
+
+const Following = styled.div`
+  font-size: ${GlobalTheme.fontSize.littleBig};
+  font-family: ${GlobalTheme.fontStyle.bold};
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 export default UserCard;

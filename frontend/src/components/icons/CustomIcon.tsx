@@ -6,6 +6,7 @@ import {
   BsSearch,
 } from "react-icons/bs";
 import { VscTriangleDown, VscTriangleUp } from "react-icons/vsc";
+import { FaUserFriends } from "react-icons/fa";
 interface CustomIconProps {
   name: string;
   size: string;
@@ -32,6 +33,9 @@ const CustomIcon = ({ name, size, color }: CustomIconProps) => {
 
       case "SeachIcon":
         return <BsSearch size={size} color={color}></BsSearch>;
+
+      case "following":
+        return <FaUserFriends size={size} color={color}></FaUserFriends>;
       default:
         console.log("Not implemented!");
         return;
