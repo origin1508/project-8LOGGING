@@ -177,4 +177,11 @@ module.exports = {
 
     return results;
   },
+
+  async findLockedUser(email) {
+    const exUser = await User.findOne({email}, "withdrawal").lean();
+    if(exUser.withdrawal) {
+      throw ApiError.forbbiden('탈퇴한 회원입니다.');
+    }
+  }
 };

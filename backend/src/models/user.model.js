@@ -47,6 +47,11 @@ const UserSchema = new Schema(
       required: false,
       default: [],
     },
+    withdrawal: {
+      type: Boolean,
+      required: true,
+      default: 0,
+    },
   },
   {
     timestamps: true,
