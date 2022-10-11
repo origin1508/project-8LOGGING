@@ -29,19 +29,19 @@ function ChannelCard({
           <List>
             <CustomIcon
               name="people"
-              size="20"
+              size="15"
               color={GlobalTheme.colors.theme}
             />
             <PeopleCount>{curMemberNum}</PeopleCount>
           </List>
           <List>
-            <CustomIcon name="map" size="20" color={GlobalTheme.colors.theme} />
+            <CustomIcon name="map" size="15" color={GlobalTheme.colors.theme} />
             <Location>{locationDist}</Location>
           </List>
           <List>
             <CustomIcon
               name="date"
-              size="20"
+              size="15"
               color={GlobalTheme.colors.theme}
             />
             <Date>22/10/22</Date>
@@ -63,8 +63,8 @@ function ChannelCard({
 }
 
 const CardContainer = styled.div`
-  width: 30rem;
-  height: 30rem;
+  width: 27rem;
+  height: 27rem;
   border-radius: 0.7rem;
   display: flex;
   flex-direction: column;
@@ -84,6 +84,7 @@ const CardContent = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  font-size: ${GlobalTheme.fontSize.medium};
 `;
 
 const CardTitle = styled.h1`
@@ -102,15 +103,9 @@ const List = styled.li`
   }
 `;
 
-const PeopleCount = styled.span`
-  font-size: ${GlobalTheme.fontSize.littleBig};
-`;
-const Location = styled.span`
-  font-size: ${GlobalTheme.fontSize.littleBig};
-`;
-const Date = styled.span`
-  font-size: ${GlobalTheme.fontSize.littleBig};
-`;
+const PeopleCount = styled.span``;
+const Location = styled.span``;
+const Date = styled.span``;
 const ButtonContainer = styled.div`
   display: flex;
   gap: 2rem;
