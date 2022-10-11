@@ -1,18 +1,39 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import GlobalTheme from "@/styles/theme";
+import useModal from "@/hooks/useModal";
 import BasePageComponent from "@/components/hoc/BasePageComponent";
 import ChannelCard from "@/components/recruitingChannel/ChannelCard";
-import { currentChannelListRequest } from "@/api/channelFetcher";
-import { ChannelsType } from "@/types/channel/channelTypes";
+import Modal from "@/components/modal/Modal";
 import { BigTitle, BigButton } from "@/styles/commonStyle";
-import GlobalTheme from "@/styles/theme";
+import { ChannelsType } from "@/types/channel/channelTypes";
+import {
+  currentChannelListRequest,
+  channelEnterRequest,
+} from "@/api/channelFetcher";
 
 const ChannelList = () => {
   const [channels, setChannels] = useState<Array<ChannelsType>>([]);
+
+  const [
+    isOpenModal,
+    isAccepted,
+    handleModalOpenButtonClick,
+    handleAcceptButtonClick,
+    handleModalCloseButtonClick,
+  ] = useModal(false);
+
   const navigate = useNavigate();
-  const handleClick = () => {
+
+  const handleCreateChannelClick = () => {
     navigate("/channels/create");
+  };
+
+  const handleChannelEnterClick = (id: string) => async () => {
+    // const res = await channelEnterRequest(`/api/channels/${id}/enter`);
+    // console.log(res);
+    handleModalOpenButtonClick();
   };
 
   useEffect(() => {
@@ -28,21 +49,33 @@ const ChannelList = () => {
         <ChannelListForm>
           <TitleContainer>
             <BigTitle>Recruting Channel</BigTitle>
-            <BigButton onClick={handleClick}>채널생성하기</BigButton>
+            <BigButton onClick={handleCreateChannelClick}>
+              채널생성하기
+            </BigButton>
           </TitleContainer>
-
           <CardsContainer>
             {channels.map((ch) => (
               <ChannelCard
                 key={ch._id}
+                id={ch._id}
                 imgUrl={ch.imgUrl}
                 title={ch.title}
                 curMemberNum={ch.curMemberNum}
                 locationDist={ch.locationDist}
+                locationCity={ch.locationCity}
+                onChannelEnterClick={handleChannelEnterClick}
               />
             ))}
           </CardsContainer>
         </ChannelListForm>
+        <Modal
+          isOpenModal={isOpenModal}
+          isAlertModal={false}
+          onModalAcceptButtonClickEvent={handleAcceptButtonClick}
+          onModalCancelButtonClickEvent={handleModalCloseButtonClick}
+        >
+          ㅎㅇㅎㅇ
+        </Modal>
       </ChannelListContiner>
     </BasePageComponent>
   );
