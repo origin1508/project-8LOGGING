@@ -180,5 +180,15 @@ module.exports = {
       waitReqList: [ ...user.waitReqList, waitList._id ]
     });
 
+    // 이메일 전송
+    const owner = await User.findById(channel.ownerId);
+
+    const from = '"8LOGGING" <wnsdml0120@gmail.com>';
+    const to = owner.email;
+    const subject = "8LOGGING 채널 입장 신청이 들어왔습니다!";
+    const text = `${user.nickname} 님께서 회원님의 채널 [ ${channel.title} ]에 입장 신청하였습니다. 입장을 수락 혹은 거절해주세요!`;
+    const html = `<b>${user.nickname}</b>님께서 회원님의 채널 <b>[ ${channel.title} ]</b>에 입장 신청하였습니다.<br/><br/>입장을 수락 혹은 거절해주세요!`;
+    await sendEmail(from, to, subject, text, html);
+
   },
 };
