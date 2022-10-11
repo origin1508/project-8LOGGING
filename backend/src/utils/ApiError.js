@@ -20,4 +20,8 @@ module.exports = class ApiError extends Error {
   static unavailableToken(msg) {
     return new ApiError(msg, 401);
   }
+
+  static forbbiden(msg) {
+    return new ApiError(msg, 403);
+  }
 };

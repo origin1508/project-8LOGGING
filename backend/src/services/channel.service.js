@@ -58,26 +58,33 @@ module.exports = {
    * 
    * @returns 
    */
-  async getRecruitChannels() {
-    const channels = await Channel.find({status: 0});
+  // async getRecruitChannels() {
+  //   const channels = await Channel.find({status: 0});
 
-    const recruitChannels = await Promise.all(channels.map( async (channel) => { 
-      // ownerId에 해당되는 nickname 찾기용
-      const user = await User.findById(channel.ownerId)
+  //   const recruitChannels = await Promise.all(channels.map( async (channel) => { 
+  //     // ownerId에 해당되는 nickname 찾기용
+  //     const user = await User.findById(channel.ownerId)
 
-      return {
-        _id: channel._id, 
-        title: channel.title,
-        imgUrl: channel.img,
-        locationDist: channel.locationDist,
-        locationCity: channel.locationCity,
-        memberNum: channel.memberNum,
-        curMemberNum: channel.members.length,
-        ownerNickname: user.nickname
-      }
-    }));
+  //     return {
+  //       _id: channel._id, 
+  //       title: channel.title,
+  //       imgUrl: channel.img,
+  //       locationDist: channel.locationDist,
+  //       locationCity: channel.locationCity,
+  //       memberNum: channel.memberNum,
+  //       curMemberNum: channel.members.length,
+  //       ownerNickname: user.nickname
+  //     }
+  //   }));
 
-    return recruitChannels
+  //   return recruitChannels
+  // },
+
+  async getChannelList(page, status) {
+    const perPage = 9; // 페이지당 9개씩 보여주기
+    const channels = await Channel.find({status}).sort({_id: -1}).skip((page - 1) * perPage).limit(perPage);
+    
+    return channels;
   },
 
   /**
