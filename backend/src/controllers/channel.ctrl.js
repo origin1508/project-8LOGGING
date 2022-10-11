@@ -93,9 +93,11 @@ module.exports = {
 
   async requestChannelEnter(req, res, next) {
     const userId = req.userId;
-    const { channelId } = req.body;
+    const { channelId } = req.params;
+    const { message } = req.body;
+    console.log(message)
+
     try {
-      
       await channelService.requestEnter(userId, channelId);
 
       res.status(201).json({
