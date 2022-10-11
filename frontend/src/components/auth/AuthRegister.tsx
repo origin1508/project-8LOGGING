@@ -17,6 +17,10 @@ interface Props {
     e: React.MouseEvent<HTMLButtonElement>,
     email: string
   ) => void;
+  isDuplicated: {
+    email: boolean;
+    nickname: boolean;
+  };
 }
 
 const AuthReigster: React.FC<Props> = ({
@@ -25,6 +29,7 @@ const AuthReigster: React.FC<Props> = ({
   onRegisterSubmitEvent,
   onCheckDuplicationEvent,
   onVerifyEmailClickEvent,
+  isDuplicated,
 }) => {
   const isValidEmail = ValidationUtil.checkEmailValidate(authFormState.email);
   const isValidNickname = ValidationUtil.checkNicknameValidate(
@@ -40,8 +45,10 @@ const AuthReigster: React.FC<Props> = ({
     isValidNickname,
     isValidPassword,
     isPasswordSame,
+    !isDuplicated.email,
+    !isDuplicated.nickname,
   ].every((v) => v === true);
-
+  console.log(isDuplicated.email);
   return (
     <RegistrationFormContainer>
       <BaseIntputContainer>
@@ -49,6 +56,7 @@ const AuthReigster: React.FC<Props> = ({
           placeholder="Email"
           name="email"
           value={authFormState.email}
+          isDuplicated={isDuplicated.email}
           onChange={onRegisterFormValueChaneEvent}
           onBlur={(e) => {
             onCheckDuplicationEvent("email", e.target.value);
@@ -72,6 +80,7 @@ const AuthReigster: React.FC<Props> = ({
           placeholder="Nickname"
           name="nickname"
           value={authFormState.nickname}
+          isDuplicated={isDuplicated.nickname}
           onChange={onRegisterFormValueChaneEvent}
           onBlur={(e) => {
             onCheckDuplicationEvent("nickname", e.target.value);
@@ -132,7 +141,7 @@ const RegistrationFormContainer = styled.form`
   margin-top: 5rem;
 `;
 
-const RegistrationInput = styled.input`
+const RegistrationInput = styled.input<{ isDuplicated?: boolean }>`
   width: 100%;
   outline: ${GlobalTheme.input.outline};
   font-size: ${GlobalTheme.fontSize.littleBig};
@@ -142,6 +151,7 @@ const RegistrationInput = styled.input`
   line-height: 3rem;
   border: ${GlobalTheme.input.border};
   box-shadow: 1px 1px 3px ${GlobalTheme.colors.gray};
+  border-color: ${(props) => props.isDuplicated && "red"};
 `;
 
 const RegistrationButtonContainer = styled.div`
@@ -160,6 +170,10 @@ const RegistrationButton = styled.button`
   text-align: center;
   cursor: pointer;
   margin-bottom: 2rem;
+  &:disabled {
+    color: ${GlobalTheme.colors.lightGray};
+    background-color: ${GlobalTheme.colors.gray};
+  }
 `;
 
 const EmailCheckButton = styled.button`
