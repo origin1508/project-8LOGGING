@@ -74,6 +74,7 @@ function ChannelCard({
 const CardContainer = styled.div`
   width: 27rem;
   height: 27rem;
+  margin: auto;
   border-radius: 0.7rem;
   display: flex;
   flex-direction: column;
