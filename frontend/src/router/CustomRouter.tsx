@@ -14,6 +14,9 @@ const ProfileComponentPage = React.lazy(
 const ChannelListPageComponent = React.lazy(
   () => import("@/components/pages/ChannelList")
 );
+const ChannelDetailPageComponent = React.lazy(
+  () => import("@/components/pages/ChannelDetail")
+);
 const AboutPloggingComponent = React.lazy(
   () => import("@/components/pages/AboutPlogging")
 );
@@ -35,6 +38,10 @@ const CustomRouter = () => {
           <Route path="/profile" element={<ProfileComponentPage />} />
           <Route path="/profile/:id" element={<ProfileComponentPage />} />
           <Route path="/channels" element={<ChannelListPageComponent />} />
+          <Route
+            path="/channels/:channelUuid"
+            element={<ChannelDetailPageComponent />}
+          />
           <Route path="/about" element={<AboutPloggingComponent />} />
         </Routes>
       </Suspense>

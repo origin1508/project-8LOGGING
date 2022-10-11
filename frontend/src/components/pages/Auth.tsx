@@ -21,6 +21,7 @@ const TapMenu = ["Sign in", "Registration"];
 const Auth = () => {
   const [tabIndex, setTabIndex] = useState(0);
   const [errMessage, setErrMessage] = useState("");
+  const [isChecked, setIsChecked] = useState({ email: true, nickname: true });
   const [
     isOpenModal,
     ,
@@ -72,21 +73,20 @@ const Auth = () => {
   };
 
   const handleCheckDuplication = async (
-    e: React.MouseEvent<HTMLElement>,
     endPoint: string,
     checkData: string
   ) => {
-    e.preventDefault();
     try {
-      const res = await checkDuplicationRequest(
-        "api/users/validation/duplication/" + endPoint,
-        checkData
-      );
-      setErrMessage(res);
+      if (checkData) {
+        await checkDuplicationRequest(
+          "api/users/validation/duplication/" + endPoint,
+          checkData
+        );
+      }
     } catch (error) {
-      setErrMessage("Already Exist");
+      setErrMessage(`${endPoint} already exist`);
+      handleModalOpenButtonClick();
     }
-    handleModalOpenButtonClick();
   };
 
   return (

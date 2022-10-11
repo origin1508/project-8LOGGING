@@ -46,6 +46,10 @@ const ChannelList = () => {
     })();
   }, []);
 
+  const handleDetailClick = (channelUuid: string) => {
+    navigate(`/channels/${channelUuid}`);
+  };
+
   const handleCreateChannelClick = () => {
     navigate("/channels/create");
   };
@@ -90,10 +94,12 @@ const ChannelList = () => {
                 ownerId={ch.ownerId}
                 img={ch.img}
                 title={ch.title}
+                channelUuid={ch._id}
                 curMemberNum={ch.curMemberNum}
                 locationDist={ch.locationDist}
-                locationCity={ch.locationCity}
                 onChannelEnterClick={handleChannelEnterClick}
+                locationCity={ch.locationCity}
+                onDetailClickEvent={handleDetailClick}
               />
             ))}
           </CardsContainer>
