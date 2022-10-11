@@ -13,9 +13,11 @@ interface ImgProps {
 interface UserCardProps {
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
   onDeleteAccountModalOpenClickEvent: () => void;
+  isEditable?: boolean;
 }
 
 function UserCard({
+  isEditable,
   setIsEditing,
   onDeleteAccountModalOpenClickEvent,
 }: UserCardProps) {
@@ -27,28 +29,36 @@ function UserCard({
   return (
     <BaseCardContainer width="40rem">
       <TitleContainer>
-        <BigTitle>MY PROFILE</BigTitle>
+        <BigTitle>
+          {isEditable ? `My` : `${curUser.nickname}'s`} PROFILE
+        </BigTitle>
       </TitleContainer>
       <Img img={curUser?.profPic}></Img>
-      <FriendListContainer>
-        <FriendList>
-          <CustomIcon
-            name="following"
-            size="15"
-            color={GlobalTheme.colors.white}
-          />
-        </FriendList>
-        <Following>following</Following>
-      </FriendListContainer>
+      {isEditable && (
+        <FriendListContainer>
+          <FriendList>
+            <CustomIcon
+              name="following"
+              size="15"
+              color={GlobalTheme.colors.white}
+            />
+          </FriendList>
+          <Following>following</Following>
+        </FriendListContainer>
+      )}
 
       <InforContainer>
         <UserNicname>{curUser?.nickname}</UserNicname>
         <UserEmail>{curUser?.email}</UserEmail>
         <UserDescription>{curUser?.description}</UserDescription>
-        <Button onClick={handlerEditClick}>Edit</Button>
-        <Button onClick={onDeleteAccountModalOpenClickEvent}>
-          Delete Account
-        </Button>
+        {isEditable && (
+          <>
+            <Button onClick={handlerEditClick}>Edit</Button>
+            <Button onClick={onDeleteAccountModalOpenClickEvent}>
+              Delete Account
+            </Button>
+          </>
+        )}
       </InforContainer>
     </BaseCardContainer>
   );

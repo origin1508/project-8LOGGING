@@ -29,6 +29,7 @@ function User({
           />
         ) : (
           <UserCard
+            isEditable={isEditable}
             setIsEditing={setIsEditing}
             onDeleteAccountModalOpenClickEvent={
               onDeleteAccountModalOpenClickEvent
