@@ -7,16 +7,15 @@ const { User, Channel } = require("../models");
 module.exports = {
   async checkEmailDuplication(email) {
     const exUser = await User.findOne({ email });
-    console.log(exUser);
-    console.log(email);
     if (exUser) {
       throw ApiError.badRequest("이미 존재하는 이메일입니다.");
     }
   },
 
-  async checkNicknameDuplication(nickname) {
+  async checkNicknameDuplication(userId, nickname) {
     const exUser = await User.findOne({ nickname });
-    if (exUser) {
+    
+    if (exUser && exUser._id.toString() !== userId) {
       throw ApiError.badRequest("이미 존재하는 닉네임입니다.");
     }
   },
