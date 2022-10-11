@@ -60,7 +60,7 @@ const CardsContainer = styled.div`
   height: 80%;
   align-itmes: center;
   flex-wrap: wrap;
-  gap: 3rem;
+  gap: 5rem;
 `;
 const TitleContainer = styled.div`
   padding: 3rem 0rem;
