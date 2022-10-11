@@ -20,9 +20,10 @@ module.exports = {
 
   // 닉네임 중복 체크
   async getNicknameDuplValidationResult(req, res, next) {
+    const userId = req.userId;
     const { nickname } = req.params;
     try {
-      await userService.checkNicknameDuplication(nickname);
+      await userService.checkNicknameDuplication(userId, nickname);
 
       res.status(200).json({
         success: true,
@@ -40,7 +41,7 @@ module.exports = {
     const { newNickname } = req.body;
     try {
       // 중복 체크
-      await userService.checkNicknameDuplication(newNickname);
+      await userService.checkNicknameDuplication(userId, newNickname);
 
       const user = await userService.updateUserNickname(userId, newNickname);
 
