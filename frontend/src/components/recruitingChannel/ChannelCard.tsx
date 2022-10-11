@@ -4,25 +4,33 @@ import GlobalTheme from "@/styles/theme";
 import CustomIcon from "@/components/icons/CustomIcon";
 
 interface ChannelCardPropsType {
-  imgUrl: string;
+  id: string;
+  ownerId: string;
+  img: string;
   title: string;
   channelUuid: string;
   curMemberNum: number;
   locationDist: string;
   onDetailClickEvent: (channelUuid: string) => void;
+  locationCity: string;
+  onChannelEnterClick: (id: string, ownerId: string) => () => void;
 }
 
 function ChannelCard({
-  imgUrl,
+  id,
+  ownerId,
+  img,
   title,
   channelUuid,
   curMemberNum,
   locationDist,
   onDetailClickEvent,
+  locationCity,
+  onChannelEnterClick,
 }: ChannelCardPropsType) {
   return (
     <CardContainer>
-      <CardImg src={imgUrl} />
+      <CardImg src={img} />
       <CardContent>
         <CardTitle>{title}</CardTitle>
         <CardInfoList>
@@ -37,6 +45,7 @@ function ChannelCard({
           <List>
             <CustomIcon name="map" size="15" color={GlobalTheme.colors.theme} />
             <Location>{locationDist}</Location>
+            <Location>{locationCity}</Location>
           </List>
           <List>
             <CustomIcon
@@ -48,7 +57,7 @@ function ChannelCard({
           </List>
         </CardInfoList>
         <ButtonContainer>
-          <Button>참가하기</Button>
+          <Button onClick={onChannelEnterClick(id, ownerId)}>참가하기</Button>
           <Button
             onClick={() => {
               onDetailClickEvent(channelUuid);

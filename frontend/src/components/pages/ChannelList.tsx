@@ -1,53 +1,123 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import GlobalTheme from "@/styles/theme";
+import useModal from "@/hooks/useModal";
 import BasePageComponent from "@/components/hoc/BasePageComponent";
 import ChannelCard from "@/components/recruitingChannel/ChannelCard";
-import { currentChannelListRequest } from "@/api/channelFetcher";
-import { ChannelsType } from "@/types/channel/channelTypes";
+import ChannelEnter from "@/components/recruitingChannel/ChannelEnter";
+import Modal from "@/components/modal/Modal";
 import { BigTitle, BigButton } from "@/styles/commonStyle";
-import GlobalTheme from "@/styles/theme";
+import { ChannelsType, ChannelOwnerType } from "@/types/channel/channelTypes";
+import { getAuthInformationById } from "@/api/authFetcher";
+import {
+  currentChannelListRequest,
+  channelEnterRequest,
+} from "@/api/channelFetcher";
 
 const ChannelList = () => {
   const [channels, setChannels] = useState<Array<ChannelsType>>([]);
+  const [onwerInfo, setOwerInfo] = useState<ChannelOwnerType>({
+    _id: "",
+    email: "",
+    nickname: "nickname",
+    description: "",
+    profPic: "profPic",
+  });
+  const [selectedChannelId, setSelectedChannelId] = useState<string>();
+
+  const [
+    isOpenModal,
+    isAccepted,
+    handleModalOpenButtonClick,
+    handleAcceptButtonClick,
+    handleModalCloseButtonClick,
+  ] = useModal(false);
+
   const navigate = useNavigate();
-  const handleClick = () => {
-    navigate("/channels/create");
-  };
+
+  useEffect(() => {
+    // api/channels?page=1&status=0
+    (async () => {
+      const { datas } = await currentChannelListRequest(
+        "/api/channels?page=1&status=0"
+      );
+      setChannels(datas);
+    })();
+  }, []);
+
   const handleDetailClick = (channelUuid: string) => {
     navigate(`/channels/${channelUuid}`);
   };
 
-  useEffect(() => {
-    (async () => {
-      const { datas } = await currentChannelListRequest("/api/channels");
-      setChannels(datas);
-    })();
-  }, []);
+  const handleCreateChannelClick = () => {
+    navigate("/channels/create");
+  };
+
+  const handleChannelEnterClick = (id: string, ownerId: string) => async () => {
+    const owner = await getAuthInformationById("/api/users/userinfo", ownerId);
+    const { _id, email, nickname, description, profPic } = owner;
+    setOwerInfo({
+      _id: _id,
+      email: email,
+      nickname: nickname,
+      description: description,
+      profPic: profPic,
+    });
+    setSelectedChannelId(id);
+    handleModalOpenButtonClick();
+  };
+
+  const handleChannelEnterDecideClick = async () => {
+    await channelEnterRequest(
+      `/api/channels/${selectedChannelId}/enter`,
+      "Change"
+    );
+    handleModalCloseButtonClick();
+  };
+
   return (
     <BasePageComponent>
       <ChannelListContiner>
         <ChannelListForm>
           <TitleContainer>
             <BigTitle>Recruting Channel</BigTitle>
-            <BigButton onClick={handleClick}>채널생성하기</BigButton>
+            <BigButton onClick={handleCreateChannelClick}>
+              채널생성하기
+            </BigButton>
           </TitleContainer>
-
           <CardsContainer>
             {channels.map((ch) => (
               <ChannelCard
                 key={ch._id}
-                imgUrl={ch.imgUrl}
+                id={ch._id}
+                ownerId={ch.ownerId}
+                img={ch.img}
                 title={ch.title}
                 channelUuid={ch._id}
                 curMemberNum={ch.curMemberNum}
                 locationDist={ch.locationDist}
+                onChannelEnterClick={handleChannelEnterClick}
+                locationCity={ch.locationCity}
                 onDetailClickEvent={handleDetailClick}
               />
             ))}
           </CardsContainer>
         </ChannelListForm>
       </ChannelListContiner>
+      <Modal
+        isOpenModal={isOpenModal}
+        isAlertModal={true}
+        onModalCancelButtonClickEvent={handleModalCloseButtonClick}
+      >
+        <ChannelEnter
+          email={onwerInfo?.email}
+          nickname={onwerInfo?.nickname}
+          description={onwerInfo?.description}
+          profPic={onwerInfo?.profPic}
+          onEnterDecideClickEvent={handleChannelEnterDecideClick}
+        />
+      </Modal>
     </BasePageComponent>
   );
 };

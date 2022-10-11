@@ -82,4 +82,11 @@ module.exports = {
 
     return token;
   },
+
+  async lockUserInfo(userId) {
+    await User.findOneAndUpdate({_id: userId}, {withdrawal: true});
+  },
+
+  
+
 };
