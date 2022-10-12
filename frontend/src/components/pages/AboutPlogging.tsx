@@ -159,7 +159,7 @@ const AboutPlogging = () => {
               </TextOne>
 
               <BarChart
-                dataName="Korea Sea Monitor Bar"
+                dataName="해양 쓰레기 모니터링"
                 labels={barChartInfo?.labels}
                 datas={barChartInfo?.data}
               />
@@ -189,7 +189,7 @@ const AboutPlogging = () => {
                 배출 속도에 비례하여 시각화 한 자료입니다.
               </TextOne>
               <MultiLineChart
-                dataName="Microplastic"
+                dataName="미세플라스틱"
                 labels={multiLineChartInfo?.labels}
                 multiDatas={multiDatas}
               />

@@ -23,16 +23,59 @@ export function chartRegistry() {
   );
 }
 
-export function chartOptions(chartTitle: string) {
+export function barChartOptions(chartTitle: string) {
   return {
     responsive: true,
     plugins: {
       legend: {
-        position: "top" as const,
+        position: "bottom" as const,
       },
       title: {
         display: true,
         text: chartTitle,
+      },
+    },
+    scales: {
+      y: {
+        title: {
+          display: true,
+          text: "Kg",
+        },
+      },
+      x: {
+        title: {
+          display: true,
+          text: "연도",
+        },
+      },
+    },
+  };
+}
+
+export function lineChartOptions(chartTitle: string) {
+  return {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "bottom" as const,
+      },
+      title: {
+        display: true,
+        text: chartTitle,
+      },
+    },
+    scales: {
+      y: {
+        title: {
+          display: true,
+          text: "Kg",
+        },
+      },
+      x: {
+        title: {
+          display: true,
+          text: "연도",
+        },
       },
     },
   };
