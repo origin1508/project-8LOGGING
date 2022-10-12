@@ -7,7 +7,6 @@ interface ButtonProps {
 export const BigTitle = styled.h1`
   margin-left: 2rem;
   font-size: ${GlobalTheme.fontSize.moreBig};
-  font-family: ${GlobalTheme.fontStyle.bold};
 `;
 
 export const TitleContainer = styled.div`
