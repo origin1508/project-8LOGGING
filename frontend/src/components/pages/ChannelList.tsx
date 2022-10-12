@@ -7,6 +7,7 @@ import usePagination from "@/hooks/usePagination";
 import BasePageComponent from "@/components/hoc/BasePageComponent";
 import ChannelCard from "@/components/recruitingChannel/ChannelCard";
 import ChannelEnter from "@/components/recruitingChannel/ChannelEnter";
+import ChannelDetail from "@/components/channelDetail/ChannelDetail";
 import Modal from "@/components/modal/Modal";
 import PaginateButton from "@/components/paginate/PaginateButton";
 import { BigTitle, BigButton } from "@/styles/commonStyle";
@@ -15,8 +16,10 @@ import { getAuthInformationById } from "@/api/authFetcher";
 import {
   currentChannelListRequest,
   channelEnterRequest,
+  currentChannelDetailRequest,
 } from "@/api/channelFetcher";
 import CustomIcon from "@/components/icons/CustomIcon";
+import { ChannelDetailType } from "@/types/channel/channelTypes";
 
 const ChannelList = () => {
   const [channels, setChannels] = useState<Array<ChannelsType>>([]);
@@ -28,6 +31,10 @@ const ChannelList = () => {
     profPic: "profPic",
   });
   const [selectedChannelId, setSelectedChannelId] = useState<string>();
+  const [isShowMore, setIsShowMore] = useState(false);
+  const [channelDetailInfo, setChannelDetailInfo] = useState<
+    ChannelDetailType[]
+  >([]);
 
   const [
     isOpenModal,
@@ -57,8 +64,12 @@ const ChannelList = () => {
     })();
   }, [page]);
 
-  const handleDetailClick = (channelUuid: string) => {
-    navigate(`/channels/${channelUuid}`);
+  const handleMoreClick = async (channelUuid: string) => {
+    const res = await currentChannelDetailRequest(
+      `/api/channels/${channelUuid}`
+    );
+    setChannelDetailInfo([res.datas]);
+    setIsShowMore(true);
   };
 
   const handleCreateChannelClick = () => {
@@ -120,9 +131,9 @@ const ChannelList = () => {
                 channelUuid={ch._id}
                 curMemberNum={ch.curMemberNum}
                 locationDist={ch.locationDist}
-                onChannelEnterClick={handleChannelEnterClick}
                 locationCity={ch.locationCity}
-                onDetailClickEvent={handleDetailClick}
+                onChannelEnterClick={handleChannelEnterClick}
+                onMoreClick={handleMoreClick}
               />
             ))}
           </CardsContainer>
@@ -131,6 +142,11 @@ const ChannelList = () => {
             onNextButtonClickEvent={handleNextButtonClick}
             onPrevButtonClickEvent={handlePrevButtonClick}
             onPageButtonClickEvent={handlePageButtonClick}
+          />
+          <ChannelDetail
+            isShowMore={isShowMore}
+            setIsShowMore={setIsShowMore}
+            channelDetailInfo={channelDetailInfo}
           />
         </ChannelListForm>
       </ChannelListContiner>
@@ -174,6 +190,7 @@ const TitleContainer = styled.div`
   justify-content: space-between;
 `;
 const ChannelListForm = styled.div`
+  position: relative;
   width: 110rem;
   overflow: hidden;
   height: 80rem;
