@@ -46,8 +46,8 @@ export default function FollowList() {
             size="15"
             color={GlobalTheme.colors.white}
           />
+          <Following>팔로잉</Following>
         </FriendListIcon>
-        <Following>following</Following>
       </FriendListIconContainer>
       <Modal
         isOpenModal={isShow}
@@ -81,11 +81,11 @@ const FriendListIconContainer = styled.div`
   gap: 1rem;
 `;
 const FriendListIcon = styled.div`
-  width: 3rem;
-  height: 2.5rem;
   border-radius: 0.4rem;
   display: flex;
   justify-content: center;
+  padding: 0.7rem 1rem;
+  gap: 1rem;
   align-items: center;
   cusor: pointer;
   background-color: ${GlobalTheme.colors.theme};
@@ -102,8 +102,8 @@ const FriendListIcon = styled.div`
 `;
 
 const Following = styled.div`
-  font-size: ${GlobalTheme.fontSize.littleBig};
-  font-family: ${GlobalTheme.fontStyle.bold};
+  font-size: ${GlobalTheme.fontSize.medium};
+  color: ${GlobalTheme.colors.white};
   display: flex;
   justify-content: center;
   align-items: center;
