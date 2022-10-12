@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import GlobalTheme from "@/styles/theme";
@@ -11,6 +11,7 @@ import AuthEmailVerification from "@/components/auth/AuthEmailVerification";
 import BasePageComponent from "@/components/hoc/BasePageComponent";
 import Modal from "@/components/modal/Modal";
 import useModal from "@/hooks/useModal";
+import { ErrorType } from "@/types/error/errorType";
 import {
   authRegisterRequest,
   authLoginRequest,
@@ -40,15 +41,8 @@ const Auth = () => {
     handleEmailVerificationAcceptButtonClick,
     handleEmailVerificationModalCloseButtonClick,
   ] = useModal(false);
-  const { authFormState, handleAuthFormValueChange, setAuthForm } =
-    useRegisterForm({
-      email: "",
-      nickname: "",
-      password: "",
-      confirmPassword: "",
-    });
 
-  const stateInitialize = () => {
+  useEffect(() => {
     setAuthForm({
       email: "",
       nickname: "",
@@ -62,7 +56,19 @@ const Auth = () => {
       password: "",
     });
     setVerificationCode("");
-  };
+    setIsDuplicated({
+      email: false,
+      nickname: false,
+    });
+  }, [tabIndex]);
+
+  const { authFormState, handleAuthFormValueChange, setAuthForm } =
+    useRegisterForm({
+      email: "",
+      nickname: "",
+      password: "",
+      confirmPassword: "",
+    });
 
   const [loginValue, handleLoginFormChange, isValid, setLoginValue] =
     useLoginForm({
@@ -70,10 +76,11 @@ const Auth = () => {
       password: "",
     });
 
-  const { isDuplicated, handleCheckDuplication } = useCheckDuplication({
-    setErrMessage,
-    handleModalOpenButtonClick,
-  });
+  const { isDuplicated, setIsDuplicated, handleCheckDuplication } =
+    useCheckDuplication({
+      setErrMessage,
+      handleModalOpenButtonClick,
+    });
 
   const setLoginUserId = useSetRecoilState(loginUserIdState);
 
@@ -106,7 +113,10 @@ const Auth = () => {
       setLoginUserId(res.userId);
       navigate("/", { replace: true });
     } catch (error) {
-      setErrMessage("Incorret email or password");
+      const err = error as ErrorType;
+      const status = err.response.data.status;
+      if (status === 400) setErrMessage("Incorret email or password");
+      if (status === 403) setErrMessage("Your account has been deleted");
       handleModalOpenButtonClick();
     }
   };
@@ -156,7 +166,6 @@ const Auth = () => {
                 <Tab
                   onClick={() => {
                     setTabIndex(index);
-                    stateInitialize();
                   }}
                   key={index}
                   style={{

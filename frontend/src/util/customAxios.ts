@@ -27,7 +27,8 @@ customAxios.interceptors.response.use(
   (error) => {
     if (error.response.status >= 400 && error.response.status < 500) {
       console.log(error);
-      throw new Error(`This is request error!`);
+      return Promise.reject(error);
+      // throw new Error(`This is request error!`);
     }
     if (error.response.status >= 500) {
       console.log(error);

@@ -1,33 +1,47 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import BasePageComponent from "@/components/hoc/BasePageComponent";
 import { currentChannelDetailRequest } from "@/api/channelFetcher";
 import GlobalTheme from "@/styles/theme";
 import ChannelInfo from "@/components/channelDetail/ChannelInfo";
-import ChannelReply from "@/components/channelDetail/ChannelReply";
+import { ChannelDetailType } from "@/types/channel/channelTypes";
 
 const ChannelDetail = () => {
+  const navigate = useNavigate();
   const { channelUuid } = useParams();
-  const [channelDetail, setChannelDetail] = useState("");
+  const [channelDetailInfo, setChannelDetailInfo] = useState<
+    ChannelDetailType[]
+  >([]);
 
   useEffect(() => {
     (async () => {
       const res = await currentChannelDetailRequest(
-        `/api/channels/${channelUuid}/info`
+        `/api/channels/${channelUuid}`
       );
-      console.log(res);
-      setChannelDetail(res);
+      setChannelDetailInfo([res.datas]);
     })();
   }, []);
   return (
     <BasePageComponent>
       <ChannelDetailContainer>
-        <ChannelInfo />
-        <ChannelReply />
+        {channelDetailInfo.map((info) => (
+          <ChannelInfo
+            key={info._id}
+            title={info.title}
+            spec={info.spec}
+            imgUrl={info.imgUrl}
+            locationCity={info.locationCity}
+            locationDist={info.locationDist}
+            memberNum={info.memberNum}
+            ownerInfo={info.ownerInfo}
+            membersInfo={info.membersInfo}
+          />
+        ))}
+
         <ChannelDetailButtonContainer>
           <Button>참가 신청</Button>
-          <BackButton>목록으로</BackButton>
+          <BackButton onClick={() => navigate(-1)}>목록으로</BackButton>
         </ChannelDetailButtonContainer>
       </ChannelDetailContainer>
     </BasePageComponent>
@@ -35,11 +49,12 @@ const ChannelDetail = () => {
 };
 
 const ChannelDetailContainer = styled.div`
-  width: 120rem;
-  height: 85rem;
+  width: 90rem;
+  height: 60rem;
   background-color: ${GlobalTheme.colors.white};
   box-shadow: 1px 1px 3px ${GlobalTheme.colors.gray};
-  border-radius: 4px;
+  border-radius: 8px;
+  margin-right: 2rem;
 `;
 
 const ChannelDetailButtonContainer = styled.div`

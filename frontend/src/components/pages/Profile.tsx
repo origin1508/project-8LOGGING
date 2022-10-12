@@ -10,7 +10,10 @@ import UserImageUpdate from "@/components/profile/UserImageUpdate";
 import UserDeleteAccount from "@/components/profile/UserDeleteAccount";
 import ChannelHistory from "../profile/ChannelHistory";
 import BasePageComponent from "@/components/hoc/BasePageComponent";
-import { authProfileImageUpdate } from "@/api/authFetcher";
+import {
+  authProfileImageUpdate,
+  deleteAccountRequest,
+} from "@/api/authFetcher";
 import * as Api from "../../api/api";
 import Storage from "@/storage/storage";
 import { imageResize } from "@/util/imageResizeUtil";
@@ -75,8 +78,10 @@ function Profile() {
 
   const handleDeleteAccountAcceptClick = async () => {
     if (curUser.email === confirmCheck) {
+      await deleteAccountRequest("/api/auth/withdrawal");
       handleAcceptDeleteClick();
       Storage.clearToken();
+      alert("Your account has been successfully deleted");
       navigate("/", { replace: true });
     } else alert("check your email");
     setConfirmCheck("");
