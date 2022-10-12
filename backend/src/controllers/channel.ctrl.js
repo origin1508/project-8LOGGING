@@ -175,4 +175,21 @@ module.exports = {
       next(err);
     }
   },
+
+  async rejectChannelEnter(req, res, next) {
+    const userId = req.userId;
+    const { channelId } = req.params;
+    const { waitingId } = req.body;
+  
+    try {
+      await channelService.rejectEnter(userId, channelId, waitingId);
+
+      res.status(200).json({
+        success: true,
+        message: "channel enter reject success",
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
 };
