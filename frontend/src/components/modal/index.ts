@@ -63,6 +63,10 @@ export const ModalImage = styled.img`
 `;
 export const ModalTextContainer = styled.div`
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  justify-content: center;
   margin: 3rem 0 3rem 0;
   font-size: ${GlobalTheme.fontSize.moreBig};
 `;
