@@ -10,5 +10,6 @@ router.get("/", jwtVerification, channelCtrl.showChannelList); // 모집 중인 
 router.get("/:channelId", jwtVerification, channelCtrl.showChannelInfo); // 채널 정보 확인
 router.put("/:channelId", jwtVerification, upload.single("image"), channelCtrl.changeChannelInfo); // 채널 정보 변경
 router.put("/:channelId/enter", jwtVerification, channelCtrl.requestChannelEnter); // 채널 입장 신청
+router.delete("/:channelId/enter", jwtVerification, channelCtrl.cancelChannelEnter); // 채널 입장 신청 취소
 
 module.exports = router

@@ -163,6 +163,12 @@ module.exports = {
     return updatedChannel._id
   },
 
+  /**
+   * 채널 입장 신청
+   * 
+   * @param {String} userId 
+   * @param {String} channelId 
+   */
   async requestEnter(userId, channelId) {
     // 채널 소유권 확인
     const channel = await Channel.findById(channelId);
@@ -193,6 +199,41 @@ module.exports = {
     const subject = "8LOGGING 채널 입장 신청이 들어왔습니다!";
     const text = `${user.nickname} 님께서 회원님의 채널 [ ${channel.title} ]에 입장 신청하였습니다. 입장을 수락 혹은 거절해주세요!`;
     const html = `<b>${user.nickname}</b>님께서 회원님의 채널 <b>[ ${channel.title} ]</b>에 입장 신청하였습니다.<br/><br/>입장을 수락 혹은 거절해주세요!`;
+    await sendEmail(from, to, subject, text, html);
+
+  },
+
+  /**
+   * 채널 입장 신청 취소
+   * 
+   * @param {String} userId 
+   * @param {String} channelId 
+   */
+  async cancelEnter(userId, channelId) {
+    // waitList 수정
+    const waitList = await WaitList.findOne({ channelId });
+    if (!waitList.waiting.includes(userId)) {
+      throw ApiError.badRequest("가입 신청한 적이 없는 채널입니다.")
+    }
+    await WaitList.findOneAndUpdate( { channelId }, {
+      waiting: waitList.waiting.filter( id => id!==userId )
+    });
+
+    // user waitReqList 수정
+    const user = await User.findById(userId);
+    await User.findByIdAndUpdate(userId, {
+      waitReqList: user.waitReqList.filter( id => id!==waitList._id )
+    });
+
+    // 이메일 전송
+    const channel = await Channel.findById(channelId);
+    const owner = await User.findById(channel.ownerId);
+
+    const from = '"8LOGGING" <wnsdml0120@gmail.com>';
+    const to = owner.email;
+    const subject = "8LOGGING 채널 입장 신청이 취소되었습니다!";
+    const text = `${user.nickname} 님께서 회원님의 채널 [ ${channel.title} ] 입장 신청을 취소하였습니다.`;
+    const html = `<b>${user.nickname}</b>님께서 회원님의 채널 <b>[ ${channel.title} ]</b> 입장 신청을 취소하였습니다.`;
     await sendEmail(from, to, subject, text, html);
 
   },

@@ -5,7 +5,7 @@ module.exports = {
   async makeChannel(req, res, next) {
     const userId = req.userId;
     // location은 upload middleware 통해서 얻은 imageUrl임을 유의
-    var location = "https://elice-8seconds.s3.ap-northeast-2.amazonaws.com/1665048675819_ex1.jpeg";
+    var location = "https://elice-8seconds.s3.ap-northeast-2.amazonaws.com/plogging_cover.png";
     if(req.file) {
       var { location } = req.file;
     }
@@ -108,6 +108,22 @@ module.exports = {
       res.status(201).json({
         success: true,
         message: "Channel enter request success"
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  async cancelChannelEnter(req, res, next) {
+    const userId = req.userId;
+    const { channelId } = req.params;
+  
+    try {
+      await channelService.cancelEnter(userId, channelId);
+
+      res.status(201).json({
+        success: true,
+        message: "Channel enter cancel success"
       });
     } catch (err) {
       next(err);
