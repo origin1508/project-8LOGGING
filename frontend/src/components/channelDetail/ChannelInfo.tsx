@@ -58,7 +58,6 @@ const ChannelInfoContainer = styled.div`
 `;
 
 const InfoHeaderContainer = styled.div`
-  margin-bottom: 3rem;
   width: 100%;
   position: relative;
 `;
@@ -109,10 +108,10 @@ const OwnerNickname = styled.div`
 const Img = styled.img`
   height: 100%;
   width: 100%;
-  object-fit: cover;
 `;
 
 const InfoBodyContainer = styled.div`
+  margin-top: 5rem;
   display: flex;
   justify-content: center;
   gap: 5rem;
