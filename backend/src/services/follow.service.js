@@ -25,9 +25,9 @@ module.exports = {
     const exFollow = await Follow.find({
       $and: [{ follower: userId }, { following: targetId }],
     });
-    
+
     if (exFollow.length === 0) {
-      throw ApiError.badRequest("팔로우 하지 않은 유저입니다.");
+      throw ApiError.badRequest("not follow");
     }
 
     return true;

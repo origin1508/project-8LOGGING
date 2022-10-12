@@ -23,13 +23,12 @@ module.exports = {
     const { targetId } = req.params;
 
     try {
-      const isFollowed = await followService.confirmFollow(userId, targetId);
+      await followService.confirmFollow(userId, targetId);
 
       res.status(200).json({
         success: true,
         status: 200,
-        message: "팔로우한 유저입니다.",
-        datas: isFollowed,
+        message: "followed users",
       });
     } catch (err) {
       next(err);
