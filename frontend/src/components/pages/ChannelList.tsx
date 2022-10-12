@@ -3,10 +3,12 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import useModal from "@/hooks/useModal";
+import usePagination from "@/hooks/usePagination";
 import BasePageComponent from "@/components/hoc/BasePageComponent";
 import ChannelCard from "@/components/recruitingChannel/ChannelCard";
 import ChannelEnter from "@/components/recruitingChannel/ChannelEnter";
 import Modal from "@/components/modal/Modal";
+import PaginateButton from "@/components/paginate/PaginateButton";
 import { BigTitle, BigButton } from "@/styles/commonStyle";
 import { ChannelsType, ChannelOwnerType } from "@/types/channel/channelTypes";
 import { getAuthInformationById } from "@/api/authFetcher";
@@ -26,6 +28,7 @@ const ChannelList = () => {
     profPic: "profPic",
   });
   const [selectedChannelId, setSelectedChannelId] = useState<string>();
+  const [totalPages, setTotalPages] = useState<number>(1);
 
   const [
     isOpenModal,
@@ -35,17 +38,26 @@ const ChannelList = () => {
     handleModalCloseButtonClick,
   ] = useModal(false);
 
+  const {
+    page,
+    status,
+    handleNextButtonClick,
+    handlePrevButtonClick,
+    handlePageButtonClick,
+  } = usePagination({ page: 1, status: 0, totalPages: totalPages });
+
   const navigate = useNavigate();
 
   useEffect(() => {
     // api/channels?page=1&status=0
     (async () => {
-      const { datas } = await currentChannelListRequest(
-        "/api/channels?page=1&status=0"
+      const { datas, totalPages } = await currentChannelListRequest(
+        `/api/channels?page=${page}&status=${status}`
       );
+      setTotalPages(totalPages);
       setChannels(datas);
     })();
-  }, []);
+  }, [page]);
 
   const handleDetailClick = (channelUuid: string) => {
     navigate(`/channels/${channelUuid}`);
@@ -116,6 +128,13 @@ const ChannelList = () => {
               />
             ))}
           </CardsContainer>
+          <PaginateButton
+            page={page}
+            totalPages={totalPages}
+            onNextButtonClickEvent={handleNextButtonClick}
+            onPrevButtonClickEvent={handlePrevButtonClick}
+            onPageButtonClickEvent={handlePageButtonClick}
+          />
         </ChannelListForm>
       </ChannelListContiner>
       <Modal

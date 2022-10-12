@@ -2,17 +2,34 @@ const { Follow, User } = require("../models");
 const ApiError = require("../utils/ApiError");
 
 module.exports = {
-  async getFollowList(userId, page) {
-    const itemCount = 10;
-    const followingInfo = await Follow.find({ follower: userId }, "following")
-      .skip((page - 1) * itemCount)
-      .limit(itemCount).lean();
-    
-    const followList = await Promise.all(followingInfo.map(info => {
-      return User.findOne({_id: info.following}, "email nickname description profPic channels");
-    }));
+  async getFollowList(userId) {
+    const followingInfo = await Follow.find(
+      { follower: userId },
+      "following"
+    ).lean();
 
-    return followList;
+    const followList = await Promise.all(
+      followingInfo.map((info) => {
+        return User.findOne(
+          { _id: info.following, withdrawal: false },
+          "email nickname description profPic channels"
+        ).lean();
+      })
+    );
+
+    return followList.filter(el => el !== null);
+  },
+
+  async confirmFollow(userId, targetId) {
+    const exFollow = await Follow.find({
+      $and: [{ follower: userId }, { following: targetId }],
+    });
+
+    if (exFollow.length === 0) {
+      throw ApiError.badRequest("not follow");
+    }
+
+    return true;
   },
 
   async createFollow(userId, targetId) {
@@ -41,6 +58,6 @@ module.exports = {
   },
 
   async deleteFollow(userId, targetId) {
-    await Follow.deleteOne({follower: userId, following: targetId});
-  }
+    await Follow.deleteOne({ follower: userId, following: targetId });
+  },
 };

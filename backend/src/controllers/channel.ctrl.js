@@ -12,7 +12,13 @@ module.exports = {
     const { title, locationDist, locationCity, memberNum, spec } = req.body;
     try {
       const channelId = await channelService.createChannel(
-        title, userId, locationDist, locationCity, memberNum, spec, location
+        title,
+        userId,
+        locationDist,
+        locationCity,
+        memberNum,
+        spec,
+        location
       );
 
       res.status(201).json({
@@ -21,7 +27,7 @@ module.exports = {
         message: "Channel create success.",
         datas: {
           _id: channelId,
-        }
+        },
       });
     } catch (err) {
       next(err);
@@ -35,13 +41,14 @@ module.exports = {
       // status == 2 : 활동 종료된 채널
       const { page, status } = req.query;
 
-      const recruitChannels = await channelService.getChannelList(page, status);
+      const channels = await channelService.getChannelList(page, status);
 
       res.status(200).json({
         success: true,
         status: 200,
         message: "Channel list load success",
-        datas: recruitChannels
+        totalPages: channels.totalPages,
+        datas: channels.channelItems,
       });
     } catch (err) {
       next(err);
@@ -49,15 +56,15 @@ module.exports = {
   },
 
   async showChannelInfo(req, res, next) {
-    const { channelId }= req.params;
+    const { channelId } = req.params;
     try {
-      const channelInfo = await channelService.getChannelInfo(channelId)
+      const channelInfo = await channelService.getChannelInfo(channelId);
 
       res.status(200).json({
         success: true,
         status: 200,
         message: "Channel info load success.",
-        datas: channelInfo
+        datas: channelInfo,
       });
     } catch (err) {
       next(err);
@@ -68,20 +75,25 @@ module.exports = {
     const userId = req.userId;
     const channelId = req.params.channelId;
     var location = null;
-    if(req.file) {
+    if (req.file) {
       var { location } = req.file;
     }
-    const { newTitle, newStatus, newSpec, newLocationDist, newLocationCity } = req.body;
-    const toUpdate = { 
+    const { newTitle, newStatus, newSpec, newLocationDist, newLocationCity } =
+      req.body;
+    const toUpdate = {
       title: newTitle,
       status: newStatus,
       spec: newSpec,
       locationDist: newLocationDist,
       locationCity: newLocationCity,
-      img: location
-    }
+      img: location,
+    };
     try {
-      const updatedChannelId = await channelService.updateChannelInfo(userId, channelId, toUpdate);
+      const updatedChannelId = await channelService.updateChannelInfo(
+        userId,
+        channelId,
+        toUpdate
+      );
 
       res.status(201).json({
         success: true,
@@ -89,7 +101,7 @@ module.exports = {
         message: "Channel info change success",
         datas: {
           _id: updatedChannelId,
-        }
+        },
       });
     } catch (err) {
       next(err);
@@ -100,14 +112,14 @@ module.exports = {
     const userId = req.userId;
     const { channelId } = req.params;
     const { message } = req.body;
-    console.log(message)
+    console.log(message);
 
     try {
       await channelService.requestEnter(userId, channelId);
 
       res.status(201).json({
         success: true,
-        message: "Channel enter request success"
+        message: "Channel enter request success",
       });
     } catch (err) {
       next(err);

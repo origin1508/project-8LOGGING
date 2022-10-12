@@ -2,16 +2,33 @@ const { followService } = require("../services");
 
 module.exports = {
   async showFollowList(req, res, next) {
-    const userId = req.userId;
-    const { page } = req.query;
+    const { userId } = req.params;
+    
     try {
-      const followList = await followService.getFollowList(userId, page);
+      const followList = await followService.getFollowList(userId);
 
       res.status(200).json({
         success: true,
         status: 200,
         message: "success Loading FollowList",
         datas: followList,
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  async checkFollow(req, res, next) {
+    const userId = req.userId;
+    const { targetId } = req.params;
+
+    try {
+      await followService.confirmFollow(userId, targetId);
+
+      res.status(200).json({
+        success: true,
+        status: 200,
+        message: "followed users",
       });
     } catch (err) {
       next(err);

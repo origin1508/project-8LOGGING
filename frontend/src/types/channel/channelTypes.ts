@@ -27,3 +27,25 @@ export interface ChannelOwnerType {
   description: string;
   profPic: string;
 }
+
+export interface ChannelDetailType {
+  _id?: string;
+  title: string;
+  spec: string;
+  imgUrl: string;
+  locationCity: string;
+  locationDist: string;
+  memberNum: number;
+  ownerInfo: {
+    ownerId: string;
+    ownerNickname: string;
+    ownerPic: string;
+  };
+  membersInfo: Array<ChannelMemberType>;
+}
+
+export interface ChannelMemberType {
+  memberId: string;
+  memberNickname: string;
+  memberPic: string;
+}

@@ -7,7 +7,7 @@ import { Bar } from "react-chartjs-2";
 chartRegistry();
 
 const BarChart = ({ dataName, labels, datas }: ChartProps) => {
-  const options = barChartOptions("한국 해양 쓰레기 모니터링");
+  const options = barChartOptions("국내 해양쓰레기 모니터링");
 
   const dataForChartRender = () => {
     return {
