@@ -153,12 +153,11 @@ module.exports = {
     const { waitingId } = req.body;
   
     try {
-      const waitList = await channelService.getWaitList(userId, channelId);
+      await channelService.acceptEnter(userId, channelId, waitingId);
 
       res.status(200).json({
         success: true,
-        message: "Wait list get success",
-        datas: waitList
+        message: "channel enter accept success",
       });
     } catch (err) {
       next(err);
