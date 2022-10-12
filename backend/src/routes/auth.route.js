@@ -11,4 +11,49 @@ router.delete("/withdrawal", jwtVerification, authCtrl.withdrawUser);
 router.post("/email", authCtrl.sendEmailAuthCode);
 router.delete("/email", authCtrl.checkEmailAuthCode);
 
+
 module.exports = router;
+
+
+/**
+ * @swagger
+ * /posts:
+ *   get:
+ *     description: 게시글 조회
+ *     tags: [Post]
+ *     produces:
+ *     - "application/json"
+ *     parameters:
+ *     - name: "category"
+ *       in: "query"
+ *       description: "조회할 카테고리 id, 중첩 가능. ex) category=1&category=2&category=3"
+ *       type: "string"
+ *     - name: "query"
+ *       in: "query"
+ *       description: "검색어"
+ *       type: "string"
+ *     responses:
+ *       "200":
+ *         description: "successful operation"
+ *     
+*/
+
+/**
+ * @swagger
+ * /posts:
+ *   post:
+ *     description: 게시물 생성
+ *     tags: [Post]
+ *     produces:
+ *     - "application/json"
+ *     parameters:
+ *     - name: "body"
+ *       in: "body"
+ *       required: true
+ *       schema:
+ *         $ref: "#/definitions/Post"
+ *     responses:
+ *       "200":
+ *         description: "successful operation"
+ *     
+*/
