@@ -64,6 +64,7 @@ const InfoHeaderContainer = styled.div`
 const MainInfoContainer = styled.div``;
 
 const ChannelTitle = styled.div`
+  width: 70%;
   margin-bottom: 1rem;
   font-size: ${GlobalTheme.fontSize.hyperBig};
 `;
@@ -78,7 +79,7 @@ const Text = styled.span`
 
 const OwnerInfoContainer = styled.div`
   position: absolute;
-  left: 75%;
+  left: 70%;
   top: 0;
   display: flex;
   align-items: center;
