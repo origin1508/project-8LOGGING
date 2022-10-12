@@ -320,7 +320,7 @@ module.exports = {
     const user = await User.findById(waitingId);
     const newWaitReqList  = user.waitReqList.filter( id => id.str!==waitList._id.str );
     const newChannels = [ ...user.channels, channelId ];
-    await User.findByIdAndUpdate(userId, { waitReqList: newWaitReqList, channels: newChannels });
+    await User.findByIdAndUpdate(waitingId, { waitReqList: newWaitReqList, channels: newChannels });
 
     // 이메일 전송
     const owner = await User.findById(channel.ownerId);
@@ -330,7 +330,45 @@ module.exports = {
     const text = `${owner.nickname} 님께서 채널 [ ${channel.title} ] 입장 신청을 수락하였습니다. 즐거운 플로깅하세요!`;
     const html = `<b>${owner.nickname}</b>님께서 채널 <b>[ ${channel.title} ]</b> 입장 신청을 수락하였습니다.<br/><br/> 즐거운 플로깅하세요!`;
     await sendEmail(from, to, subject, text, html);
+  },
 
+  /**
+   * 채널 입장 거절
+   * 
+   * @param {String} userId 
+   * @param {String} channelId 
+   * @param {String} waitingId 
+   */
+  async rejectEnter(userId, channelId, waitingId) {
+    // 권한 확인
+    const channel = await Channel.findById(channelId);
+    if (channel.ownerId!==userId) {
+      throw ApiError.badRequest("거절 권한이 없습니다.")
+    }
+
+    // waitList 수정
+    const waitList = await WaitList.findOne({ channelId });
+    await WaitList.findOneAndUpdate( { channelId }, {
+      waiting: waitList.waiting.filter( id => id!=waitingId )
+    });
+
+    // waiting user channels, waitReqList 수정
+    const user = await User.findById(waitingId);
+    const newWaitReqList = user.waitReqList.filter( id => id.str!==waitList._id.str );
+    const newChannels = user.channels.filter( id => id.str!=channelId.str ); 
+    await User.findByIdAndUpdate(waitingId, { 
+      waitReqList: newWaitReqList,
+      channels: newChannels
+    });;
+
+    // 이메일 전송
+    const owner = await User.findById(channel.ownerId);
+    const from = '"8LOGGING" <wnsdml0120@gmail.com>';
+    const to = user.email;
+    const subject = "8LOGGING 채널 입장 신청이 수락되었습니다!";
+    const text = `${owner.nickname} 님께서 채널 [ ${channel.title} ] 입장 신청을 거절하였습니다.`;
+    const html = `<b>${owner.nickname}</b>님께서 채널 <b>[ ${channel.title} ]</b> 입장 신청을 거절하였습니다.`;
+    await sendEmail(from, to, subject, text, html);
   },
 
 };
