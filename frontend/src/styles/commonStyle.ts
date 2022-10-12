@@ -62,3 +62,42 @@ export const BigButton = styled.button`
     transform: translateY(-0.1rem);
   }
 `;
+
+export const SmallButton = styled.button`
+  ${GlobalTheme.buttons}
+  background-color:${GlobalTheme.colors.theme};
+  color: ${GlobalTheme.colors.white};
+  width: ${(props) => props.itemProp};
+  font-size: ${GlobalTheme.fontSize.medium};
+  cursor: pointer;
+  padding: 1rem 1rem;
+
+  &:hover {
+    transform: translateY(-0.3rem);
+  }
+  &::after {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+  &:active {
+    transform: translateY(-0.1rem);
+  }
+`;
+export const MediumTitle = styled.div`
+  font-size: ${GlobalTheme.fontSize.titleSize};
+  font-family: ${GlobalTheme.fontStyle.bold};
+`;
+
+export const TextOne = styled.p`
+  font-weight: bold;
+  font-size: ${GlobalTheme.fontSize.littleBig};
+  line-height: 1.4;
+  margin: 0;
+`;
+
+export const TextTwo = styled.p`
+  text-align: ${(props) => props.itemProp};
+  font-size: ${GlobalTheme.fontSize.default};
+  line-height: 1.7;
+  margin: 0;
+`;
