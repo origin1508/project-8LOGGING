@@ -6,7 +6,6 @@ import GlobalTheme from "@/styles/theme";
 import { curUserState } from "@/recoil/atoms/authState";
 import { useRecoilValue } from "recoil";
 import * as Api from "@/api/api";
-import BaseCardContainer from "@/components/hoc/BaseCardContainer";
 import {
   TextOne,
   TextTwo,
@@ -34,23 +33,22 @@ export default function FollowList() {
       setIsShow(true);
       const res = await Api.get("/api/follow/list", curUser._id);
       setFollowList(res.data.datas);
-      console.log(followList);
     } catch (e) {
       console.log(e);
     }
   };
   return (
     <>
-      <FriendListContainer>
-        <FriendList onClick={handleFollowingClick}>
+      <FriendListIconContainer>
+        <FriendListIcon onClick={handleFollowingClick}>
           <CustomIcon
             name="following"
             size="15"
             color={GlobalTheme.colors.white}
           />
-        </FriendList>
+        </FriendListIcon>
         <Following>following</Following>
-      </FriendListContainer>
+      </FriendListIconContainer>
       <Modal
         isOpenModal={isShow}
         isAlertModal={true}
@@ -77,19 +75,30 @@ export default function FollowList() {
   );
 }
 
-const FriendListContainer = styled.div`
+const FriendListIconContainer = styled.div`
   display: flex;
   margin-bottom: 3rem;
   gap: 1rem;
 `;
-const FriendList = styled.div`
+const FriendListIcon = styled.div`
   width: 3rem;
   height: 2.5rem;
   border-radius: 0.4rem;
   display: flex;
   justify-content: center;
   align-items: center;
+  cusor: pointer;
   background-color: ${GlobalTheme.colors.theme};
+  &:hover {
+    transform: translateY(-0.3rem);
+  }
+  &::after {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+  &:active {
+    transform: translateY(-0.1rem);
+  }
 `;
 
 const Following = styled.div`
