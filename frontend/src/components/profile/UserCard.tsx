@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import { curUserState } from "@/recoil/atoms/authState";
@@ -23,12 +23,20 @@ function UserCard({
   onDeleteAccountModalOpenClickEvent,
 }: UserCardProps) {
   const curUser = useRecoilValue(curUserState);
-  const [followed, setFollowed] = useState(true);
+  const [followed, setFollowed] = useState(false);
 
   const handlerEditClick = () => {
     setIsEditing(true);
   };
-
+  const handleFollowingClick = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const res = await Api.get("/api/follow/list", curUser._id);
+      console.log(res.data);
+    } catch (e) {
+      console.log(e);
+    }
+  };
   const handleFollowClick = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -45,6 +53,9 @@ function UserCard({
       console.log(e);
     }
   };
+  useEffect(() => {
+    Api.get("/api/follow", curUser._id).then((res) => console.log(res));
+  });
   return (
     <BaseCardContainer width="40rem">
       <TitleContainer>
@@ -70,7 +81,11 @@ function UserCard({
         <UserNicname>{curUser?.nickname}</UserNicname>
         <UserEmail>{curUser?.email}</UserEmail>
         <UserDescription>{curUser?.description}</UserDescription>
-        <FollowButton onClick={handleFollowClick}>Follow</FollowButton>
+        {!isEditable && (
+          <FollowButton onClick={handleFollowClick} itemScope={followed}>
+            Follow
+          </FollowButton>
+        )}
         {isEditable && (
           <>
             <Button onClick={handlerEditClick}>Edit</Button>
@@ -156,8 +171,12 @@ const Following = styled.div`
 
 const FollowButton = styled.button`
   ${GlobalTheme.buttons}
-  background-color:${GlobalTheme.colors.theme};
-  color: ${GlobalTheme.colors.white};
+  background-color:${(props) =>
+    props.itemScope ? GlobalTheme.colors.theme : "none"};
+  color: ${(props) =>
+    props.itemScope ? GlobalTheme.colors.white : GlobalTheme.colors.theme};
+  border: 1px solid ${GlobalTheme.colors.theme};
+  transition: all 0.3s;
   width: 50%;
   font-size: 1.5rem;
   padding: 1rem 2rem;
