@@ -12,5 +12,6 @@ router.put("/:channelId", jwtVerification, upload.single("image"), channelCtrl.c
 router.put("/:channelId/enter", jwtVerification, channelCtrl.requestChannelEnter); // 채널 입장 신청
 router.delete("/:channelId/enter", jwtVerification, channelCtrl.cancelChannelEnter); // 채널 입장 신청 취소
 router.get("/:channelId/waiting", jwtVerification, channelCtrl.showWaitList); // 채널 입장 신청 확인
+router.put("/:channelId/waiting", jwtVerification, channelCtrl.acceptChannelEnter); // 채널 입장 신청 수락
 
 module.exports = router

@@ -146,4 +146,22 @@ module.exports = {
       next(err);
     }
   },
+
+  async acceptChannelEnter(req, res, next) {
+    const userId = req.userId;
+    const { channelId } = req.params;
+    const { waitingId } = req.body;
+  
+    try {
+      const waitList = await channelService.getWaitList(userId, channelId);
+
+      res.status(200).json({
+        success: true,
+        message: "Wait list get success",
+        datas: waitList
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
 };
