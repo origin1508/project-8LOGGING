@@ -9,7 +9,6 @@ const BaseChannelComponent = ({ children }: BaseComponentType) => {
 const BaseChannelComponentStyle = styled.div`
   height: 100%;
   margin-left: 26rem;
-  margin-top: 2rem;
   margin-bottom: 2rem;
   display: flex;
   align-items: center;

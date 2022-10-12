@@ -152,7 +152,6 @@ const Auth = () => {
         setErrMessage(res.message);
       }
     }
-    handleModalOpenButtonClick();
   };
 
   return (
@@ -202,6 +201,7 @@ const Auth = () => {
               onSendVerficationCodeClickEvent={handleSendVerificationCode}
               isDuplicated={isDuplicated}
               isVerifiedEmail={isVerifiedEmail}
+              setIsVerifiedEmail={setIsVerifiedEmail}
             />
           )}
         </FormContainer>

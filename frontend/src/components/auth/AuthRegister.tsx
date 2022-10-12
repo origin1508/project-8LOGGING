@@ -22,6 +22,7 @@ interface Props {
     nickname: boolean;
   };
   isVerifiedEmail: boolean;
+  setIsVerifiedEmail: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const AuthReigster: React.FC<Props> = ({
@@ -32,6 +33,7 @@ const AuthReigster: React.FC<Props> = ({
   onSendVerficationCodeClickEvent,
   isDuplicated,
   isVerifiedEmail,
+  setIsVerifiedEmail,
 }) => {
   const isValidEmail = ValidationUtil.checkEmailValidate(authFormState.email);
   const isValidNickname = ValidationUtil.checkNicknameValidate(
@@ -62,21 +64,32 @@ const AuthReigster: React.FC<Props> = ({
           onBlur={(e) => {
             onCheckDuplicationEvent("email", e.target.value);
           }}
+          disabled={isVerifiedEmail && true}
         />
         {authFormState.email && !isValidEmail && (
           <BaseValidateTextContainer>
             Please check your email
           </BaseValidateTextContainer>
         )}
-        <EmailVerificationButton
-          isVerifiedEmail={isVerifiedEmail}
-          onClick={(e) => {
-            onSendVerficationCodeClickEvent(e, authFormState.email);
-          }}
-          disabled={!isValidEmail && true}
-        >
-          Verify
-        </EmailVerificationButton>
+        {isVerifiedEmail ? (
+          <VerifiedEmailButton
+            onClick={(e) => {
+              e.preventDefault();
+              setIsVerifiedEmail(false);
+            }}
+          >
+            Verify
+          </VerifiedEmailButton>
+        ) : (
+          <EmailVerificationButton
+            onClick={(e) => {
+              onSendVerficationCodeClickEvent(e, authFormState.email);
+            }}
+            disabled={!isValidEmail && true}
+          >
+            Verify
+          </EmailVerificationButton>
+        )}
       </BaseIntputContainer>
       <BaseIntputContainer>
         <RegistrationInput
@@ -179,7 +192,7 @@ const RegistrationButton = styled.button`
   }
 `;
 
-const EmailVerificationButton = styled.button<{ isVerifiedEmail: boolean }>`
+const EmailVerificationButton = styled.button`
   ${GlobalTheme.buttons}
   border: 1px solid ${GlobalTheme.colors.theme};
   position: absolute;
@@ -194,7 +207,12 @@ const EmailVerificationButton = styled.button<{ isVerifiedEmail: boolean }>`
     color: ${GlobalTheme.colors.gray};
     border-color: ${GlobalTheme.colors.gray};
   }
-  ${(props) => props.isVerifiedEmail && "color: green; border-color: green"}
+`;
+
+const VerifiedEmailButton = styled(EmailVerificationButton)`
+  ${GlobalTheme.buttons}
+  border: 1px solid green;
+  color: green;
 `;
 
 export default AuthReigster;
