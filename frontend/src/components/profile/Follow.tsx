@@ -28,11 +28,12 @@ export default function Follow() {
 
   useEffect(() => {
     if (curUserId) {
-      Api.get("/api/follow", curUserId).then((res) =>
-        setFollowed(res.data.datas)
-      );
+      Api.get("/api/follow", curUserId).then((res) => {
+        const isFollowed = res.data.datas.isFollowed;
+        setFollowed(isFollowed);
+      });
     }
-  });
+  }, [curUserId]);
   return (
     <FollowButton onClick={handleFollowClick} itemScope={followed}>
       Follow
