@@ -185,6 +185,12 @@ module.exports = {
     return updatedChannel._id;
   },
 
+  /**
+   * 채널 입장 신청
+   * 
+   * @param {String} userId 
+   * @param {String} channelId 
+   */
   async requestEnter(userId, channelId) {
     // 채널 소유권 확인
     const channel = await Channel.findById(channelId);
@@ -204,10 +210,11 @@ module.exports = {
       }
     );
 
-    // user waitReqList 수정
+    // user channels, waitReqList 수정
     const user = await User.findById(userId);
     await User.findByIdAndUpdate(userId, {
       waitReqList: [...user.waitReqList, waitList._id],
+      channels: [...user.channels, channelId]
     });
 
     // 이메일 전송
@@ -220,4 +227,148 @@ module.exports = {
     const html = `<b>${user.nickname}</b>님께서 회원님의 채널 <b>[ ${channel.title} ]</b>에 입장 신청하였습니다.<br/><br/>입장을 수락 혹은 거절해주세요!`;
     await sendEmail(from, to, subject, text, html);
   },
+
+  /**
+   * 채널 입장 신청 취소
+   * 
+   * @param {String} userId 
+   * @param {String} channelId 
+   */
+  async cancelEnter(userId, channelId) {
+    // waitList 수정
+    const waitList = await WaitList.findOne({ channelId });
+    if (!waitList.waiting.includes(userId)) {
+      throw ApiError.badRequest("가입 신청한 적이 없는 채널입니다.")
+    }
+    await WaitList.findOneAndUpdate( { channelId }, {
+      waiting: waitList.waiting.filter( id => id!=userId )
+    });
+
+    // user channels, waitReqList 수정
+    const user = await User.findById(userId);
+    const newWaitReqList = user.waitReqList.filter( id => id.str!==waitList._id.str );
+    const newChannels = user.channels.filter( id => id.str!=channelId.str ); 
+    await User.findByIdAndUpdate(userId, { 
+      waitReqList: newWaitReqList,
+      channels: newChannels
+    });
+
+    // 이메일 전송
+    const channel = await Channel.findById(channelId);
+    const owner = await User.findById(channel.ownerId);
+
+    const from = '"8LOGGING" <wnsdml0120@gmail.com>';
+    const to = owner.email;
+    const subject = "8LOGGING 채널 입장 신청이 취소되었습니다!";
+    const text = `${user.nickname} 님께서 회원님의 채널 [ ${channel.title} ] 입장 신청을 취소하였습니다.`;
+    const html = `<b>${user.nickname}</b>님께서 회원님의 채널 <b>[ ${channel.title} ]</b> 입장 신청을 취소하였습니다.`;
+    await sendEmail(from, to, subject, text, html);
+
+  },
+
+  /**
+   * 채널 입장 신청 목록 확인
+   * 
+   * @param {String} userId 
+   * @param {String} channelId 
+   * @returns 
+   */
+  async getWaitList(userId, channelId) {
+    // 권한 확인
+    const channel = await Channel.findById(channelId);
+    if (channel.ownerId!==userId) {
+      throw ApiError.badRequest("조회 권한이 없습니다.")
+    }
+
+    // waitList 조회
+    const rawWaitList = await WaitList.findOne({ channelId });
+    
+    // waitList에 있는 user 정보들 반환
+    const waitList = await Promise.all(rawWaitList.waiting.map( async (id) => {
+      const user = await User.findById(id);
+      return { userId, nickname: user.nickname, profPic: user.profPic }
+    }))
+
+    return waitList
+  },
+
+  /**
+   * 채널 입장 수락
+   * 
+   * @param {String} userId 
+   * @param {String} channelId 
+   * @param {String} waitingId 
+   */
+  async acceptEnter(userId, channelId, waitingId) {
+    // 권한 확인
+    const channel = await Channel.findById(channelId);
+    if (channel.ownerId!==userId) {
+      throw ApiError.badRequest("수락 권한이 없습니다.")
+    }
+
+    // waitList 수정
+    const waitList = await WaitList.findOne({ channelId });
+    await WaitList.findOneAndUpdate( { channelId }, {
+      waiting: waitList.waiting.filter( id => id!=waitingId )
+    });
+
+    // channel member 수정하기
+    const newMembers = [ ...channel.members, waitingId ]
+    await Channel.findByIdAndUpdate(channelId, { members: newMembers })
+
+    // waiting user channels, waitReqList 수정
+    const user = await User.findById(waitingId);
+    const newWaitReqList  = user.waitReqList.filter( id => id.str!==waitList._id.str );
+    const newChannels = [ ...user.channels, channelId ];
+    await User.findByIdAndUpdate(waitingId, { waitReqList: newWaitReqList, channels: newChannels });
+
+    // 이메일 전송
+    const owner = await User.findById(channel.ownerId);
+    const from = '"8LOGGING" <wnsdml0120@gmail.com>';
+    const to = user.email;
+    const subject = "8LOGGING 채널 입장 신청이 수락되었습니다!";
+    const text = `${owner.nickname} 님께서 채널 [ ${channel.title} ] 입장 신청을 수락하였습니다. 즐거운 플로깅하세요!`;
+    const html = `<b>${owner.nickname}</b>님께서 채널 <b>[ ${channel.title} ]</b> 입장 신청을 수락하였습니다.<br/><br/> 즐거운 플로깅하세요!`;
+    await sendEmail(from, to, subject, text, html);
+  },
+
+  /**
+   * 채널 입장 거절
+   * 
+   * @param {String} userId 
+   * @param {String} channelId 
+   * @param {String} waitingId 
+   */
+  async rejectEnter(userId, channelId, waitingId) {
+    // 권한 확인
+    const channel = await Channel.findById(channelId);
+    if (channel.ownerId!==userId) {
+      throw ApiError.badRequest("거절 권한이 없습니다.")
+    }
+
+    // waitList 수정
+    const waitList = await WaitList.findOne({ channelId });
+    await WaitList.findOneAndUpdate( { channelId }, {
+      waiting: waitList.waiting.filter( id => id!=waitingId )
+    });
+
+    // waiting user channels, waitReqList 수정
+    const user = await User.findById(waitingId);
+    const newWaitReqList = user.waitReqList.filter( id => id.str!==waitList._id.str );
+    const newChannels = user.channels.filter( id => id.str!=channelId.str ); 
+    await User.findByIdAndUpdate(waitingId, { 
+      waitReqList: newWaitReqList,
+      channels: newChannels
+    });;
+
+    // 이메일 전송
+    const owner = await User.findById(channel.ownerId);
+    const from = '"8LOGGING" <wnsdml0120@gmail.com>';
+    const to = user.email;
+    const subject = "8LOGGING 채널 입장 신청이 수락되었습니다!";
+    const text = `${owner.nickname} 님께서 채널 [ ${channel.title} ] 입장 신청을 거절하였습니다.`;
+    const html = `<b>${owner.nickname}</b>님께서 채널 <b>[ ${channel.title} ]</b> 입장 신청을 거절하였습니다.`;
+    await sendEmail(from, to, subject, text, html);
+  },
+
 };

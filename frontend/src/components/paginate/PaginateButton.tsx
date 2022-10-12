@@ -4,6 +4,7 @@ import GlobalTheme from "@/styles/theme";
 
 interface PaginateButtonProps {
   page: number;
+  totalPages: number;
   onNextButtonClickEvent: () => void;
   onPrevButtonClickEvent: () => void;
   onPageButtonClickEvent: (param: number) => () => void;
@@ -11,11 +12,12 @@ interface PaginateButtonProps {
 
 const PaginateButton = ({
   page,
+  totalPages,
   onNextButtonClickEvent,
   onPrevButtonClickEvent,
   onPageButtonClickEvent,
 }: PaginateButtonProps) => {
-  const pages = [1, 2, 3, 4];
+  const pages = Array.from({ length: totalPages }).map((p, i) => i + 1);
 
   return (
     <PaginateContainer>

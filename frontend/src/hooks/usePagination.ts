@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 // http://localhost:3002/api/channels?page=1&status=0
 // status == 0 : 모집 중인 채널
@@ -8,6 +8,7 @@ import React, { useState } from "react";
 interface PaginationProps {
   page: number;
   status: number;
+  totalPages: number;
 }
 
 const usePagination = (initialState: PaginationProps) => {
@@ -15,8 +16,9 @@ const usePagination = (initialState: PaginationProps) => {
   const [status] = useState<number>(initialState.status);
 
   const handleNextButtonClick = () => {
-    // 마지막 페이지인지 고려를 해야하는데?
-    setPage((prev) => prev + 1);
+    setPage((prev) =>
+      prev + 1 > initialState.totalPages ? initialState.totalPages : prev + 1
+    );
   };
 
   const handlePrevButtonClick = () => {
