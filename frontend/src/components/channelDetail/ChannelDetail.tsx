@@ -1,29 +1,22 @@
-import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import React from "react";
 import styled from "styled-components";
-import BasePageComponent from "@/components/hoc/BasePageComponent";
-import { currentChannelDetailRequest } from "@/api/channelFetcher";
 import GlobalTheme from "@/styles/theme";
 import ChannelInfo from "@/components/channelDetail/ChannelInfo";
 import { ChannelDetailType } from "@/types/channel/channelTypes";
 
-const ChannelDetail = () => {
-  const navigate = useNavigate();
-  const { channelUuid } = useParams();
-  const [channelDetailInfo, setChannelDetailInfo] = useState<
-    ChannelDetailType[]
-  >([]);
+interface Props {
+  isShowMore: boolean;
+  setIsShowMore: React.Dispatch<React.SetStateAction<boolean>>;
+  channelDetailInfo: ChannelDetailType[];
+}
 
-  useEffect(() => {
-    (async () => {
-      const res = await currentChannelDetailRequest(
-        `/api/channels/${channelUuid}`
-      );
-      setChannelDetailInfo([res.datas]);
-    })();
-  }, []);
+const ChannelDetail = ({
+  isShowMore,
+  setIsShowMore,
+  channelDetailInfo,
+}: Props) => {
   return (
-    <BasePageComponent>
+    <ChannelDetailBackground isShowMore={isShowMore}>
       <ChannelDetailContainer>
         {channelDetailInfo.map((info) => (
           <ChannelInfo
@@ -40,27 +33,46 @@ const ChannelDetail = () => {
         ))}
 
         <ChannelDetailButtonContainer>
-          <Button>참가 신청</Button>
-          <BackButton onClick={() => navigate(-1)}>목록으로</BackButton>
+          <Button>참가하기</Button>
+          <BackButton
+            onClick={() => {
+              setIsShowMore(false);
+            }}
+          >
+            Close
+          </BackButton>
         </ChannelDetailButtonContainer>
       </ChannelDetailContainer>
-    </BasePageComponent>
+    </ChannelDetailBackground>
   );
 };
 
+const ChannelDetailBackground = styled.div<{ isShowMore: boolean }>`
+  display: ${(props) => (props.isShowMore ? "block" : "none")};
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.2);
+`;
+
 const ChannelDetailContainer = styled.div`
-  width: 90rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  width: 100rem;
   height: 60rem;
   background-color: ${GlobalTheme.colors.white};
   box-shadow: 1px 1px 3px ${GlobalTheme.colors.gray};
   border-radius: 8px;
-  margin-right: 2rem;
 `;
 
 const ChannelDetailButtonContainer = styled.div`
   display: flex;
   justify-content: center;
-  gap: 5rem;
+  gap: 8rem;
   width: 100%;
 `;
 
