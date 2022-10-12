@@ -78,20 +78,6 @@ const LogoImg = styled.img`
 const MenuContainer = styled.div`
   width: 100%;
 `;
-const SearchContainer = styled.div`
-  width: 100%;
-  height: 10rem;
-  margin-top: 2rem;
-`;
-
-const SearchInput = styled.input`
-  width: 20rem;
-  height: 4rem;
-  background-color: ${GlobalTheme.colors.lightGray};
-  border: none;
-  border-radius: 4px;
-  text-align: center;
-`;
 
 const MenuItem = styled.div`
   margin-bottom: 3rem;
