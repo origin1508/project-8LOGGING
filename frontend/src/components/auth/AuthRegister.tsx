@@ -22,6 +22,7 @@ interface Props {
     nickname: boolean;
   };
   isVerifiedEmail: boolean;
+  setIsVerifiedEmail: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const AuthReigster: React.FC<Props> = ({
@@ -32,6 +33,7 @@ const AuthReigster: React.FC<Props> = ({
   onSendVerficationCodeClickEvent,
   isDuplicated,
   isVerifiedEmail,
+  setIsVerifiedEmail,
 }) => {
   const isValidEmail = ValidationUtil.checkEmailValidate(authFormState.email);
   const isValidNickname = ValidationUtil.checkNicknameValidate(
@@ -70,7 +72,14 @@ const AuthReigster: React.FC<Props> = ({
           </BaseValidateTextContainer>
         )}
         {isVerifiedEmail ? (
-          <VerifiedEmail>Verify</VerifiedEmail>
+          <VerifiedEmailButton
+            onClick={(e) => {
+              e.preventDefault();
+              setIsVerifiedEmail(false);
+            }}
+          >
+            Verify
+          </VerifiedEmailButton>
         ) : (
           <EmailVerificationButton
             onClick={(e) => {
@@ -200,18 +209,10 @@ const EmailVerificationButton = styled.button`
   }
 `;
 
-const VerifiedEmail = styled.div`
+const VerifiedEmailButton = styled(EmailVerificationButton)`
   ${GlobalTheme.buttons}
   border: 1px solid green;
-  position: absolute;
-  top: 18.5rem;
-  font-size: ${GlobalTheme.fontSize.littleBig};
   color: green;
-  right: 6rem;
-  height: 3rem;
-  line-height: 3rem;
-  width: 6rem;
-  text-align: center;
 `;
 
 export default AuthReigster;

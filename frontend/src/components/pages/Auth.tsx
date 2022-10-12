@@ -201,6 +201,7 @@ const Auth = () => {
               onSendVerficationCodeClickEvent={handleSendVerificationCode}
               isDuplicated={isDuplicated}
               isVerifiedEmail={isVerifiedEmail}
+              setIsVerifiedEmail={setIsVerifiedEmail}
             />
           )}
         </FormContainer>
