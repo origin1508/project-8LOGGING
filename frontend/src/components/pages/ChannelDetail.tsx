@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import BasePageComponent from "@/components/hoc/BasePageComponent";
 import { currentChannelDetailRequest } from "@/api/channelFetcher";
@@ -8,6 +8,7 @@ import ChannelInfo from "@/components/channelDetail/ChannelInfo";
 import { ChannelDetailType } from "@/types/channel/channelTypes";
 
 const ChannelDetail = () => {
+  const navigate = useNavigate();
   const { channelUuid } = useParams();
   const [channelDetailInfo, setChannelDetailInfo] = useState<
     ChannelDetailType[]
@@ -40,7 +41,7 @@ const ChannelDetail = () => {
 
         <ChannelDetailButtonContainer>
           <Button>참가 신청</Button>
-          <BackButton>목록으로</BackButton>
+          <BackButton onClick={() => navigate(-1)}>목록으로</BackButton>
         </ChannelDetailButtonContainer>
       </ChannelDetailContainer>
     </BasePageComponent>
