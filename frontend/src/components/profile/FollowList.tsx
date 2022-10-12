@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import CustomIcon from "@/components/icons/CustomIcon";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
@@ -25,6 +26,7 @@ export default function FollowList() {
   const [followList, setFollowList] = useState<Array<UserContentType>>([]);
   const curUser = useRecoilValue(curUserState);
   const [isShow, setIsShow] = useState(false);
+  const navigate = useNavigate();
 
   const handleFollowingClick = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -64,7 +66,9 @@ export default function FollowList() {
                 <TextOne>{user.nickname}</TextOne>
                 <TextTwo>{user.email}</TextTwo>
               </UserInfo>
-              <SmallButton>프로필</SmallButton>
+              <SmallButton onClick={() => navigate(`/profile/${user._id}`)}>
+                프로필
+              </SmallButton>
             </UserContainer>
           ))}
         </UsersContainer>
