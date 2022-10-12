@@ -2,6 +2,7 @@ import React, { Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
 import SidebarComponent from "@/components/commonLayout/sidebars/SidebarComponent";
 import Footer from "@/components/commonLayout/footer/Footer";
+import ScrollToTop from "@/util/scrollToTop";
 
 const MainComponentPage = React.lazy(() => import("@/components/pages/Main"));
 const LoginComponentPage = React.lazy(() => import("@/components/pages/Auth"));
@@ -28,6 +29,7 @@ const CustomRouter = () => {
       <Suspense
         fallback={<div>Loading... 이 친구도 따로 디자인 필요 Spinner?</div>}
       >
+        <ScrollToTop />
         <Routes>
           <Route path="/" element={<MainComponentPage />} />
           <Route path="/auth" element={<LoginComponentPage />} />
