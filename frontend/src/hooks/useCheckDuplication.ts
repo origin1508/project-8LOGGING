@@ -41,7 +41,7 @@ const useCheckDuplication = (initialState: InitialState) => {
       handleModalOpenButtonClick();
     }
   };
-  return { isDuplicated, handleCheckDuplication };
+  return { isDuplicated, setIsDuplicated, handleCheckDuplication };
 };
 
 export default useCheckDuplication;

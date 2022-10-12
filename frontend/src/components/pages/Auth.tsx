@@ -11,6 +11,7 @@ import AuthEmailVerification from "@/components/auth/AuthEmailVerification";
 import BasePageComponent from "@/components/hoc/BasePageComponent";
 import Modal from "@/components/modal/Modal";
 import useModal from "@/hooks/useModal";
+import { ErrorType } from "@/types/common/errorType";
 import {
   authRegisterRequest,
   authLoginRequest,
@@ -55,6 +56,10 @@ const Auth = () => {
       password: "",
     });
     setVerificationCode("");
+    setIsDuplicated({
+      email: false,
+      nickname: false,
+    });
   }, [tabIndex]);
 
   const { authFormState, handleAuthFormValueChange, setAuthForm } =
@@ -71,10 +76,11 @@ const Auth = () => {
       password: "",
     });
 
-  const { isDuplicated, handleCheckDuplication } = useCheckDuplication({
-    setErrMessage,
-    handleModalOpenButtonClick,
-  });
+  const { isDuplicated, setIsDuplicated, handleCheckDuplication } =
+    useCheckDuplication({
+      setErrMessage,
+      handleModalOpenButtonClick,
+    });
 
   const setCurUserId = useSetRecoilState(curUserIdState);
 
@@ -107,7 +113,10 @@ const Auth = () => {
       setCurUserId(res.userId);
       navigate("/", { replace: true });
     } catch (error) {
-      setErrMessage("Incorret email or password");
+      const err = error as ErrorType;
+      const status = err.response.data.status;
+      if (status === 400) setErrMessage("Incorret email or password");
+      if (status === 403) setErrMessage("Your account has been deleted");
       handleModalOpenButtonClick();
     }
   };
