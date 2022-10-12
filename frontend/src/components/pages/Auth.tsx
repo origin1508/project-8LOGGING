@@ -147,6 +147,7 @@ const Auth = () => {
       );
       if (res.success) {
         setIsVerifiedEmail(true);
+        setVerificationCode("");
         handleEmailVerificationAcceptButtonClick();
       } else {
         setErrMessage(res.message);

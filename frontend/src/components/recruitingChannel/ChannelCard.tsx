@@ -4,28 +4,22 @@ import GlobalTheme from "@/styles/theme";
 import CustomIcon from "@/components/icons/CustomIcon";
 
 interface ChannelCardPropsType {
-  id: string;
-  ownerId: string;
   img: string;
   title: string;
   channelUuid: string;
   curMemberNum: string;
   locationDist: string;
   locationCity: string;
-  onChannelEnterClick: (id: string, ownerId: string) => () => void;
   onMoreClick: (channelUuid: string) => void;
 }
 
 function ChannelCard({
-  id,
-  ownerId,
   img,
   title,
   channelUuid,
   curMemberNum,
   locationDist,
   locationCity,
-  onChannelEnterClick,
   onMoreClick,
 }: ChannelCardPropsType) {
   return (
@@ -49,7 +43,6 @@ function ChannelCard({
           </List>
         </CardInfoList>
         <ButtonContainer>
-          <Button onClick={onChannelEnterClick(id, ownerId)}>참가하기</Button>
           <Button
             onClick={() => {
               onMoreClick(channelUuid);
