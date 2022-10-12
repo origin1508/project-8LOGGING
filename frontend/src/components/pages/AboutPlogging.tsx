@@ -35,12 +35,12 @@ const AboutPlogging = () => {
         <AboutImage src="/images/plogging-about-1.png" />
       </AboutWrapper>
       <BarChart
-        dataName="Korea Sea Monitor Bar"
+        dataName="해양 쓰레기"
         labels={barChartInfo?.labels}
         datas={barChartInfo?.data}
       />
       <MultiLineChart
-        dataName="Microplastic"
+        dataName="미세플라스틱"
         labels={multiLineChartInfo?.labels}
         multiDatas={multiDatas}
       />
