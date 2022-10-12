@@ -48,7 +48,8 @@ module.exports = {
         success: true,
         status: 200,
         message: "Channel list load success",
-        datas: channels,
+        totalPages: channels.totalPages,
+        datas: channels.channelItems,
       });
     } catch (err) {
       next(err);
