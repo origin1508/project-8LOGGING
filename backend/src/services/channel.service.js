@@ -216,14 +216,13 @@ module.exports = {
       throw ApiError.badRequest("가입 신청한 적이 없는 채널입니다.")
     }
     await WaitList.findOneAndUpdate( { channelId }, {
-      waiting: waitList.waiting.filter( id => id!==userId )
+      waiting: waitList.waiting.filter( id => id!=userId )
     });
 
     // user waitReqList 수정
     const user = await User.findById(userId);
-    await User.findByIdAndUpdate(userId, {
-      waitReqList: user.waitReqList.filter( id => id!==waitList._id )
-    });
+    const newWaitReqList  = user.waitReqList.filter( id => id.str!==waitList._id.str );
+    await User.findByIdAndUpdate(userId, { waitReqList: newWaitReqList });
 
     // 이메일 전송
     const channel = await Channel.findById(channelId);
