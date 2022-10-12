@@ -11,12 +11,13 @@ export interface ChannelsType {
   _id: string;
   ownerId: string;
   title: string;
-  ownerNickname: string;
+  ownerNickname?: string;
   locationDist: string;
   locationCity: string;
-  selectedCity: string;
+  selectedCity?: string;
   img: string;
   memberNum: number;
+  members: string[];
   curMemberNum: number;
 }
 
