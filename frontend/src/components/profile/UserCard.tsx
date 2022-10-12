@@ -53,6 +53,7 @@ function UserCard({
         <UserDescription>{curUser?.description}</UserDescription>
         {isEditable && (
           <>
+            <FollowButton>Follow</FollowButton>
             <Button onClick={handlerEditClick}>Edit</Button>
             <Button onClick={onDeleteAccountModalOpenClickEvent}>
               Delete Account
@@ -131,5 +132,14 @@ const Following = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+
+const FollowButton = styled.button`
+  ${GlobalTheme.buttons}
+  background-color:${GlobalTheme.colors.theme};
+  color: ${GlobalTheme.colors.white};
+  width: 50%;
+  font-size: 1.5rem;
+  padding: 1rem 2rem;
 `;
 export default UserCard;
