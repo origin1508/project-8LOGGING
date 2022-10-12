@@ -18,6 +18,23 @@ module.exports = {
     }
   },
 
+  async checkFollow(req, res, next) {
+    const userId = req.userId;
+    const { targetId } = req.params;
+
+    try {
+      await followService.confirmFollow(userId, targetId);
+
+      res.status(200).json({
+        success: true,
+        status: 200,
+        message: "followed users",
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
+
   async addFollow(req, res, next) {
     const userId = req.userId;
     const { targetId } = req.body;
