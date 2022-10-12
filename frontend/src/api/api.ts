@@ -8,6 +8,7 @@ interface dataType {
   newPassword?: string;
   newProfPic?: string;
   currentPassword?: string;
+  targetId?: string;
 }
 
 export async function put(endpoint: string, data: dataType) {
@@ -24,6 +25,27 @@ export async function put(endpoint: string, data: dataType) {
 export async function get(endpoint: string, params = "") {
   return axios.get(serverUrl + endpoint + "/" + params, {
     headers: {
+      Authorization: `Bearer ${Storage.getToken()}`,
+    },
+  });
+}
+
+export async function post(endpoint: string, data: dataType) {
+  const bodyData = JSON.stringify(data);
+  return axios.post(serverUrl + endpoint, bodyData, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${Storage.getToken()}`,
+    },
+  });
+}
+
+export async function del(endpoint: string, data: dataType) {
+  const bodyData = JSON.stringify(data);
+  return axios.delete(serverUrl + endpoint, {
+    data: bodyData,
+    headers: {
+      "Content-Type": "application/json",
       Authorization: `Bearer ${Storage.getToken()}`,
     },
   });
