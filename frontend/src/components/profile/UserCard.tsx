@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import { curUserState } from "@/recoil/atoms/authState";
@@ -6,6 +6,7 @@ import { useRecoilValue } from "recoil";
 import BaseCardContainer from "@/components/hoc/BaseCardContainer";
 import { BigTitle, TitleContainer } from "@/styles/commonStyle";
 import CustomIcon from "@/components/icons/CustomIcon";
+import * as Api from "@/api/api";
 
 interface ImgProps {
   img?: string;
@@ -22,9 +23,27 @@ function UserCard({
   onDeleteAccountModalOpenClickEvent,
 }: UserCardProps) {
   const curUser = useRecoilValue(curUserState);
+  const [followed, setFollowed] = useState(true);
 
   const handlerEditClick = () => {
     setIsEditing(true);
+  };
+
+  const handleFollowClick = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      if (!followed) {
+        await Api.post("/api/follow", { targetId: curUser._id });
+        console.log("팔로우");
+        setFollowed(true);
+      } else {
+        await Api.del("/api/follow", { targetId: curUser._id });
+        console.log("팔로우취소");
+        setFollowed(false);
+      }
+    } catch (e) {
+      console.log(e);
+    }
   };
   return (
     <BaseCardContainer width="40rem">
@@ -51,9 +70,9 @@ function UserCard({
         <UserNicname>{curUser?.nickname}</UserNicname>
         <UserEmail>{curUser?.email}</UserEmail>
         <UserDescription>{curUser?.description}</UserDescription>
+        <FollowButton onClick={handleFollowClick}>Follow</FollowButton>
         {isEditable && (
           <>
-            <FollowButton>Follow</FollowButton>
             <Button onClick={handlerEditClick}>Edit</Button>
             <Button onClick={onDeleteAccountModalOpenClickEvent}>
               Delete Account
@@ -99,6 +118,7 @@ const Button = styled.button`
   width: 80%;
   font-size: 1.5rem;
   padding: 1rem 2rem;
+  cursor: pointer;
 
   &:hover {
     transform: translateY(-0.3rem);
@@ -141,5 +161,6 @@ const FollowButton = styled.button`
   width: 50%;
   font-size: 1.5rem;
   padding: 1rem 2rem;
+  cursor: pointer;
 `;
 export default UserCard;
