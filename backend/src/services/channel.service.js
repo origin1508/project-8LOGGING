@@ -210,10 +210,11 @@ module.exports = {
       }
     );
 
-    // user waitReqList 수정
+    // user channels, waitReqList 수정
     const user = await User.findById(userId);
     await User.findByIdAndUpdate(userId, {
       waitReqList: [...user.waitReqList, waitList._id],
+      channels: [...user.channels, channelId]
     });
 
     // 이메일 전송
@@ -243,10 +244,14 @@ module.exports = {
       waiting: waitList.waiting.filter( id => id!=userId )
     });
 
-    // user waitReqList 수정
+    // user channels, waitReqList 수정
     const user = await User.findById(userId);
-    const newWaitReqList  = user.waitReqList.filter( id => id.str!==waitList._id.str );
-    await User.findByIdAndUpdate(userId, { waitReqList: newWaitReqList });
+    const newWaitReqList = user.waitReqList.filter( id => id.str!==waitList._id.str );
+    const newChannels = user.channels.filter( id => id.str!=channelId.str ); 
+    await User.findByIdAndUpdate(userId, { 
+      waitReqList: newWaitReqList,
+      channels: newChannels
+    });
 
     // 이메일 전송
     const channel = await Channel.findById(channelId);
@@ -287,6 +292,13 @@ module.exports = {
     return waitList
   },
 
+  /**
+   * 채널 입장 수락
+   * 
+   * @param {String} userId 
+   * @param {String} channelId 
+   * @param {String} waitingId 
+   */
   async acceptEnter(userId, channelId, waitingId) {
     // 권한 확인
     const channel = await Channel.findById(channelId);
