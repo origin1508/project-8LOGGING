@@ -6,13 +6,31 @@ module.exports = {
     const itemCount = 10;
     const followingInfo = await Follow.find({ follower: userId }, "following")
       .skip((page - 1) * itemCount)
-      .limit(itemCount).lean();
-    
-    const followList = await Promise.all(followingInfo.map(info => {
-      return User.findOne({_id: info.following}, "email nickname description profPic channels");
-    }));
+      .limit(itemCount)
+      .lean();
+
+    const followList = await Promise.all(
+      followingInfo.map((info) => {
+        return User.findOne(
+          { _id: info.following },
+          "email nickname description profPic channels"
+        );
+      })
+    );
 
     return followList;
+  },
+
+  async confirmFollow(userId, targetId) {
+    const exFollow = await Follow.find({
+      $and: [{ follower: userId }, { following: targetId }],
+    });
+    
+    if (exFollow.length === 0) {
+      throw ApiError.badRequest("팔로우 하지 않은 유저입니다.");
+    }
+
+    return true;
   },
 
   async createFollow(userId, targetId) {
@@ -41,6 +59,6 @@ module.exports = {
   },
 
   async deleteFollow(userId, targetId) {
-    await Follow.deleteOne({follower: userId, following: targetId});
-  }
+    await Follow.deleteOne({ follower: userId, following: targetId });
+  },
 };
