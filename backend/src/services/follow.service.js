@@ -2,23 +2,22 @@ const { Follow, User } = require("../models");
 const ApiError = require("../utils/ApiError");
 
 module.exports = {
-  async getFollowList(userId, page) {
-    const itemCount = 10;
-    const followingInfo = await Follow.find({ follower: userId }, "following")
-      .skip((page - 1) * itemCount)
-      .limit(itemCount)
-      .lean();
+  async getFollowList(userId) {
+    const followingInfo = await Follow.find(
+      { follower: userId },
+      "following"
+    ).lean();
 
     const followList = await Promise.all(
       followingInfo.map((info) => {
         return User.findOne(
-          { _id: info.following },
+          { _id: info.following, withdrawal: false },
           "email nickname description profPic channels"
-        );
+        ).lean();
       })
     );
 
-    return followList;
+    return followList.filter(el => el !== null);
   },
 
   async confirmFollow(userId, targetId) {

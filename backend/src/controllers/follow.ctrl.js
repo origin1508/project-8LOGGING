@@ -2,10 +2,10 @@ const { followService } = require("../services");
 
 module.exports = {
   async showFollowList(req, res, next) {
-    const userId = req.userId;
-    const { page } = req.query;
+    const { userId } = req.params;
+    
     try {
-      const followList = await followService.getFollowList(userId, page);
+      const followList = await followService.getFollowList(userId);
 
       res.status(200).json({
         success: true,
