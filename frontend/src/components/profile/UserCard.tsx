@@ -32,7 +32,7 @@ function UserCard({
     <BaseCardContainer width="40rem">
       <TitleContainer>
         <BigTitle>
-          {isEditable ? `My` : `${curUser.nickname}'s`} PROFILE
+          {isEditable ? `My` : `${curUser.nickname}'s`} Profile
         </BigTitle>
       </TitleContainer>
       <Img img={curUser?.profPic}></Img>
