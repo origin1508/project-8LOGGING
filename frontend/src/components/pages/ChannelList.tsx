@@ -105,7 +105,7 @@ const ChannelList = () => {
       <ChannelListContiner>
         <ChannelListForm>
           <TitleContainer>
-            <BigTitle>Recruting Channel</BigTitle>
+            <BigTitle>Recruiting Channel</BigTitle>
             <BigButton onClick={handleCreateChannelClick}>
               채널생성하기
             </BigButton>
@@ -118,7 +118,7 @@ const ChannelList = () => {
             <Select>
               <option value="All">All</option>
               <option value="Title">Title</option>
-              <option value="Regin">Regin</option>
+              <option value="Regin">Region</option>
             </Select>
           </Search>
 
@@ -131,7 +131,7 @@ const ChannelList = () => {
                 img={ch.img}
                 title={ch.title}
                 channelUuid={ch._id}
-                curMemberNum={ch.curMemberNum}
+                curMemberNum={`${ch.memberNum}/${ch.members.length}`}
                 locationDist={ch.locationDist}
                 locationCity={ch.locationCity}
                 onChannelEnterClick={handleChannelEnterClick}
