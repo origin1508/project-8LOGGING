@@ -11,9 +11,9 @@ interface ChannelCardPropsType {
   channelUuid: string;
   curMemberNum: number;
   locationDist: string;
-  onDetailClickEvent: (channelUuid: string) => void;
   locationCity: string;
   onChannelEnterClick: (id: string, ownerId: string) => () => void;
+  onMoreClick: (channelUuid: string) => void;
 }
 
 function ChannelCard({
@@ -24,9 +24,9 @@ function ChannelCard({
   channelUuid,
   curMemberNum,
   locationDist,
-  onDetailClickEvent,
   locationCity,
   onChannelEnterClick,
+  onMoreClick,
 }: ChannelCardPropsType) {
   return (
     <CardContainer>
@@ -60,7 +60,7 @@ function ChannelCard({
           <Button onClick={onChannelEnterClick(id, ownerId)}>참가하기</Button>
           <Button
             onClick={() => {
-              onDetailClickEvent(channelUuid);
+              onMoreClick(channelUuid);
             }}
           >
             More
