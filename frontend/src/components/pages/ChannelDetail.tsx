@@ -21,7 +21,6 @@ const ChannelDetail = () => {
       setChannelDetailInfo([res.datas]);
     })();
   }, []);
-
   return (
     <BasePageComponent>
       <ChannelDetailContainer>
@@ -35,6 +34,7 @@ const ChannelDetail = () => {
             locationDist={info.locationDist}
             memberNum={info.memberNum}
             ownerInfo={info.ownerInfo}
+            membersInfo={info.membersInfo}
           />
         ))}
 
