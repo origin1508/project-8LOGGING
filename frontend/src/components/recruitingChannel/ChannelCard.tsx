@@ -9,7 +9,7 @@ interface ChannelCardPropsType {
   img: string;
   title: string;
   channelUuid: string;
-  curMemberNum: number;
+  curMemberNum: string;
   locationDist: string;
   locationCity: string;
   onChannelEnterClick: (id: string, ownerId: string) => () => void;
@@ -46,14 +46,6 @@ function ChannelCard({
             <CustomIcon name="map" size="15" color={GlobalTheme.colors.theme} />
             <Location>{locationDist}</Location>
             <Location>{locationCity}</Location>
-          </List>
-          <List>
-            <CustomIcon
-              name="date"
-              size="15"
-              color={GlobalTheme.colors.theme}
-            />
-            <Date>22/10/22</Date>
           </List>
         </CardInfoList>
         <ButtonContainer>
@@ -103,11 +95,11 @@ const CardTitle = styled.h1`
 `;
 const CardInfoList = styled.ul`
   display: flex;
-  justify-content: space-between;
+  justify-content: left;
 `;
 const List = styled.li`
   display: flex;
-  margin-right: 1rem;
+  margin-right: 2rem;
   span {
     margin-left: 1rem;
   }
@@ -115,7 +107,7 @@ const List = styled.li`
 
 const PeopleCount = styled.span``;
 const Location = styled.span``;
-const Date = styled.span``;
+
 const ButtonContainer = styled.div`
   display: flex;
   gap: 2rem;
