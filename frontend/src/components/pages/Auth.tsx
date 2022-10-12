@@ -19,7 +19,7 @@ import {
   authVerificationCodeCheck,
 } from "@/api/authFetcher";
 import { useSetRecoilState } from "recoil";
-import { curUserIdState } from "@/recoil/atoms/authState";
+import { loginUserIdState } from "@/recoil/atoms/authState";
 const TapMenu = ["Sign in", "Registration"];
 
 const Auth = () => {
@@ -82,7 +82,7 @@ const Auth = () => {
       handleModalOpenButtonClick,
     });
 
-  const setCurUserId = useSetRecoilState(curUserIdState);
+  const setLoginUserId = useSetRecoilState(loginUserIdState);
 
   const navigate = useNavigate();
 
@@ -110,7 +110,7 @@ const Auth = () => {
         email,
         password,
       });
-      setCurUserId(res.userId);
+      setLoginUserId(res.userId);
       navigate("/", { replace: true });
     } catch (error) {
       const err = error as ErrorType;
@@ -152,6 +152,7 @@ const Auth = () => {
         setErrMessage(res.message);
       }
     }
+    handleModalOpenButtonClick();
   };
 
   return (

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { useNavigate, useParams } from "react-router-dom";
 import useModal from "@/hooks/useModal";
-import { curUserState, curUserIdState } from "@/recoil/atoms/authState";
+import { curUserState, loginUserIdState } from "@/recoil/atoms/authState";
 import User from "@/components/profile/User";
 import Modal from "@/components/modal/Modal";
 import DeleteAccountModal from "@/components/modal/Modal";
@@ -24,12 +24,11 @@ function Profile() {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [confirmCheck, setConfirmCheck] = useState("");
   const [curUser, setCurUser] = useRecoilState(curUserState);
-  const [isFetchCompleted, setIsFetchCompleted] = useState(false);
   const [image, setImage] = useState<Blob>();
   const [profileImagePreview, setProfileImagePreview] = useState<
     string | ArrayBuffer | null
   >();
-  const curUserId = useRecoilValue(curUserIdState);
+  const loginUserId = useRecoilValue(loginUserIdState);
 
   const [
     isOpenModal,
@@ -47,12 +46,10 @@ function Profile() {
     handleDeleteAccountModalCloseButtonClick,
   ] = useModal(false);
 
-  const fetchProfileOwner = async (curUserId: string) => {
-    const res = await Api.get("/api/users/userinfo", curUserId);
+  const fetchProfileOwner = async (loginUserId: string) => {
+    const res = await Api.get("/api/users/userinfo", loginUserId);
     const curUserData = res.data.datas;
-
     setCurUser(curUserData);
-    setIsFetchCompleted(true);
   };
 
   const handleProfileImageUploadChange = async (
@@ -104,7 +101,7 @@ function Profile() {
       const userId = params.userId;
       fetchProfileOwner(userId);
     } else {
-      const userId = curUserId;
+      const userId = loginUserId;
       fetchProfileOwner(userId);
     }
   }, [params, navigate]);
@@ -112,6 +109,7 @@ function Profile() {
   return (
     <BasePageComponent>
       <User
+        isEditable={curUser._id === loginUserId}
         isEditing={isEditing}
         setIsEditing={setIsEditing}
         onDeleteAccountModalOpenClickEvent={

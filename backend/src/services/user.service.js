@@ -108,19 +108,19 @@ module.exports = {
     return result;
   },
 
-  /**
-   * 유저 팔로잉 리스트 조회
-   *
-   * @param {String} userId
-   * @returns
-   */
-  async findFollowingList(userId) {
-    const user = await User.findOne({ _id: userId });
+  // /**
+  //  * 유저 팔로잉 리스트 조회
+  //  *
+  //  * @param {String} userId
+  //  * @returns
+  //  */
+  // async findFollowingList(userId) {
+  //   const user = await User.findOne({ _id: userId });
 
-    return {
-      following: user.following,
-    };
-  },
+  //   return {
+  //     following: user.following,
+  //   };
+  // },
   /**
    * 자기소개 수정
    *

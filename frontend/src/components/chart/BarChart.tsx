@@ -1,13 +1,13 @@
 import React from "react";
 import { ChartProps } from "@/types/common/baseChartPropsType";
-import { chartRegistry, chartOptions } from "@/util/chartOption";
+import { chartRegistry, barChartOptions } from "@/util/chartOption";
 import BaseChartContainer from "@/components/hoc/BaseChartContainer";
 import { Bar } from "react-chartjs-2";
 
 chartRegistry();
 
 const BarChart = ({ dataName, labels, datas }: ChartProps) => {
-  const options = chartOptions("Korea sea monitor");
+  const options = barChartOptions("국내 해양쓰레기 모니터링");
 
   const dataForChartRender = () => {
     return {
