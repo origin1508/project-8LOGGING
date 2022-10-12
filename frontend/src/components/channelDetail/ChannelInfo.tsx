@@ -2,36 +2,50 @@ import React from "react";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import CustomIcon from "@/components/icons/CustomIcon";
+import { ChannelDetailType } from "@/types/channel/channelTypes";
 
-const ChannelInfo = () => {
+const ChannelInfo = ({
+  title,
+  spec,
+  imgUrl,
+  locationCity,
+  locationDist,
+  memberNum,
+  ownerInfo,
+}: ChannelDetailType) => {
+  console.log(spec);
   return (
     <ChannelInfoContainer>
       <InfoHeaderContainer>
         <MainInfoContainer>
-          <ChannelTitle>여기어때 저기어때</ChannelTitle>
+          <ChannelTitle>{title}</ChannelTitle>
           <MemberNumInfo>
             <CustomIcon
               name="people"
               size="15"
               color={GlobalTheme.colors.theme}
             />
-            <Text>12</Text>
+            <Text>{memberNum}</Text>
           </MemberNumInfo>
           <LocationInfo>
             <CustomIcon name="map" size="15" color={GlobalTheme.colors.theme} />
-            <Text>서울시 마포구</Text>
+            <Text>
+              {locationDist} {locationCity}
+            </Text>
           </LocationInfo>
         </MainInfoContainer>
         <OwnerInfoContainer>
           <OwnerPic>
-            <Img />
+            <Img src={ownerInfo.ownerPic} />
           </OwnerPic>
-          <OwnerNickname>Alex</OwnerNickname>
+          <OwnerNickname>{ownerInfo.ownerNickname}</OwnerNickname>
         </OwnerInfoContainer>
       </InfoHeaderContainer>
       <InfoBodyContainer>
-        <ChannelDescription>올여름 혼자어때 둘이어때</ChannelDescription>
-        <ChannelPic></ChannelPic>
+        <ChannelDescription>{spec}</ChannelDescription>
+        <ChannelPic>
+          <Img src={imgUrl} />
+        </ChannelPic>
       </InfoBodyContainer>
     </ChannelInfoContainer>
   );
@@ -89,7 +103,11 @@ const OwnerNickname = styled.div`
   }
 `;
 
-const Img = styled.img``;
+const Img = styled.img`
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+`;
 
 const InfoBodyContainer = styled.div`
   display: flex;
@@ -104,14 +122,16 @@ const ChannelDescription = styled.div`
   box-shadow: 1px 1px 3px ${GlobalTheme.colors.gray};
   border-radius: 4px;
   box-sizing: border-box;
-  padding: 5rem;
+  padding: 3rem;
   font-size: ${GlobalTheme.fontSize.littleBig};
+  white-space: pre-wrap;
 `;
 
 const ChannelPic = styled.div`
   box-shadow: 1px 1px 3px ${GlobalTheme.colors.gray};
   width: 50rem;
   height: 25rem;
+  overflow: hidden;
 `;
 
 export default ChannelInfo;
