@@ -152,7 +152,6 @@ const Auth = () => {
         setErrMessage(res.message);
       }
     }
-    handleModalOpenButtonClick();
   };
 
   return (
