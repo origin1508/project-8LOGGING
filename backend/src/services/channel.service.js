@@ -237,4 +237,24 @@ module.exports = {
     await sendEmail(from, to, subject, text, html);
 
   },
+
+  async getWaitList(userId, channelId) {
+    // 권한 확인
+    const channel = await Channel.findById(channelId);
+    if (channel.ownerId!==userId) {
+      throw ApiError.badRequest("조회 권한이 없습니다.")
+    }
+
+    // waitList 조회
+    const rawWaitList = await WaitList.findOne({ channelId });
+    
+    // waitList에 있는 user 정보들 반환
+    const waitList = await Promise.all(rawWaitList.waiting.map( async (id) => {
+      const user = await User.findById(id);
+      return { userId, nickname: user.nickname, profPic: user.profPic }
+    }))
+
+    return waitList
+  },
+
 };
