@@ -3,7 +3,7 @@ const { followService } = require("../services");
 module.exports = {
   async showFollowList(req, res, next) {
     const { userId } = req.params;
-    
+
     try {
       const followList = await followService.getFollowList(userId);
 
@@ -23,12 +23,13 @@ module.exports = {
     const { targetId } = req.params;
 
     try {
-      await followService.confirmFollow(userId, targetId);
+      const isFollowed = await followService.confirmFollow(userId, targetId);
 
       res.status(200).json({
         success: true,
         status: 200,
-        message: "followed users",
+        message: "true => followed, false => unfollowed",
+        datas: { isFollowed },
       });
     } catch (err) {
       next(err);

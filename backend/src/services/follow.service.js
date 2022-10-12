@@ -21,15 +21,17 @@ module.exports = {
   },
 
   async confirmFollow(userId, targetId) {
+    let isFollowed = true;
+    
     const exFollow = await Follow.find({
       $and: [{ follower: userId }, { following: targetId }],
     });
 
     if (exFollow.length === 0) {
-      throw ApiError.badRequest("not follow");
+      isFollowed = false;
     }
 
-    return true;
+    return isFollowed;
   },
 
   async createFollow(userId, targetId) {
