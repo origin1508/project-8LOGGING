@@ -28,6 +28,7 @@ const ChannelList = () => {
     profPic: "profPic",
   });
   const [selectedChannelId, setSelectedChannelId] = useState<string>();
+  const [totalPages, setTotalPages] = useState<number>(1);
 
   const [
     isOpenModal,
@@ -43,16 +44,17 @@ const ChannelList = () => {
     handleNextButtonClick,
     handlePrevButtonClick,
     handlePageButtonClick,
-  } = usePagination({ page: 1, status: 0 });
+  } = usePagination({ page: 1, status: 0, totalPages: totalPages });
 
   const navigate = useNavigate();
 
   useEffect(() => {
     // api/channels?page=1&status=0
     (async () => {
-      const { datas } = await currentChannelListRequest(
+      const { datas, totalPages } = await currentChannelListRequest(
         `/api/channels?page=${page}&status=${status}`
       );
+      setTotalPages(totalPages);
       setChannels(datas);
     })();
   }, [page]);
@@ -128,6 +130,7 @@ const ChannelList = () => {
           </CardsContainer>
           <PaginateButton
             page={page}
+            totalPages={totalPages}
             onNextButtonClickEvent={handleNextButtonClick}
             onPrevButtonClickEvent={handlePrevButtonClick}
             onPageButtonClickEvent={handlePageButtonClick}
