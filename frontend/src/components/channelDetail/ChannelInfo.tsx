@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import CustomIcon from "@/components/icons/CustomIcon";
@@ -14,6 +15,7 @@ const ChannelInfo = ({
   ownerInfo,
   membersInfo,
 }: ChannelDetailType) => {
+  const navigate = useNavigate();
   return (
     <ChannelInfoContainer>
       <InfoHeaderContainer>
@@ -36,7 +38,11 @@ const ChannelInfo = ({
             </Text>
           </LocationInfo>
         </MainInfoContainer>
-        <OwnerInfoContainer>
+        <OwnerInfoContainer
+          onClick={() => {
+            navigate(`/profile/${ownerInfo.ownerId}`);
+          }}
+        >
           <OwnerPic>
             <Img src={ownerInfo.ownerPic} />
           </OwnerPic>
@@ -84,6 +90,7 @@ const OwnerInfoContainer = styled.div`
   top: 0;
   display: flex;
   align-items: center;
+  cursor: pointer;
 `;
 
 const OwnerPic = styled.div`
