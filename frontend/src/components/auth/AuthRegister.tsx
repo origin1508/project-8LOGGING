@@ -62,21 +62,25 @@ const AuthReigster: React.FC<Props> = ({
           onBlur={(e) => {
             onCheckDuplicationEvent("email", e.target.value);
           }}
+          disabled={isVerifiedEmail && true}
         />
         {authFormState.email && !isValidEmail && (
           <BaseValidateTextContainer>
             Please check your email
           </BaseValidateTextContainer>
         )}
-        <EmailVerificationButton
-          isVerifiedEmail={isVerifiedEmail}
-          onClick={(e) => {
-            onSendVerficationCodeClickEvent(e, authFormState.email);
-          }}
-          disabled={!isValidEmail && true}
-        >
-          Verify
-        </EmailVerificationButton>
+        {isVerifiedEmail ? (
+          <VerifiedEmail>Verify</VerifiedEmail>
+        ) : (
+          <EmailVerificationButton
+            onClick={(e) => {
+              onSendVerficationCodeClickEvent(e, authFormState.email);
+            }}
+            disabled={!isValidEmail && true}
+          >
+            Verify
+          </EmailVerificationButton>
+        )}
       </BaseIntputContainer>
       <BaseIntputContainer>
         <RegistrationInput
@@ -179,7 +183,7 @@ const RegistrationButton = styled.button`
   }
 `;
 
-const EmailVerificationButton = styled.button<{ isVerifiedEmail: boolean }>`
+const EmailVerificationButton = styled.button`
   ${GlobalTheme.buttons}
   border: 1px solid ${GlobalTheme.colors.theme};
   position: absolute;
@@ -194,7 +198,20 @@ const EmailVerificationButton = styled.button<{ isVerifiedEmail: boolean }>`
     color: ${GlobalTheme.colors.gray};
     border-color: ${GlobalTheme.colors.gray};
   }
-  ${(props) => props.isVerifiedEmail && "color: green; border-color: green"}
+`;
+
+const VerifiedEmail = styled.div`
+  ${GlobalTheme.buttons}
+  border: 1px solid green;
+  position: absolute;
+  top: 18.5rem;
+  font-size: ${GlobalTheme.fontSize.littleBig};
+  color: green;
+  right: 6rem;
+  height: 3rem;
+  line-height: 3rem;
+  width: 6rem;
+  text-align: center;
 `;
 
 export default AuthReigster;
