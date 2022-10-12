@@ -12,8 +12,8 @@ const ChannelInfo = ({
   locationDist,
   memberNum,
   ownerInfo,
+  membersInfo,
 }: ChannelDetailType) => {
-  console.log(spec);
   return (
     <ChannelInfoContainer>
       <InfoHeaderContainer>
@@ -25,7 +25,9 @@ const ChannelInfo = ({
               size="15"
               color={GlobalTheme.colors.theme}
             />
-            <Text>{memberNum}</Text>
+            <Text>
+              {membersInfo.length} / {memberNum}
+            </Text>
           </MemberNumInfo>
           <LocationInfo>
             <CustomIcon name="map" size="15" color={GlobalTheme.colors.theme} />
@@ -126,9 +128,11 @@ const ChannelDescription = styled.div`
   padding: 3rem;
   font-size: ${GlobalTheme.fontSize.littleBig};
   white-space: pre-wrap;
+  overflow: auto;
 `;
 
 const ChannelPic = styled.div`
+  border-radius: 4px;
   box-shadow: 1px 1px 3px ${GlobalTheme.colors.gray};
   width: 50rem;
   height: 25rem;
