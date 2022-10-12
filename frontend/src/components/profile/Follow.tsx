@@ -29,7 +29,7 @@ export default function Follow() {
   useEffect(() => {
     if (curUserId) {
       Api.get("/api/follow", curUserId).then((res) =>
-        setFollowed(res.data.success)
+        setFollowed(res.data.datas)
       );
     }
   });
