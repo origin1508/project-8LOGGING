@@ -12,7 +12,7 @@ export const SidebarData = [
   {
     title: "Recruiting channel",
     path: "/channels",
-    loginRequired: false,
+    loginRequired: true,
   },
   {
     title: "Create channel",

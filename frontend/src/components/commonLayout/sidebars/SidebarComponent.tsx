@@ -22,9 +22,6 @@ const SidebarComponent = () => {
       <Logo onClick={handleLogoImageClick}>
         <LogoImg src={`${process.env.PUBLIC_URL}/images/plogging_logo.png`} />
       </Logo>
-      <SearchContainer>
-        <SearchInput placeholder="Search"></SearchInput>
-      </SearchContainer>
       {Storage.getToken() ? (
         <LoginButton to="/" onClick={hanldeLogoutButtonClick}>
           Logout
@@ -70,6 +67,7 @@ const SidebarContainer = styled.div`
 const Logo = styled.div`
   cursor: pointer;
   margin: 1rem;
+  margin-bottom: 5rem;
   font-size: ${GlobalTheme.fontSize.big};
 `;
 
