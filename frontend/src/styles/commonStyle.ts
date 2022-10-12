@@ -12,7 +12,7 @@ export const BigTitle = styled.h1`
 
 export const TitleContainer = styled.div`
   padding: 2rem;
-  height: 20%;
+  height: 12%;
   width: 100%;
   border-bottom: solid 1px ${GlobalTheme.colors.lightTwoGray};
   margin-bottom: 2rem;

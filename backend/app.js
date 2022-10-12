@@ -9,7 +9,13 @@ const cors = require("cors");
 const dbConnect = require("./src/config/mongoose");
 
 // 라우터 불러오기
-const { authRouter, userRouter, channelRouter, dataRouter } = require("./src/routes");
+const {
+  authRouter,
+  userRouter,
+  channelRouter,
+  dataRouter,
+  followRouter,
+} = require("./src/routes");
 
 const app = express();
 dotenv.config();
@@ -27,6 +33,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/users", userRouter);
 app.use("/api/channels", channelRouter);
 app.use("/api/data", dataRouter);
+app.use("/api/follow", followRouter);
 
 // swagger
 app.use("/docs", swaggerUI.serve, swaggerUI.setup(specs));

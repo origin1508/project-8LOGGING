@@ -42,11 +42,6 @@ const UserSchema = new Schema(
       required: false,
       default: [],
     },
-    following: {
-      type: Array,
-      required: false,
-      default: [],
-    },
     withdrawal: {
       type: Boolean,
       required: true,

@@ -2,7 +2,7 @@ import { createGlobalStyle } from "styled-components";
 import { normalize } from "styled-normalize";
 import EliceDigitalBaeumOTF_Bold from "@/styles/fonts/EliceDigitalBaeumOTF_Bold.otf";
 import EliceDigitalBaeumOTF_Regular from "@/styles/fonts/EliceDigitalBaeumOTF_Regular.otf";
-
+import GlobalTheme from "./theme";
 const GlobalStyle = createGlobalStyle`
     ${normalize}
     @font-face {
@@ -30,9 +30,8 @@ const GlobalStyle = createGlobalStyle`
         font-size: 62.5%; 
     }
     body{
-        background-image: url("mainBg.png");
-        background-size:cover;
-        background-repeat: no-repeat;
+        background-color:${GlobalTheme.colors.lightThreeGray}
+        
     }
 `;
 

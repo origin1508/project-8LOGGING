@@ -16,7 +16,7 @@ const useRegisterForm = (initialValue: AuthFormInitialType) => {
     });
   };
 
-  return { authFormState, handleAuthFormValueChange };
+  return { authFormState, handleAuthFormValueChange, setAuthForm };
 };
 
 export default useRegisterForm;

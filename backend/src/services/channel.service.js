@@ -1,4 +1,6 @@
 const ApiError = require("../utils/ApiError");
+const dateToString = require('../utils/dateToString');
+const { sendEmail } = require("../utils/EmailDelivery");
 
 // 모델 불러오기
 const { User, Channel, WaitList } = require("../models");
@@ -82,9 +84,12 @@ module.exports = {
 
   async getChannelList(page, status) {
     const perPage = 9; // 페이지당 9개씩 보여주기
-    const channels = await Channel.find({status}).sort({_id: -1}).skip((page - 1) * perPage).limit(perPage);
-    
-    return channels;
+    const channels = await Channel.find({status}).sort({_id: -1}).skip((page - 1) * perPage).limit(perPage).lean();
+    const result = channels.map(channel => {
+      channel.createdAt = dateToString(channel.createdAt);
+      return channel;
+    })
+    return result;
   },
 
   /**

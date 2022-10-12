@@ -79,6 +79,30 @@ export async function getAuthInformationById(endPoint: string, id: string) {
   return datas;
 }
 
+export async function authVerificationCodeSend(
+  endPoint: string,
+  email: string
+) {
+  const res = await customAxios.post(endPoint, {
+    email: email,
+  });
+  return res.data;
+}
+
+export async function authVerificationCodeCheck(
+  endPoint: string,
+  email: string,
+  authCode: string
+) {
+  const res = await customAxios.delete(endPoint, {
+    data: {
+      email: email,
+      authCode: authCode,
+    },
+  });
+  return res.data;
+}
+
 export async function get(endpoint: string, params = "") {
   return customAxios.get(endpoint + "/" + params);
 }

@@ -13,6 +13,15 @@ interface Props {
   ) => void;
   onRegisterSubmitEvent: (e: React.FormEvent) => void;
   onCheckDuplicationEvent: (endPoint: string, checkData: string) => void;
+  onSendVerficationCodeClickEvent: (
+    e: React.MouseEvent<HTMLButtonElement>,
+    email: string
+  ) => void;
+  isDuplicated: {
+    email: boolean;
+    nickname: boolean;
+  };
+  isVerifiedEmail: boolean;
 }
 
 const AuthReigster: React.FC<Props> = ({
@@ -20,6 +29,9 @@ const AuthReigster: React.FC<Props> = ({
   onRegisterFormValueChaneEvent,
   onRegisterSubmitEvent,
   onCheckDuplicationEvent,
+  onSendVerficationCodeClickEvent,
+  isDuplicated,
+  isVerifiedEmail,
 }) => {
   const isValidEmail = ValidationUtil.checkEmailValidate(authFormState.email);
   const isValidNickname = ValidationUtil.checkNicknameValidate(
@@ -35,8 +47,9 @@ const AuthReigster: React.FC<Props> = ({
     isValidNickname,
     isValidPassword,
     isPasswordSame,
+    !isDuplicated.email,
+    !isDuplicated.nickname,
   ].every((v) => v === true);
-
   return (
     <RegistrationFormContainer>
       <BaseIntputContainer>
@@ -44,28 +57,39 @@ const AuthReigster: React.FC<Props> = ({
           placeholder="Email"
           name="email"
           value={authFormState.email}
+          isDuplicated={isDuplicated.email}
           onChange={onRegisterFormValueChaneEvent}
           onBlur={(e) => {
             onCheckDuplicationEvent("email", e.target.value);
           }}
         />
-        {!isValidEmail && (
+        {authFormState.email && !isValidEmail && (
           <BaseValidateTextContainer>
             Please check your email
           </BaseValidateTextContainer>
         )}
+        <EmailVerificationButton
+          isVerifiedEmail={isVerifiedEmail}
+          onClick={(e) => {
+            onSendVerficationCodeClickEvent(e, authFormState.email);
+          }}
+          disabled={!isValidEmail && true}
+        >
+          Verify
+        </EmailVerificationButton>
       </BaseIntputContainer>
       <BaseIntputContainer>
         <RegistrationInput
           placeholder="Nickname"
           name="nickname"
           value={authFormState.nickname}
+          isDuplicated={isDuplicated.nickname}
           onChange={onRegisterFormValueChaneEvent}
           onBlur={(e) => {
             onCheckDuplicationEvent("nickname", e.target.value);
           }}
         />
-        {!isValidNickname && (
+        {authFormState.nickname && !isValidNickname && (
           <BaseValidateTextContainer>
             Please check your nickname
           </BaseValidateTextContainer>
@@ -79,7 +103,7 @@ const AuthReigster: React.FC<Props> = ({
           value={authFormState.password}
           onChange={onRegisterFormValueChaneEvent}
         />
-        {!isValidPassword && (
+        {authFormState.password && !isValidPassword && (
           <BaseValidateTextContainer>
             Special characters and numbers from 8 to 15.
           </BaseValidateTextContainer>
@@ -93,7 +117,7 @@ const AuthReigster: React.FC<Props> = ({
           value={authFormState.confirmPassword}
           onChange={onRegisterFormValueChaneEvent}
         />
-        {!isPasswordSame && (
+        {authFormState.confirmPassword && !isPasswordSame && (
           <BaseValidateTextContainer>
             Please check your password and confirm password
           </BaseValidateTextContainer>
@@ -120,7 +144,7 @@ const RegistrationFormContainer = styled.form`
   margin-top: 5rem;
 `;
 
-const RegistrationInput = styled.input`
+const RegistrationInput = styled.input<{ isDuplicated?: boolean }>`
   width: 100%;
   outline: ${GlobalTheme.input.outline};
   font-size: ${GlobalTheme.fontSize.littleBig};
@@ -130,6 +154,7 @@ const RegistrationInput = styled.input`
   line-height: 3rem;
   border: ${GlobalTheme.input.border};
   box-shadow: 1px 1px 3px ${GlobalTheme.colors.gray};
+  border-color: ${(props) => props.isDuplicated && "red"};
 `;
 
 const RegistrationButtonContainer = styled.div`
@@ -148,6 +173,28 @@ const RegistrationButton = styled.button`
   text-align: center;
   cursor: pointer;
   margin-bottom: 2rem;
+  &:disabled {
+    color: ${GlobalTheme.colors.lightGray};
+    background-color: ${GlobalTheme.colors.gray};
+  }
+`;
+
+const EmailVerificationButton = styled.button<{ isVerifiedEmail: boolean }>`
+  ${GlobalTheme.buttons}
+  border: 1px solid ${GlobalTheme.colors.theme};
+  position: absolute;
+  top: 18.5rem;
+  font-size: ${GlobalTheme.fontSize.littleBig};
+  color: ${GlobalTheme.colors.theme};
+  background-color: ${GlobalTheme.colors.white};
+  right: 6rem;
+  height: 3rem;
+  cursor: pointer;
+  &:disabled {
+    color: ${GlobalTheme.colors.gray};
+    border-color: ${GlobalTheme.colors.gray};
+  }
+  ${(props) => props.isVerifiedEmail && "color: green; border-color: green"}
 `;
 
 export default AuthReigster;
