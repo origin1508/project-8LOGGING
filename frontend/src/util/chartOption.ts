@@ -68,7 +68,7 @@ export function lineChartOptions(chartTitle: string) {
       y: {
         title: {
           display: true,
-          text: "Kg",
+          text: "t",
         },
       },
       x: {

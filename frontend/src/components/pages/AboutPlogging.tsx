@@ -159,7 +159,7 @@ const AboutPlogging = () => {
               </TextOne>
 
               <BarChart
-                dataName="해양 쓰레기 모니터링"
+                dataName="연도별 쓰레기 무게 합산"
                 labels={barChartInfo?.labels}
                 datas={barChartInfo?.data}
               />
@@ -189,7 +189,7 @@ const AboutPlogging = () => {
                 배출 속도에 비례하여 시각화 한 자료입니다.
               </TextOne>
               <MultiLineChart
-                dataName="미세플라스틱"
+                dataName="플라스틱 배출"
                 labels={multiLineChartInfo?.labels}
                 multiDatas={multiDatas}
               />
