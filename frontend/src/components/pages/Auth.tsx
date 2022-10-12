@@ -11,7 +11,7 @@ import AuthEmailVerification from "@/components/auth/AuthEmailVerification";
 import BasePageComponent from "@/components/hoc/BasePageComponent";
 import Modal from "@/components/modal/Modal";
 import useModal from "@/hooks/useModal";
-import { ErrorType } from "@/types/common/errorType";
+import { ErrorType } from "@/types/error/errorType";
 import {
   authRegisterRequest,
   authLoginRequest,
