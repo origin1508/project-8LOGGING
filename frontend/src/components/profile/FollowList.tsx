@@ -6,24 +6,39 @@ import { curUserState } from "@/recoil/atoms/authState";
 import { useRecoilValue } from "recoil";
 import * as Api from "@/api/api";
 import BaseCardContainer from "@/components/hoc/BaseCardContainer";
-import { TextOne, TextTwo, SmallButton } from "@/styles/commonStyle";
+import {
+  TextOne,
+  TextTwo,
+  SmallButton,
+  MediumTitle,
+} from "@/styles/commonStyle";
 import Modal from "../modal/Modal";
 
+interface UserContentType {
+  nickname: string;
+  email: string;
+  profPic: string;
+  _id: "string";
+}
+
 export default function FollowList() {
-  const [followList, setFollowList] = useState([]);
+  const [followList, setFollowList] = useState<Array<UserContentType>>([]);
   const curUser = useRecoilValue(curUserState);
+  const [isShow, setIsShow] = useState(false);
 
   const handleFollowingClick = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      setIsShow(true);
       const res = await Api.get("/api/follow/list", curUser._id);
-      console.log(res.data);
+      setFollowList(res.data.datas);
+      console.log(followList);
     } catch (e) {
       console.log(e);
     }
   };
   return (
-    <Wrap>
+    <>
       <FriendListContainer>
         <FriendList onClick={handleFollowingClick}>
           <CustomIcon
@@ -34,80 +49,29 @@ export default function FollowList() {
         </FriendList>
         <Following>following</Following>
       </FriendListContainer>
-
-      <UsersContainer>
-        <UserContainer>
-          <UserImg itemProp="./123.jpeg"></UserImg>
-          <UserInfo>
-            <TextOne>들자구</TextOne>
-            <TextTwo>eodnsdlekd@naver.com</TextTwo>
-          </UserInfo>
-          <SmallButton>프로필</SmallButton>
-        </UserContainer>
-        <UserContainer>
-          <UserImg itemProp="./123.jpeg"></UserImg>
-          <UserInfo>
-            <TextOne>들자구</TextOne>
-            <TextTwo>eodnsdlekd@naver.com</TextTwo>
-          </UserInfo>
-          <SmallButton>프로필</SmallButton>
-        </UserContainer>
-        <UserContainer>
-          <UserImg itemProp="./123.jpeg"></UserImg>
-          <UserInfo>
-            <TextOne>들자구</TextOne>
-            <TextTwo>eodnsdlekd@naver.com</TextTwo>
-          </UserInfo>
-          <SmallButton>프로필</SmallButton>
-        </UserContainer>
-        <UserContainer>
-          <UserImg itemProp="./123.jpeg"></UserImg>
-          <UserInfo>
-            <TextOne>들자구</TextOne>
-            <TextTwo>eodnsdlekd@naver.com</TextTwo>
-          </UserInfo>
-          <SmallButton>프로필</SmallButton>
-        </UserContainer>
-        <UserContainer>
-          <UserImg itemProp="./123.jpeg"></UserImg>
-          <UserInfo>
-            <TextOne>들자구</TextOne>
-            <TextTwo>eodnsdlekd@naver.com</TextTwo>
-          </UserInfo>
-          <SmallButton>프로필</SmallButton>
-        </UserContainer>
-        <UserContainer>
-          <UserImg itemProp="./123.jpeg"></UserImg>
-          <UserInfo>
-            <TextOne>들자구</TextOne>
-            <TextTwo>eodnsdlekd@naver.com</TextTwo>
-          </UserInfo>
-          <SmallButton>프로필</SmallButton>
-        </UserContainer>
-        <UserContainer>
-          <UserImg itemProp="./123.jpeg"></UserImg>
-          <UserInfo>
-            <TextOne>들자구</TextOne>
-            <TextTwo>eodnsdlekd@naver.com</TextTwo>
-          </UserInfo>
-          <SmallButton>프로필</SmallButton>
-        </UserContainer>
-        <UserContainer>
-          <UserImg itemProp="./123.jpeg"></UserImg>
-          <UserInfo>
-            <TextOne>들자구</TextOne>
-            <TextTwo>eodnsdlekd@naver.com</TextTwo>
-          </UserInfo>
-          <SmallButton>프로필</SmallButton>
-        </UserContainer>
-      </UsersContainer>
-    </Wrap>
+      <Modal
+        isOpenModal={isShow}
+        isAlertModal={true}
+        isShowImage={false}
+        onModalCancelButtonClickEvent={() => setIsShow(false)}
+      >
+        <MediumTitle>팔로잉</MediumTitle>
+        <UsersContainer>
+          {followList.map((user) => (
+            <UserContainer key={user.nickname}>
+              <UserImg itemProp={user.profPic}></UserImg>
+              <UserInfo>
+                <TextOne>{user.nickname}</TextOne>
+                <TextTwo>{user.email}</TextTwo>
+              </UserInfo>
+              <SmallButton>프로필</SmallButton>
+            </UserContainer>
+          ))}
+        </UsersContainer>
+      </Modal>
+    </>
   );
 }
-
-const Wrap = styled.div`
-  margin-left: 30rem;
-`;
 
 const FriendListContainer = styled.div`
   display: flex;
@@ -132,16 +96,13 @@ const Following = styled.div`
   align-items: center;
 `;
 const UsersContainer = styled.div`
-  width: 40rem;
+  width: 100%;
   overflow-y: scroll;
-  height: 65rem;
+  height: 45rem;
   border-radius: 1rem;
-  background-color: ${GlobalTheme.colors.white};
   display: flex;
   align-items: center;
-  justify-content: center;
   flex-direction: column;
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 `;
 const UserContainer = styled.div`
   margin-top: 2rem;
