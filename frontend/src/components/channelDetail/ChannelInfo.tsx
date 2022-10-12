@@ -121,17 +121,17 @@ const InfoBodyContainer = styled.div`
   margin-top: 5rem;
   display: flex;
   justify-content: center;
-  gap: 5rem;
+  gap: 1.5rem;
 `;
 
 const ChannelDescription = styled.div`
-  width: 50rem;
-  height: 25rem;
+  width: 45rem;
+  height: 22.5rem;
   background-color: ${GlobalTheme.colors.white};
   box-shadow: 1px 1px 3px ${GlobalTheme.colors.gray};
   border-radius: 4px;
   box-sizing: border-box;
-  padding: 3rem;
+  padding: 2rem;
   font-size: ${GlobalTheme.fontSize.littleBig};
   white-space: pre-wrap;
   overflow: auto;
@@ -140,8 +140,8 @@ const ChannelDescription = styled.div`
 const ChannelPic = styled.div`
   border-radius: 4px;
   box-shadow: 1px 1px 3px ${GlobalTheme.colors.gray};
-  width: 50rem;
-  height: 25rem;
+  width: 45rem;
+  height: 22.5rem;
   overflow: hidden;
 `;
 

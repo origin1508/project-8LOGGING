@@ -3,18 +3,27 @@ import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import ChannelInfo from "@/components/channelDetail/ChannelInfo";
 import { ChannelDetailType } from "@/types/channel/channelTypes";
+import { loginUserIdState } from "@/recoil/atoms/authState";
+import { useRecoilValue } from "recoil";
 
 interface Props {
   isShowMore: boolean;
   setIsShowMore: React.Dispatch<React.SetStateAction<boolean>>;
   channelDetailInfo: ChannelDetailType[];
+  onEnterDecideClickEvent: (selectedChannelId: string) => void;
+  selectedChannelId: string;
 }
 
 const ChannelDetail = ({
   isShowMore,
   setIsShowMore,
   channelDetailInfo,
+  onEnterDecideClickEvent,
+  selectedChannelId,
 }: Props) => {
+  const loginUserId = useRecoilValue(loginUserIdState);
+  const ownerId = channelDetailInfo[0]?.ownerInfo.ownerId;
+  const isLoginUserChannel = ownerId === loginUserId;
   return (
     <ChannelDetailBackground isShowMore={isShowMore}>
       <ChannelDetailContainer>
@@ -33,7 +42,15 @@ const ChannelDetail = ({
         ))}
 
         <ChannelDetailButtonContainer>
-          <Button>참가하기</Button>
+          {!isLoginUserChannel && (
+            <Button
+              onClick={() => {
+                onEnterDecideClickEvent(selectedChannelId);
+              }}
+            >
+              참가신청
+            </Button>
+          )}
           <BackButton
             onClick={() => {
               setIsShowMore(false);
@@ -72,8 +89,9 @@ const ChannelDetailContainer = styled.div`
 const ChannelDetailButtonContainer = styled.div`
   display: flex;
   justify-content: center;
-  gap: 8rem;
+  align-items: center;
   width: 100%;
+  gap: 8rem;
 `;
 
 const Button = styled.button`
