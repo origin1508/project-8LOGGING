@@ -46,12 +46,14 @@ const Text = styled.div`
 `;
 const CodeInput = styled.input`
   width: 30rem;
+  height: 2rem;
   font-size: ${GlobalTheme.fontSize.littleBig};
   text-align: center;
   padding: 1rem;
   border: ${GlobalTheme.input.border};
   box-shadow: 1px 1px 3px ${GlobalTheme.colors.gray};
   outline: ${GlobalTheme.input.outline};
+  border-radius: 4px;
 `;
 
 export default AuthEmailVerification;
