@@ -1,17 +1,16 @@
 const socket = require("socket.io");
 
 const socketConfig = (server) => {
-  const io = SocketIO(server, { path: "/chat-socket" });
+  const io = socket(server, { path: "/chat-socket" });
 
   io.on("connection", (socket) => {
     const req = socket.request;
-    const clientIp =
-      req.headers["x-forwarded-for"] || req.connection.remoteAddress;
-    console.log(ip, socket.id, req.ip);
-
+    // const clientIp =
+    //   req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+    
     // 이벤트
-    socket.on("enter", (data) => {
-      console.log(data);
+    socket.on("enter-room", (nickname) => {
+      console.log(nickname + '님 이 접속하셨습니다.');
     });
 
     socket.on("disconnection", () => {
@@ -19,8 +18,12 @@ const socketConfig = (server) => {
       clearInterval(socket.interval);
     });
 
+    socket.on('test', (data) => {
+      console.log(data); 
+    })
+
     socket.interval = setInterval(() => {
-      socket.emit();
+      socket.emit('checkConnection', '5초마다 연결 확인');
     }, 5000);
   });
 };

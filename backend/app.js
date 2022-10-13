@@ -7,6 +7,7 @@ const errorMiddleware = require("./src/middlewares/error");
 const { swaggerUI, specs } = require("./src/config/swagger");
 const cors = require("cors");
 const dbConnect = require("./src/config/mongoose");
+const socket = require('./src/config/socket');
 
 // 라우터 불러오기
 const {
@@ -42,6 +43,6 @@ app.use("/docs", swaggerUI.serve, swaggerUI.setup(specs));
 app.use(errorMiddleware);
 
 // 서버 시작
-app.listen(process.env.PORT || 3001, () => {
+socket(app.listen(process.env.PORT || 3001, () => {
   console.log(`http://localhost:${process.env.PORT || 3001}`);
-});
+}));
