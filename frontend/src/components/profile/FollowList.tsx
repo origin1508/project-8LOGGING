@@ -6,12 +6,7 @@ import GlobalTheme from "@/styles/theme";
 import { curUserState } from "@/recoil/atoms/authState";
 import { useRecoilValue } from "recoil";
 import * as Api from "@/api/api";
-import {
-  TextOne,
-  TextTwo,
-  SmallButton,
-  MediumTitle,
-} from "@/styles/commonStyle";
+import { TextOne, TextTwo, SmallButton, BigTitle } from "@/styles/commonStyle";
 import Modal from "../modal/Modal";
 
 interface UserContentType {
@@ -55,7 +50,7 @@ export default function FollowList() {
         isShowImage={false}
         onModalCancelButtonClickEvent={() => setIsShow(false)}
       >
-        <MediumTitle>팔로잉</MediumTitle>
+        <BigTitle>팔로잉</BigTitle>
         <UsersContainer>
           {followList.map((user) => (
             <UserContainer key={user.nickname}>
