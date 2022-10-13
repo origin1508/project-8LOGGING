@@ -31,14 +31,100 @@ function Channel() {
             <Application>new applicant 15</Application>
           </MediumSubTitle>
           <NewPeopleContainer>
-            <CustomIcon
-              name="bell"
-              size="30"
-              color={GlobalTheme.colors.theme}
-            ></CustomIcon>
+            <IconBox>
+              <CustomIcon
+                name="bell"
+                size="30"
+                color={GlobalTheme.colors.theme}
+              ></CustomIcon>
+              <Notification>15</Notification>
+            </IconBox>
+
             <NewPeople>New People</NewPeople>
           </NewPeopleContainer>
         </TitleContainer>
+        <ChatForm>
+          <ContentContainer>
+            <UserContainer>
+              <UserImg itemProp="logo192.png"></UserImg>
+              <UserInfo>
+                <TextOne>들자구 </TextOne>
+                <TextTwo>ㅁㄴㅇㅁㄴㅇ</TextTwo>
+              </UserInfo>
+            </UserContainer>
+            <UserContainer>
+              <UserImg itemProp="logo192.png"></UserImg>
+              <UserInfo>
+                <TextOne>들자구 </TextOne>
+                <TextTwo>ㅁㄴㅇㅁㄴㅇ</TextTwo>
+              </UserInfo>
+            </UserContainer>
+            <UserContainer>
+              <UserImg itemProp="logo192.png"></UserImg>
+              <UserInfo>
+                <TextOne>들자구 </TextOne>
+                <TextTwo>ㅁㄴㅇㅁㄴㅇ</TextTwo>
+              </UserInfo>
+            </UserContainer>
+            <UserContainer>
+              <UserImg itemProp="logo192.png"></UserImg>
+              <UserInfo>
+                <TextOne>들자구 </TextOne>
+                <TextTwo>ㅁㄴㅇㅁㄴㅇ</TextTwo>
+              </UserInfo>
+            </UserContainer>
+            <UserContainer>
+              <UserImg itemProp="logo192.png"></UserImg>
+              <UserInfo>
+                <TextOne>들자구 </TextOne>
+                <TextTwo>ㅁㄴㅇㅁㄴㅇ</TextTwo>
+              </UserInfo>
+            </UserContainer>
+            <UserContainer>
+              <UserImg itemProp="logo192.png"></UserImg>
+              <UserInfo>
+                <TextOne>들자구 </TextOne>
+                <TextTwo>ㅁㄴㅇㅁㄴㅇ</TextTwo>
+              </UserInfo>
+            </UserContainer>
+            <UserContainer>
+              <UserImg itemProp="logo192.png"></UserImg>
+              <UserInfo>
+                <TextOne>들자구 </TextOne>
+                <TextTwo>ㅁㄴㅇㅁㄴㅇ</TextTwo>
+              </UserInfo>
+            </UserContainer>
+            <UserContainer>
+              <UserImg itemProp="logo192.png"></UserImg>
+              <UserInfo>
+                <TextOne>들자구 </TextOne>
+                <TextTwo>ㅁㄴㅇㅁㄴㅇ</TextTwo>
+              </UserInfo>
+            </UserContainer>
+            <UserContainer>
+              <UserImg itemProp="logo192.png"></UserImg>
+              <UserInfo>
+                <TextOne>들자구 </TextOne>
+                <TextTwo>ㅁㄴㅇㅁㄴㅇ</TextTwo>
+              </UserInfo>
+            </UserContainer>
+            <UserContainer>
+              <UserImg itemProp="logo192.png"></UserImg>
+              <UserInfo>
+                <TextOne>들자구 </TextOne>
+                <TextTwo>ㅁㄴㅇㅁㄴㅇ</TextTwo>
+              </UserInfo>
+            </UserContainer>
+          </ContentContainer>
+          <ChatInput />
+          <SendButton>
+            <CustomIcon
+              name="send"
+              size="22"
+              color={GlobalTheme.colors.theme}
+            />
+          </SendButton>
+        </ChatForm>
       </BaseCardContainerStyle>
     </BasePageComponent>
   );
@@ -47,6 +133,7 @@ function Channel() {
 const TitleContainer = styled.div`
   position: relative;
   padding: 2rem;
+  height: 20%;
   width: 100%;
   border-bottom: solid 1px ${GlobalTheme.colors.lightTwoGray};
   display: flex;
@@ -69,19 +156,113 @@ const Application = styled.div`
   align-items: center;
   gap: 0.5rem;
 `;
+const IconBox = styled.div`
+  position: relative;
+`;
+const Notification = styled.span`
+  font-size: 0.8rem;
+  height: 1.75rem;
+  width: 1.75rem;
+  background-color: #eb2f64;
+  border-radius: 50%;
+  color: white;
+  position: absolute;
+  top: 1.2rem;
+  right: -0.4rem;
 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 const NewPeopleContainer = styled.div`
   position: absolute;
   top: 4rem;
+  cursor: pointer;
   right: 7rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1rem;
+  &:hover {
+    transform: translateY(-0.3rem);
+  }
+  &::after {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+  &:active {
+    transform: translateY(-0.1rem);
+  }
 `;
 const NewPeople = styled.div`
   font-weight: bold;
   line-height: 1.4;
   font-size: ${GlobalTheme.fontSize.littleBig};
+`;
+
+const ChatForm = styled.form`
+  height: 100%;
+  width: 100%;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: start;
+`;
+
+const ChatInput = styled.input`
+  position: absolute;
+  bottom: 2rem;
+  padding: 0rem 2rem;
+  font-size: ${GlobalTheme.fontSize.littleBig};
+  width: 90%;
+  height: 13%;
+  border-radius: 2rem;
+  border: 1.2px solid ${GlobalTheme.colors.theme};
+`;
+
+const SendButton = styled.button`
+  border: none;
+  background: none;
+  position: absolute;
+  bottom: 8%;
+  right: 8%;
+  cursor: pointer;
+  &:hover {
+    transform: translateY(-0.3rem);
+  }
+  &::after {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+  &:active {
+    transform: translateY(-0.1rem);
+  }
+`;
+
+const ContentContainer = styled.div`
+  width: 100%;
+  height: 80%;
+  padding: 1rem 0rem 0rem 3rem;
+  overflow-y: scroll;
+`;
+
+const UserContainer = styled.div`
+  margin-botton: 2rem;
+  display: flex;
+  width: 70%;
+  align-items: center;
+  gap: 3rem;
+  padding-bottom: 1rem;
+`;
+const UserImg = styled.div`
+  width: 3.5rem;
+  height: 3.5rem;
+  background-image: url(${(props) => props.itemProp});
+  background-size: cover;
+  border-radius: 100%;
+`;
+const UserInfo = styled.div`
+  display: flex;
+  flex-direction: column;
 `;
 export default Channel;
