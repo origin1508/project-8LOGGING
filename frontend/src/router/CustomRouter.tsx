@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import SidebarComponent from "@/components/commonLayout/sidebars/SidebarComponent";
 import Footer from "@/components/commonLayout/footer/Footer";
 import ScrollToTop from "@/util/scrollToTop";
-
+import Channel from "@/components/pages/Channel";
 const MainComponentPage = React.lazy(() => import("@/components/pages/Main"));
 const LoginComponentPage = React.lazy(() => import("@/components/pages/Auth"));
 const ChannelFormComponentPage = React.lazy(
@@ -39,6 +39,7 @@ const CustomRouter = () => {
 
           <Route path="/channels" element={<ChannelListPageComponent />} />
           <Route path="/about" element={<AboutPloggingComponent />} />
+          <Route path="/channel" element={<Channel />} />
         </Routes>
       </Suspense>
       <Footer />

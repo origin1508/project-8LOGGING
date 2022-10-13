@@ -6,9 +6,35 @@ interface ButtonProps {
 
 export const BigTitle = styled.h1`
   margin-left: 2rem;
+
   font-size: ${GlobalTheme.fontSize.moreBig};
 `;
+export const MediumTitle = styled.div`
+  margin-left: 3.5rem;
+  font-weight: bold;
+  line-height: 1.4;
+  font-size: ${GlobalTheme.fontSize.littleBig};
+`;
+export const MediumSubTitle = styled.div`
+  margin-left: 3.5rem;
+  font-size: ${GlobalTheme.fontSize.littleBig};
+  color: ${GlobalTheme.colors.gray};
+  display: flex;
+  gap: 1rem;
+`;
+export const TextOne = styled.p`
+  font-weight: bold;
+  font-size: ${GlobalTheme.fontSize.littleBig};
+  line-height: 1.4;
+  margin: 0;
+`;
 
+export const TextTwo = styled.p`
+  text-align: ${(props) => props.itemProp};
+  font-size: ${GlobalTheme.fontSize.default};
+  line-height: 1.7;
+  margin: 0;
+`;
 export const TitleContainer = styled.div`
   padding: 2rem;
   height: 12%;
@@ -81,22 +107,4 @@ export const SmallButton = styled.button`
   &:active {
     transform: translateY(-0.1rem);
   }
-`;
-export const MediumTitle = styled.div`
-  font-size: ${GlobalTheme.fontSize.titleSize};
-  font-family: ${GlobalTheme.fontStyle.bold};
-`;
-
-export const TextOne = styled.p`
-  font-weight: bold;
-  font-size: ${GlobalTheme.fontSize.littleBig};
-  line-height: 1.4;
-  margin: 0;
-`;
-
-export const TextTwo = styled.p`
-  text-align: ${(props) => props.itemProp};
-  font-size: ${GlobalTheme.fontSize.default};
-  line-height: 1.7;
-  margin: 0;
 `;
