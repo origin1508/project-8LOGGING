@@ -13,7 +13,7 @@ function ChannelHistory() {
   const curUser = useRecoilValue(curUserState);
   const channels = curUser.channels;
   const [tabIndex, setTabIndex] = useState(0);
-  const TapMenu = ["생성한 채널", "가입한 채널"];
+  const TapMenu = ["생성 채널", "가입 채널", "가입 대기 채널"];
   const [selectedChannelId, setSelectedChannelId] = useState<string>("");
   const [isShowMore, setIsShowMore] = useState(false);
   const [channelDetailInfo, setChannelDetailInfo] = useState<
@@ -60,18 +60,22 @@ function ChannelHistory() {
         {/* <SmallButton onClick={handleClickButton}>api</SmallButton> */}
       </TitleContainer>
       <CardContainer>
-        {channels.map((ch) => (
-          <ChannelCard
-            key={ch._id}
-            img={ch.img}
-            title={ch.title}
-            channelUuid={ch._id}
-            curMemberNum={`${ch.memberNum}/${ch.curMemberNum}`}
-            locationDist={ch.locationDist}
-            locationCity={ch.locationCity}
-            onMoreClick={handleMoreClick}
-          />
-        ))}
+        {channels.map((ch) =>
+          ch.position === tabIndex ? (
+            <ChannelCard
+              key={ch._id}
+              img={ch.img}
+              title={ch.title}
+              channelUuid={ch._id}
+              curMemberNum={`${ch.memberNum}/${ch.curMemberNum}`}
+              locationDist={ch.locationDist}
+              locationCity={ch.locationCity}
+              onMoreClick={handleMoreClick}
+            />
+          ) : (
+            ""
+          )
+        )}
       </CardContainer>
       <ChannelDetail
         isShowMore={isShowMore}
