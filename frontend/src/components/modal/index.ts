@@ -23,7 +23,7 @@ export const ModalBackDrop = styled.div`
   bottom: 0;
   right: 0;
   font-family: ${GlobalTheme.fontStyle.bold};
-  z-index: 0;
+  z-index: 9;
   background-color: rgba(0, 0, 0, 0.1);
   ${isVisibleModal};
 `;
