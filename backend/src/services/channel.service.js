@@ -370,4 +370,24 @@ module.exports = {
     await sendEmail(from, to, subject, text, html);
   },
 
+  /**
+   * 유저와 채널의 관계
+   * 
+   * @param {String} userId 
+   * @param {String} channelId 
+   * @returns 
+   */
+  async checkUserChannelRelation(userId, channelId) {
+    const channel = await Channel.findById(channelId);
+    // 채널 owner 여부 확인
+    if (channel.ownerId == userId) return 0;
+    // 채널 입장 대기 여부 확인
+    const waitList = await WaitList.findOne({ channelId });
+    if (waitList.waiting.includes(userId)) return 2;
+    // 채널 소속 여부 확인
+    if (channel.members.includes(userId)) return 1;
+    // 상기 모두 해당 없으면
+    return 3;
+  }
+
 };
