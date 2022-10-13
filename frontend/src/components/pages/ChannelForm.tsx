@@ -32,7 +32,7 @@ const ChannelForm = () => {
   const { channelForm, handleChannelFormValueChange } = useChannelForm({
     title: "",
     locationDist: "경기도",
-    memberNum: 1,
+    memberNum: 2,
     spec: "",
     image: "",
   });
@@ -42,6 +42,15 @@ const ChannelForm = () => {
   const distOptions = Object.keys(channelListData).sort(
     (a: string, b: string) => (a < b ? -1 : 1)
   );
+
+  const sortedChannelListData = distOptions.reduce((acc, cur: string) => {
+    return {
+      ...acc,
+      [cur]: channelListData[cur].sort((a: string, b: string) =>
+        a < b ? -1 : 1
+      ),
+    };
+  }, {});
 
   const {
     checkChannelTitleValidate,
@@ -79,8 +88,13 @@ const ChannelForm = () => {
       | React.ChangeEvent<HTMLInputElement>
       | React.ChangeEvent<HTMLTextAreaElement>
       | React.ChangeEvent<HTMLSelectElement>
+      | string
   ) => {
-    setSelectedCity(e.target.value);
+    if (typeof e === "string") {
+      setSelectedCity(e);
+    } else {
+      setSelectedCity(e.target.value);
+    }
   };
 
   const handleChannelFormCreateClick = async (e: React.FormEvent) => {
@@ -122,7 +136,7 @@ const ChannelForm = () => {
         <ChannelFormCard
           channelForm={channelForm}
           distOptions={distOptions}
-          channelListData={channelListData}
+          channelListData={sortedChannelListData}
           imagePreview={imagePreview}
           isValidTitle={isValidTitle}
           isValidMemberCount={isValidMemberCount}

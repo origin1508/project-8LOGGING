@@ -31,6 +31,7 @@ interface ChannelFormCardProps {
       | React.ChangeEvent<HTMLInputElement>
       | React.ChangeEvent<HTMLTextAreaElement>
       | React.ChangeEvent<HTMLSelectElement>
+      | string
   ) => void;
   onChannelFormCreateClickEvent: (e: React.FormEvent) => void;
 }
@@ -85,6 +86,8 @@ const ChannelFormCard = ({
               placeholder="Number of recruits"
               name="memberNum"
               type="number"
+              min="2"
+              max="25"
               value={channelForm.memberNum}
               onChange={onChannelFormValueChangeEvent}
             />
@@ -99,18 +102,19 @@ const ChannelFormCard = ({
             <ChannelSelector
               name="locationDist"
               value={channelForm.locationDist}
-              onChange={onChannelFormValueChangeEvent}
+              onChange={(e) => {
+                onChannelFormValueChangeEvent(e);
+                onChangeSelectChangeEvent(channelListData[e.target.value][0]);
+              }}
             >
               {distOptions.map((dist) => (
                 <ChannelOption key={dist}>{dist}</ChannelOption>
               ))}
             </ChannelSelector>
             <ChannelSelector onChange={onChangeSelectChangeEvent}>
-              {channelListData[channelForm.locationDist]
-                .sort((a, b) => (a < b ? -1 : 1))
-                .map((city) => (
-                  <ChannelOption key={city}>{city}</ChannelOption>
-                ))}
+              {channelListData[channelForm.locationDist].map((city) => (
+                <ChannelOption key={city}>{city}</ChannelOption>
+              ))}
             </ChannelSelector>
           </BaseIntputContainer>
         </ChannelInputWrapper>
