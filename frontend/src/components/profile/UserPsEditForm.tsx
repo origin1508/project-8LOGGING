@@ -137,6 +137,7 @@ function UserPsEditForm({ setIsEditing, setIsPsEditing }: UserInfoEditProps) {
       <Modal
         isOpenModal={isOppenModal}
         isAlertModal={true}
+        isShowImage={true}
         onModalCancelButtonClickEvent={onModalCancelButtonClickEvent}
       >
         {erorrMessage}

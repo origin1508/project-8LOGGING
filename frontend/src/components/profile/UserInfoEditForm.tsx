@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled, { css } from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import { curUserState } from "@/recoil/atoms/authState";
@@ -7,6 +7,7 @@ import BaseValidateTextContainer from "@/components/hoc/BaseValidateTextContaine
 import useEditForm from "@/hooks/useEditForm";
 import * as Api from "@/api/api";
 import BaseCardContainer from "../hoc/BaseCardContainer";
+import Modal from "../modal/Modal";
 
 import {
   BigTitle,
@@ -41,6 +42,8 @@ function UserInfoEditForm({
   onModalOpenButtonClickEvent,
 }: UserInfoEditProps) {
   const [curUser, setCurUser] = useRecoilState(curUserState);
+  const [erorrMessage, setErorrMessage] = useState("");
+  const [isOppenModal, setIsOpenModal] = useState(false);
 
   const handlerClick = () => {
     setIsEditing(false);
@@ -51,6 +54,9 @@ function UserInfoEditForm({
   });
 
   const isValidAll = isValid.description && isValid.nickname;
+  const onModalCancelButtonClickEvent = () => {
+    setIsOpenModal(false);
+  };
 
   const handleSubmitClick = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -72,8 +78,10 @@ function UserInfoEditForm({
       });
 
       setIsEditing(false);
-    } catch (e) {
-      console.log(e);
+    } catch (e: any) {
+      const erorrMessage = e.response.data.message;
+      setErorrMessage(erorrMessage);
+      setIsOpenModal(true);
     }
   };
 
@@ -131,6 +139,14 @@ function UserInfoEditForm({
           비밀번호 변경하기
         </EditButton>
       </InpurForm>
+      <Modal
+        isOpenModal={isOppenModal}
+        isAlertModal={true}
+        isShowImage={true}
+        onModalCancelButtonClickEvent={onModalCancelButtonClickEvent}
+      >
+        {erorrMessage}
+      </Modal>
     </BaseCardContainer>
   );
 }
