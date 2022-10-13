@@ -60,6 +60,9 @@ const UsersContainer = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
+  &::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera*/
+  }
 `;
 const UserContainer = styled.div`
   margin-top: 2rem;
