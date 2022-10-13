@@ -2,7 +2,7 @@ const bcrypt = require("bcrypt");
 const ApiError = require("../utils/ApiError");
 
 // 모델 불러오기
-const { User, Channel } = require("../models");
+const { User, Channel, WaitList } = require("../models");
 
 module.exports = {
   async checkEmailDuplication(email) {
@@ -143,13 +143,40 @@ module.exports = {
   },
 
   /**
-   * 유저 모든 데이터 조회
+   * 유저 모든 데이터 조회 (소속 채널 상세 정보 포함)
    *
    * @param {String} userId
    * @returns
    */
   async findUserAllData(userId) {
     const user = await User.findOne({ _id: userId }).lean();
+    const waitingChannels = await Promise.all(user.waitReqList.map(async (waitListId) => {
+      const waitList = await WaitList.findById(waitListId);
+      return waitList.channelId
+    }))
+    const channels = await Promise.all(user.channels.map(async (channelId) => {
+      const channel = await Channel.findById(channelId);
+      // 개설자/입장대기자/일반멤버 파악
+      var position = 1;
+      if ( userId == channel.ownerId )  {
+        position = 0;
+      } else if ( waitingChannels.includes(channelId) ) {
+        position = 2;
+      }
+
+      return {
+        _id: channel._id,
+        title: channel.title,
+        locationDist: channel.locationDist,
+        locationCity: channel.locationCity,
+        memberNum: channel.memberNum,
+        curMemberNum: channel.members.length,
+        img: channel.img,
+        position
+      }
+    }))
+    
+    user.channels = channels
     delete user.password;
 
     return user;
