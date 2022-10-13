@@ -58,5 +58,5 @@ export interface waitListType {
 }
 
 export interface MainChannelType extends ChannelDetailType {
-  waitList?: Array<waitListType>;
+  waitList: Array<waitListType>;
 }
