@@ -1,4 +1,4 @@
-const { ChatRoom, ChatLog } = require("../models");
+const { ChatRoom, ChatLog, User } = require("../models");
 const dateToString = require("../utils/dateToString");
 
 module.exports = {
@@ -19,10 +19,18 @@ module.exports = {
       { roomId },
       "_id roomId chat userId createdAt"
     ).lean();
-
-    return logs.map((log) => {
+    
+    const chatLogs = logs.map(log => {
       log.createdAt = dateToString(log.createdAt);
       return log;
-    });
+    })
+
+    const userInfo = await Promise.all(logs.map(log => {
+      return User.findById(log.userId, "nickname profPic");
+    }));
+
+    console.log(userInfo);
+
+    return {chatLogs, userInfo};
   },
 };

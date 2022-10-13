@@ -11,8 +11,9 @@ const chatLogSchema = new Schema(
       type: String,
     },
     userId: {
-      type: String,
+      type: Schema.Types.ObjectId,
       required: true,
+      ref: "User",
     },
   },
   {
