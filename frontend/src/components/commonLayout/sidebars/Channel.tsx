@@ -12,17 +12,27 @@ interface ChannelContainerProps {
   isToggle: boolean;
 }
 
+interface ItemType {
+  _id: string;
+  title: string;
+}
+
 const Channel: React.FC = () => {
   const loginUserId = useRecoilValue(loginUserIdState);
-  const [channels, setChannels] = useRecoilValue(channelsState);
+  const [channels, setChannels] = useRecoilState(channelsState);
+
   useEffect(() => {
     (async () => {
       if (Storage.getToken()) {
         const res = await Api.get(`/api/users/userinfo/${loginUserId}`);
-        console.log(res.data.datas.channels);
+        const chArray = res.data.datas.channels.map((item: ItemType) => {
+          return { _id: item._id, title: item.title };
+        });
+        setChannels(chArray);
       }
     })();
   }, [Storage.getToken()]);
+
   const [isToggle, setIsToggle] = useState(false);
   return (
     <ChannelsContainer>
@@ -46,9 +56,9 @@ const Channel: React.FC = () => {
       </TitleContainer>
 
       <ChannelContainer isToggle={!isToggle}>
-        {/* {channels.map((channel, index) => {
+        {channels.map((channel, index) => {
           return <ChannelLink key={index}>{channel.title}</ChannelLink>;
-        })} */}
+        })}
       </ChannelContainer>
     </ChannelsContainer>
   );
@@ -81,7 +91,7 @@ const TitleContainer = styled.div`
 `;
 const ChannelContainer = styled.div<ChannelContainerProps>`
   display: flex;
-  overflow: hidden;
+  overflow: auto;
 
   ${(props) =>
     props.isToggle
