@@ -50,3 +50,13 @@ export interface ChannelMemberType {
   memberNickname: string;
   memberPic: string;
 }
+
+export interface waitListType {
+  userId: string;
+  nickname: string;
+  profPic: string;
+}
+
+export interface MainChannelType extends ChannelDetailType {
+  waitList?: Array<waitListType>;
+}
