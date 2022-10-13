@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import { BigTitle, MediumSubTitle, MediumTitle } from "@/styles/commonStyle";
 import CustomIcon from "@/components/icons/CustomIcon";
+import MemberList from "./MemberList";
 
 const ChannelHeader = () => {
+  const [isShowMember, setIsShowMember] = useState(false);
+  const onModalCancleButtonClickEvent = () => setIsShowMember(false);
   return (
     <TitleContainer>
       <BigTitle>Channel</BigTitle>
@@ -18,20 +21,24 @@ const ChannelHeader = () => {
           />
           15
         </PeopleContainer>
-        <Application>new applicant 15</Application>
+        <Application>new applicant 3</Application>
       </MediumSubTitle>
-      <NewPeopleContainer>
+      <NewPeopleContainer onClick={() => setIsShowMember(true)}>
         <IconBox>
           <CustomIcon
-            name="bell"
+            name="following"
             size="30"
             color={GlobalTheme.colors.theme}
           ></CustomIcon>
-          <Notification>15</Notification>
+          <Notification>7</Notification>
         </IconBox>
 
-        <NewPeople>New People</NewPeople>
+        <NewPeople>Member</NewPeople>
       </NewPeopleContainer>
+      <MemberList
+        isShowMember={isShowMember}
+        onModalCancleButtonClickEvent={onModalCancleButtonClickEvent}
+      ></MemberList>
     </TitleContainer>
   );
 };
