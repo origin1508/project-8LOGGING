@@ -4,11 +4,11 @@ import { curUserState } from "@/recoil/atoms/authState";
 import { useRecoilValue } from "recoil";
 import GlobalTheme from "@/styles/theme";
 import ChannelCard from "@/components/recruitingChannel/ChannelCard";
-import { SmallButton, BigTitle } from "@/styles/commonStyle";
+import { BigTitle } from "@/styles/commonStyle";
 import { currentChannelDetailRequest } from "@/api/channelFetcher";
 import { ChannelDetailType } from "@/types/channel/channelTypes";
 import ChannelDetail from "../channelDetail/ChannelDetail";
-import * as Api from "@/api/api";
+
 function ChannelHistory() {
   const curUser = useRecoilValue(curUserState);
   const channels = curUser.channels;
@@ -120,8 +120,11 @@ const CardContainer = styled.div`
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: rem;
   overflow-y: scroll;
+  & > * {
+    margin-bottom: 2rem;
+  }
 `;
 
 export default ChannelHistory;
