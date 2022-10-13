@@ -1,20 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import { curUserState } from "@/recoil/atoms/authState";
+import { useRecoilValue } from "recoil";
 import GlobalTheme from "@/styles/theme";
-import ChannelHistoryCard from "./ChannelHistoryCard";
+import ChannelCard from "@/components/recruitingChannel/ChannelCard";
 import { SmallButton, BigTitle } from "@/styles/commonStyle";
+import { currentChannelDetailRequest } from "@/api/channelFetcher";
+import { ChannelDetailType } from "@/types/channel/channelTypes";
+import ChannelDetail from "../channelDetail/ChannelDetail";
 import * as Api from "@/api/api";
 function ChannelHistory() {
-  // const handleClickButton = async () => {
-  //   try {
-  //     const res = await Api.get("/api/users/channelhistory");
-  //     console.log(res.data);
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // };
+  const curUser = useRecoilValue(curUserState);
+  const channels = curUser.channels;
   const [tabIndex, setTabIndex] = useState(0);
   const TapMenu = ["생성한 채널", "가입한 채널"];
+  const [selectedChannelId, setSelectedChannelId] = useState<string>("");
+  const [isShowMore, setIsShowMore] = useState(false);
+  const [channelDetailInfo, setChannelDetailInfo] = useState<
+    ChannelDetailType[]
+  >([]);
+
+  const handleMoreClick = async (channelUuid: string) => {
+    const res = await currentChannelDetailRequest(
+      `/api/channels/${channelUuid}`
+    );
+    setChannelDetailInfo([res.datas]);
+    setSelectedChannelId(res.datas._id);
+    setIsShowMore(true);
+  };
+
   return (
     <ChannelHistoryContainer>
       <TitleContainer>
@@ -46,13 +60,26 @@ function ChannelHistory() {
         {/* <SmallButton onClick={handleClickButton}>api</SmallButton> */}
       </TitleContainer>
       <CardContainer>
-        <ChannelHistoryCard />
-        <ChannelHistoryCard />
-        <ChannelHistoryCard />
-        <ChannelHistoryCard />
-        <ChannelHistoryCard />
-        <ChannelHistoryCard />
+        {channels.map((ch) => (
+          <ChannelCard
+            key={ch._id}
+            img={ch.img}
+            title={ch.title}
+            channelUuid={ch._id}
+            curMemberNum={`${ch.memberNum}/${ch.curMemberNum}`}
+            locationDist={ch.locationDist}
+            locationCity={ch.locationCity}
+            onMoreClick={handleMoreClick}
+          />
+        ))}
       </CardContainer>
+      <ChannelDetail
+        isShowMore={isShowMore}
+        setIsShowMore={setIsShowMore}
+        channelDetailInfo={channelDetailInfo}
+        onEnterDecideClickEvent={(s) => console.log(s)}
+        selectedChannelId={selectedChannelId}
+      />
     </ChannelHistoryContainer>
   );
 }
@@ -91,8 +118,9 @@ const TitleContainer = styled.div`
 const CardContainer = styled.div`
   display: flex;
   justify-content: center;
+  align-items: center;
   flex-wrap: wrap;
-  gap: 3rem;
+  gap: 1rem;
   overflow-y: scroll;
 `;
 
