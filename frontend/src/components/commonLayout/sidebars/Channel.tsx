@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import CustomIcon from "@/components/icons/CustomIcon";
-import * as Api from "@/api/api";
+import { loginUserChannelListRequest } from "@/api/channelFetcher";
 
 interface ChannelContainerProps {
   isToggle: boolean;
@@ -19,8 +19,10 @@ const Channel: React.FC = () => {
 
   useEffect(() => {
     (async () => {
-      const res = await Api.get(`/api/users/userinfo/${loginUserId}`);
-      setSidebarChannels(res.data.datas.channels);
+      const res = await loginUserChannelListRequest(
+        `/api/users/userinfo/${loginUserId}`
+      );
+      setSidebarChannels(res.datas.channels);
     })();
   }, []);
   const [isToggle, setIsToggle] = useState(false);
