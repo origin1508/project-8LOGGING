@@ -1,13 +1,24 @@
 import { atom } from "recoil";
 import { recoilPersist } from "recoil-persist";
 
+export interface channelsType {
+  _id: string;
+  title: string;
+  img: string;
+  locationDist: string;
+  locationCity: string;
+  memberNum: number;
+  curMemberNum: number;
+  position: number;
+}
+
 export interface IUser {
   _id: string;
   token?: string;
   email?: string;
   nickname: string;
   password?: string;
-  chnnels?: string[];
+  channels: channelsType[];
   description: string;
   waitResList?: string[];
   waitReqList?: string[];
@@ -39,7 +50,7 @@ export const curUserState = atom<IUser>({
     email: "",
     nickname: "",
     password: "",
-    chnnels: [],
+    channels: [],
     description: "",
     waitResList: [],
     waitReqList: [],

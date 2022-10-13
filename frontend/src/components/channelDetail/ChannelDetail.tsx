@@ -66,14 +66,16 @@ const ChannelDetail = ({
 
 const ChannelDetailBackground = styled.div<{ isShowMore: boolean }>`
   display: ${(props) => (props.isShowMore ? "block" : "none")};
-  position: absolute;
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.2);
 `;
 
 const ChannelDetailContainer = styled.div`
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
