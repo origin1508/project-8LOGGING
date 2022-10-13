@@ -5,7 +5,7 @@ const chatLogSchema = new Schema(
     roomId: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: "Room",
+      ref: "ChatRoom",
     },
     chatLog: {
       type: String,
@@ -19,3 +19,5 @@ const chatLogSchema = new Schema(
     timestamps: true,
   }
 );
+
+module.exports = chatLogSchema;

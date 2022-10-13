@@ -7,7 +7,7 @@ const errorMiddleware = require("./src/middlewares/error");
 const { swaggerUI, specs } = require("./src/config/swagger");
 const cors = require("cors");
 const dbConnect = require("./src/config/mongoose");
-const socket = require('./src/config/socket');
+const socket = require("./src/config/socket");
 
 // 라우터 불러오기
 const {
@@ -16,6 +16,7 @@ const {
   channelRouter,
   dataRouter,
   followRouter,
+  chatRouter,
 } = require("./src/routes");
 
 const app = express();
@@ -35,6 +36,7 @@ app.use("/api/users", userRouter);
 app.use("/api/channels", channelRouter);
 app.use("/api/data", dataRouter);
 app.use("/api/follow", followRouter);
+app.use("/api/chat", chatRouter);
 
 // swagger
 app.use("/docs", swaggerUI.serve, swaggerUI.setup(specs));
@@ -43,6 +45,9 @@ app.use("/docs", swaggerUI.serve, swaggerUI.setup(specs));
 app.use(errorMiddleware);
 
 // 서버 시작
-socket(app.listen(process.env.PORT || 3001, () => {
-  console.log(`http://localhost:${process.env.PORT || 3001}`);
-}));
+socket(
+  app.listen(process.env.PORT || 3001, () => {
+    console.log(`http://localhost:${process.env.PORT || 3001}`);
+  }),
+  app
+);
