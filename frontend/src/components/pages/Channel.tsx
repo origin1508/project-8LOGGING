@@ -1,4 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { currentChannelDetailRequest } from "@/api/channelFetcher";
+import { MainChannelType } from "@/types/channel/channelTypes";
+import Modal from "@/components/modal/Modal";
+import useModal from "@/hooks/useModal";
 import styled from "styled-components";
 import BaseCardContainerStyle from "../hoc/BaseCardContainer";
 import BasePageComponent from "../hoc/BasePageComponent";
@@ -13,37 +18,65 @@ import {
 } from "@/styles/commonStyle";
 
 function Channel() {
+  const [channelData, setChannelData] = useState<MainChannelType>();
+  const [entryFailureMessage, setEntryFailureMessage] = useState();
+  const { channelId } = useParams();
+  const navigate = useNavigate();
+  const [
+    isOpenModal,
+    ,
+    handleModalOpenButtonClick,
+    ,
+    handleModalCloseButtonClick,
+  ] = useModal(false);
+  useEffect(() => {
+    (async () => {
+      const res = await currentChannelDetailRequest(
+        `/api/channels/${channelId}/main`
+      );
+      if (res.success) {
+        setChannelData(res.datas);
+      } else {
+        setChannelData(undefined);
+        handleModalOpenButtonClick();
+        setEntryFailureMessage(res.message);
+      }
+    })();
+  }, [channelId]);
   return (
     <BasePageComponent>
       <BaseCardContainerStyle width="100rem">
-        <TitleContainer>
-          <BigTitle>Channel</BigTitle>
-          <MediumTitle>제주도에서 쓰레기 줍기</MediumTitle>
-          <MediumSubTitle>
-            <PeopleContainer>
-              <CustomIcon
-                name="following"
-                size="20"
-                color={GlobalTheme.colors.gray}
-              />
-              15
-            </PeopleContainer>
-            <Application>new applicant 15</Application>
-          </MediumSubTitle>
-          <NewPeopleContainer>
-            <IconBox>
-              <CustomIcon
-                name="bell"
-                size="30"
-                color={GlobalTheme.colors.theme}
-              ></CustomIcon>
-              <Notification>15</Notification>
-            </IconBox>
+        {channelData && (
+          <TitleContainer>
+            <BigTitle>Channel</BigTitle>
+            <MediumTitle>{channelData.title}</MediumTitle>
+            <MediumSubTitle>
+              <PeopleContainer>
+                <CustomIcon
+                  name="following"
+                  size="20"
+                  color={GlobalTheme.colors.gray}
+                />
+                {channelData.membersInfo.length}
+              </PeopleContainer>
+              <Application>new applicant 15</Application>
+            </MediumSubTitle>
+            <NewPeopleContainer>
+              <IconBox>
+                <CustomIcon
+                  name="bell"
+                  size="30"
+                  color={GlobalTheme.colors.theme}
+                ></CustomIcon>
+                <Notification>{channelData.waitList?.length}</Notification>
+              </IconBox>
 
-            <NewPeople>New People</NewPeople>
-          </NewPeopleContainer>
-        </TitleContainer>
-        <ChatForm>
+              <NewPeople>New People</NewPeople>
+            </NewPeopleContainer>
+          </TitleContainer>
+        )}
+
+        {/* <ChatForm>
           <ContentContainer>
             <UserContainer>
               <UserImg itemProp="logo192.png"></UserImg>
@@ -124,8 +157,19 @@ function Channel() {
               color={GlobalTheme.colors.theme}
             />
           </SendButton>
-        </ChatForm>
+        </ChatForm> */}
       </BaseCardContainerStyle>
+      <Modal
+        isOpenModal={isOpenModal}
+        isAlertModal={true}
+        isShowImage={true}
+        onModalCancelButtonClickEvent={() => {
+          handleModalCloseButtonClick;
+          navigate("/profile", { replace: true });
+        }}
+      >
+        {entryFailureMessage}
+      </Modal>
     </BasePageComponent>
   );
 }
