@@ -167,7 +167,7 @@ module.exports = {
     try {
       await channelService.acceptEnter(userId, channelId, waitingId);
 
-      res.status(200).json({
+      res.status(201).json({
         success: true,
         message: "channel enter accept success",
       });
@@ -184,7 +184,7 @@ module.exports = {
     try {
       await channelService.rejectEnter(userId, channelId, waitingId);
 
-      res.status(200).json({
+      res.status(201).json({
         success: true,
         message: "channel enter reject success",
       });
@@ -192,4 +192,36 @@ module.exports = {
       next(err);
     }
   },
+
+  async loadMainContent(req, res, next) {
+    const userId = req.userId;
+    const { channelId } = req.params;
+
+    try{
+      const userPosition = await channelService.checkUserChannelRelation(userId, channelId);
+      const response = {};
+      
+      if (userPosition==0 || userPosition==1) {
+        const channelInfo = await channelService.getChannelInfo(channelId);
+        if (userPosition==0) {
+          const waitList = await channelService.getWaitList(userId, channelId);
+          channelInfo.waitList = waitList;
+        }
+        response.success = true;
+        response.message = "channel main content load success";
+        response.datas = channelInfo;
+      } else {
+        response.success = false;
+        if (userPosition==2) {
+          response.message = "pending channel entrance";
+        } else {
+          response.message = "non-member access is forbidden";
+        }
+      }
+
+      res.status(200).json(response);
+    } catch (err) {
+      next(err);
+    }
+  }
 };
