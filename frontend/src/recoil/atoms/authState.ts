@@ -1,15 +1,15 @@
 import { atom } from "recoil";
 import { recoilPersist } from "recoil-persist";
 
-interface channelsType {
+export interface channelsType {
   _id: string;
   title: string;
   img: string;
   locationDist: string;
   locationCity: string;
-  memberNum: string;
-  curMemberNum: string;
-  position: string;
+  memberNum: number;
+  curMemberNum: number;
+  position: number;
 }
 
 export interface IUser {
