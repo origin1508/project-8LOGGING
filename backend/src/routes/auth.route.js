@@ -17,6 +17,18 @@ module.exports = router;
 
 /**
  * @swagger
+ * /api/auth/register:
+ *  post:
+ *    tags:
+ *    - auth
+ *    description: 회원 가입
+ *    produces:
+ *    - application/json
+ *    parameters:
+ */
+
+/**
+ * @swagger
  * /posts:
  *   get:
  *     description: 게시글 조회
