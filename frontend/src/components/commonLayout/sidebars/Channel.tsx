@@ -1,11 +1,59 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { channelsState } from "@/recoil/atoms/channelState";
+import { loginUserIdState } from "@/recoil/atoms/authState";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import CustomIcon from "@/components/icons/CustomIcon";
+import Storage from "@/storage/storage";
+import * as Api from "@/api/api";
 
 interface ChannelContainerProps {
   isToggle: boolean;
 }
+
+const Channel: React.FC = () => {
+  const loginUserId = useRecoilValue(loginUserIdState);
+  const [channels, setChannels] = useRecoilValue(channelsState);
+  useEffect(() => {
+    (async () => {
+      if (Storage.getToken()) {
+        const res = await Api.get(`/api/users/userinfo/${loginUserId}`);
+        console.log(res.data.datas.channels);
+      }
+    })();
+  }, [Storage.getToken()]);
+  const [isToggle, setIsToggle] = useState(false);
+  return (
+    <ChannelsContainer>
+      <TitleContainer>
+        <ChannelTitle>Channel</ChannelTitle>
+        <ToggleIcon onClick={() => setIsToggle(!isToggle)}>
+          {!isToggle ? (
+            <CustomIcon
+              name="toggleDown"
+              size="25"
+              color={GlobalTheme.colors.theme}
+            />
+          ) : (
+            <CustomIcon
+              name="toggleUp"
+              size="25"
+              color={GlobalTheme.colors.theme}
+            />
+          )}
+        </ToggleIcon>
+      </TitleContainer>
+
+      <ChannelContainer isToggle={!isToggle}>
+        {/* {channels.map((channel, index) => {
+          return <ChannelLink key={index}>{channel.title}</ChannelLink>;
+        })} */}
+      </ChannelContainer>
+    </ChannelsContainer>
+  );
+};
+
 const ChannelsContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -56,48 +104,5 @@ const ToggleIcon = styled.div`
     scale: 1.2;
   }
 `;
-const channels = [
-  {
-    title: "channel one",
-  },
-  {
-    title: "channel two",
-  },
-  {
-    title: "channel three",
-  },
-];
-
-const Channel: React.FC = () => {
-  const [isToggle, setIsToggle] = useState(false);
-  return (
-    <ChannelsContainer>
-      <TitleContainer>
-        <ChannelTitle>Channel</ChannelTitle>
-        <ToggleIcon onClick={() => setIsToggle(!isToggle)}>
-          {!isToggle ? (
-            <CustomIcon
-              name="toggleDown"
-              size="25"
-              color={GlobalTheme.colors.theme}
-            />
-          ) : (
-            <CustomIcon
-              name="toggleUp"
-              size="25"
-              color={GlobalTheme.colors.theme}
-            />
-          )}
-        </ToggleIcon>
-      </TitleContainer>
-
-      <ChannelContainer isToggle={!isToggle}>
-        {channels.map((channel, index) => {
-          return <ChannelLink key={index}>{channel.title}</ChannelLink>;
-        })}
-      </ChannelContainer>
-    </ChannelsContainer>
-  );
-};
 
 export default Channel;
