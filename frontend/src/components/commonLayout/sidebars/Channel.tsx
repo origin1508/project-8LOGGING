@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import CustomIcon from "@/components/icons/CustomIcon";
-import Storage from "@/storage/storage";
 import * as Api from "@/api/api";
 
 interface ChannelContainerProps {
@@ -20,12 +19,10 @@ const Channel: React.FC = () => {
 
   useEffect(() => {
     (async () => {
-      if (Storage.getToken()) {
-        const res = await Api.get(`/api/users/userinfo/${loginUserId}`);
-        setSidebarChannels(res.data.datas.channels);
-      }
+      const res = await Api.get(`/api/users/userinfo/${loginUserId}`);
+      setSidebarChannels(res.data.datas.channels);
     })();
-  }, [Storage.getToken()]);
+  }, []);
   const [isToggle, setIsToggle] = useState(false);
   return (
     <ChannelsContainer>
@@ -89,15 +86,23 @@ const TitleContainer = styled.div`
 const ChannelContainer = styled.div<ChannelContainerProps>`
   display: flex;
   overflow: auto;
+  padding-top: 1rem;
   &::-webkit-scrollbar {
-    width: 5px;
+    display: none;
   }
-  &::-webkit-scrollbar-thumb {
-    background: ${GlobalTheme.colors.theme};
-    border-radius: 4px;
-  }
-  &::-webkit-scrollbar-track {
-    background: ${GlobalTheme.colors.lightThreeGray};
+
+  &:hover {
+    &::-webkit-scrollbar {
+      display: block;
+      width: 5px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: ${GlobalTheme.colors.theme};
+      border-radius: 4px;
+    }
+    &::-webkit-scrollbar-track {
+      background: ${GlobalTheme.colors.lightThreeGray};
+    }
   }
   ${(props) =>
     props.isToggle
