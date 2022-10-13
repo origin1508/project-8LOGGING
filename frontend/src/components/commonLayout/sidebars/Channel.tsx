@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { channelsState } from "@/recoil/atoms/channelState";
 import { loginUserIdState } from "@/recoil/atoms/authState";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import CustomIcon from "@/components/icons/CustomIcon";
@@ -12,11 +13,6 @@ interface ChannelContainerProps {
   isToggle: boolean;
 }
 
-interface ItemType {
-  _id: string;
-  title: string;
-}
-
 const Channel: React.FC = () => {
   const loginUserId = useRecoilValue(loginUserIdState);
   const [channels, setChannels] = useRecoilState(channelsState);
@@ -25,14 +21,10 @@ const Channel: React.FC = () => {
     (async () => {
       if (Storage.getToken()) {
         const res = await Api.get(`/api/users/userinfo/${loginUserId}`);
-        const chArray = res.data.datas.channels.map((item: ItemType) => {
-          return { _id: item._id, title: item.title };
-        });
-        setChannels(chArray);
+        setChannels(res.data.datas.channels);
       }
     })();
   }, [Storage.getToken()]);
-
   const [isToggle, setIsToggle] = useState(false);
   return (
     <ChannelsContainer>
@@ -57,7 +49,11 @@ const Channel: React.FC = () => {
 
       <ChannelContainer isToggle={!isToggle}>
         {channels.map((channel, index) => {
-          return <ChannelLink key={index}>{channel.title}</ChannelLink>;
+          return (
+            <ChannelLink key={index} to={`/channel/${channel._id}`}>
+              {channel.title}
+            </ChannelLink>
+          );
         })}
       </ChannelContainer>
     </ChannelsContainer>
@@ -72,7 +68,7 @@ const ChannelsContainer = styled.div`
   magin-top: 20rem;
 `;
 
-const ChannelLink = styled.a`
+const ChannelLink = styled(Link)`
   text-decoration: none;
   margin-bottom: 3rem;
   color: ${GlobalTheme.colors.gray};
@@ -92,13 +88,22 @@ const TitleContainer = styled.div`
 const ChannelContainer = styled.div<ChannelContainerProps>`
   display: flex;
   overflow: auto;
-
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: ${GlobalTheme.colors.theme};
+    border-radius: 4px;
+  }
+  &::-webkit-scrollbar-track {
+    background: ${GlobalTheme.colors.lightThreeGray};
+  }
   ${(props) =>
     props.isToggle
       ? `visibility: hidden;
   height: 0vh;`
       : `visibility: visible;
-  height: 20vh;`}
+  height: 30vh;`}
   flex-direction: column;
   transition: all 0.4s;
   &:active {
