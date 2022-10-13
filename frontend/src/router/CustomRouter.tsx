@@ -3,7 +3,6 @@ import { Routes, Route } from "react-router-dom";
 import SidebarComponent from "@/components/commonLayout/sidebars/SidebarComponent";
 import Footer from "@/components/commonLayout/footer/Footer";
 import ScrollToTop from "@/util/scrollToTop";
-import Channel from "@/components/pages/Channel";
 const MainComponentPage = React.lazy(() => import("@/components/pages/Main"));
 const LoginComponentPage = React.lazy(() => import("@/components/pages/Auth"));
 const ChannelFormComponentPage = React.lazy(
@@ -18,7 +17,9 @@ const ChannelListPageComponent = React.lazy(
 const AboutPloggingComponent = React.lazy(
   () => import("@/components/pages/AboutPlogging")
 );
-
+const ChannelPageComponent = React.lazy(
+  () => import("@/components/pages/Channel")
+);
 const CustomRouter = () => {
   return (
     <React.Fragment>
@@ -30,16 +31,18 @@ const CustomRouter = () => {
         <Routes>
           <Route path="/" element={<MainComponentPage />} />
           <Route path="/auth" element={<LoginComponentPage />} />
+          <Route path="/about" element={<AboutPloggingComponent />} />
+          <Route path="/profile" element={<ProfileComponentPage />} />
+          <Route path="/profile/:userId" element={<ProfileComponentPage />} />
+          <Route path="/channels" element={<ChannelListPageComponent />} />
           <Route
             path="/channels/create"
             element={<ChannelFormComponentPage />}
           />
-          <Route path="/profile/:userId" element={<ProfileComponentPage />} />
-          <Route path="/profile" element={<ProfileComponentPage />} />
-
-          <Route path="/channels" element={<ChannelListPageComponent />} />
-          <Route path="/about" element={<AboutPloggingComponent />} />
-          <Route path="/channel" element={<Channel />} />
+          <Route
+            path="/channels/:channelId"
+            element={<ChannelPageComponent />}
+          />
         </Routes>
       </Suspense>
       <Footer />
