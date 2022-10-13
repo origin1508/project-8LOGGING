@@ -8,6 +8,8 @@ import {
 } from "react-icons/bs";
 import { VscTriangleDown, VscTriangleUp } from "react-icons/vsc";
 import { FaUserFriends } from "react-icons/fa";
+import { FiSend } from "react-icons/fi";
+
 interface CustomIconProps {
   name: string;
   size: string;
@@ -39,6 +41,8 @@ const CustomIcon = ({ name, size, color }: CustomIconProps) => {
         return <FaUserFriends size={size} color={color}></FaUserFriends>;
       case "bell":
         return <BsFillBellFill size={size} color={color}></BsFillBellFill>;
+      case "send":
+        return <FiSend size={size} color={color}></FiSend>;
       default:
         console.log("Not implemented!");
         return;
