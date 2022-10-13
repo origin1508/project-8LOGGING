@@ -13,6 +13,7 @@ interface ChannelFormCardProps {
   channelForm: ChannelFormInitialType;
   distOptions: Array<string>;
   channelListData: { [key: string]: Array<string> };
+  selectedCity: string;
   imagePreview: string | ArrayBuffer | FileReader | null | undefined;
   isValidTitle: boolean;
   isValidMemberCount: boolean;
@@ -40,6 +41,7 @@ const ChannelFormCard = ({
   channelForm,
   distOptions,
   channelListData,
+  selectedCity,
   imagePreview,
   isValidTitle,
   isValidMemberCount,
@@ -111,7 +113,10 @@ const ChannelFormCard = ({
                 <ChannelOption key={dist}>{dist}</ChannelOption>
               ))}
             </ChannelSelector>
-            <ChannelSelector onChange={onChangeSelectChangeEvent}>
+            <ChannelSelector
+              value={selectedCity}
+              onChange={onChangeSelectChangeEvent}
+            >
               {channelListData[channelForm.locationDist].map((city) => (
                 <ChannelOption key={city}>{city}</ChannelOption>
               ))}

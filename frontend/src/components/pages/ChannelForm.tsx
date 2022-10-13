@@ -104,10 +104,6 @@ const ChannelForm = () => {
       return;
     }
     const { title, locationDist, memberNum, spec } = channelForm;
-    const city = !selectedCity
-      ? channelListData[channelForm.locationDist][0]
-      : selectedCity;
-    setSelectedCity(city);
     const { datas } = await createChannelRequest("/api/channels", {
       title,
       locationDist,
@@ -137,6 +133,7 @@ const ChannelForm = () => {
           channelForm={channelForm}
           distOptions={distOptions}
           channelListData={sortedChannelListData}
+          selectedCity={selectedCity}
           imagePreview={imagePreview}
           isValidTitle={isValidTitle}
           isValidMemberCount={isValidMemberCount}
