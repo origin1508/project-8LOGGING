@@ -1,7 +1,6 @@
 import React, { useMemo } from "react";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
-import usePagination from "@/hooks/usePagination";
 
 interface PaginateButtonProps {
   page: number;
@@ -10,11 +9,17 @@ interface PaginateButtonProps {
 }
 
 const PaginateButton = ({ page, totalPages, setPage }: PaginateButtonProps) => {
-  const {
-    handleNextButtonClick,
-    handlePrevButtonClick,
-    handlePageButtonClick,
-  } = usePagination({ setPage: setPage, totalPages: totalPages });
+  const handleNextButtonClick = () => {
+    setPage((prev) => (prev + 1 > totalPages ? totalPages : prev + 1));
+  };
+
+  const handlePrevButtonClick = () => {
+    setPage((prev) => (prev - 1 < 1 ? 1 : prev - 1));
+  };
+
+  const handlePageButtonClick = (page: number) => () => {
+    setPage(page);
+  };
 
   const pages = useMemo(
     () => Array.from({ length: totalPages }).map((p, i) => i + 1),

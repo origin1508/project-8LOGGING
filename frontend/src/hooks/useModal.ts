@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 
 type ModalReturnType = [
   isOpenModal: boolean,
@@ -12,19 +12,19 @@ const useModal = (initialState: boolean): ModalReturnType => {
   const [isOpenModal, setIsOpenModal] = useState(initialState);
   const [isAccepted, setIsAccepted] = useState(initialState);
 
-  const handleModalOpenButtonClick = () => {
+  const handleModalOpenButtonClick = useCallback(() => {
     setIsOpenModal(true);
-  };
+  }, [setIsOpenModal]);
 
-  const handleAcceptButtonClick = () => {
+  const handleAcceptButtonClick = useCallback(() => {
     setIsAccepted(true);
     setIsOpenModal(false);
-  };
+  }, [setIsAccepted, setIsOpenModal]);
 
-  const handleModalCloseButtonClick = () => {
+  const handleModalCloseButtonClick = useCallback(() => {
     setIsOpenModal(false);
     setIsAccepted(false);
-  };
+  }, [setIsOpenModal, setIsAccepted]);
 
   return [
     isOpenModal,

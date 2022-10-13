@@ -21,7 +21,6 @@ const AboutPlogging = () => {
         // 스크롤 내릴 때
         if (scrollTop >= 0 && scrollTop < pageHeight) {
           //현재 1페이지
-          console.log("현재 1페이지, down");
           outerDivRef.current.scrollTo({
             top: pageHeight + DIVIDER_HEIGHT,
             left: 0,
@@ -30,7 +29,6 @@ const AboutPlogging = () => {
           setScrollIndex(2);
         } else if (scrollTop >= pageHeight && scrollTop < pageHeight * 2) {
           //현재 2페이지
-          console.log("현재 2페이지, down");
           outerDivRef.current.scrollTo({
             top: pageHeight * 2 + DIVIDER_HEIGHT * 2,
             left: 0,
@@ -39,7 +37,6 @@ const AboutPlogging = () => {
           setScrollIndex(3);
         } else if (scrollTop >= pageHeight && scrollTop < pageHeight * 3) {
           //현재 3페이지
-          console.log("현재 3페이지, down");
           outerDivRef.current.scrollTo({
             top: pageHeight * 3 + DIVIDER_HEIGHT * 3,
             left: 0,
@@ -48,7 +45,6 @@ const AboutPlogging = () => {
           setScrollIndex(4);
         } else {
           // 현재 4페이지
-          console.log("현재 4페이지, down");
           outerDivRef.current.scrollTo({
             top: pageHeight * 3 + DIVIDER_HEIGHT * 3,
             left: 0,
@@ -60,7 +56,6 @@ const AboutPlogging = () => {
         // 스크롤 올릴 때
         if (scrollTop >= 0 && scrollTop < pageHeight) {
           //현재 1페이지
-          console.log("현재 1페이지, up");
           outerDivRef.current.scrollTo({
             top: 0,
             left: 0,
@@ -69,7 +64,6 @@ const AboutPlogging = () => {
           setScrollIndex(1);
         } else if (scrollTop >= pageHeight && scrollTop < pageHeight * 2) {
           //현재 2페이지
-          console.log("현재 2페이지, up");
           outerDivRef.current.scrollTo({
             top: 0,
             left: 0,
@@ -78,7 +72,6 @@ const AboutPlogging = () => {
           setScrollIndex(1);
         } else if (scrollTop >= pageHeight && scrollTop < pageHeight * 3) {
           //현재 3페이지
-          console.log("현재 3페이지, up");
           outerDivRef.current.scrollTo({
             top: pageHeight + DIVIDER_HEIGHT,
             left: 0,
@@ -87,7 +80,6 @@ const AboutPlogging = () => {
           setScrollIndex(2);
         } else {
           // 현재 4페이지
-          console.log("현재 4페이지, up");
           outerDivRef.current.scrollTo({
             top: pageHeight * 2 + DIVIDER_HEIGHT,
             left: 0,
