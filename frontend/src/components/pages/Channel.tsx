@@ -17,6 +17,11 @@ import {
   ChannelLogType,
 } from "@/types/channel/channelTypes";
 
+const socket = socketIOClient(`${process.env.REACT_APP_SERVER_BASE_URL}/chat`, {
+  path: "/chat-socket",
+  transports: ["websocket"],
+});
+
 function Channel() {
   const [channelContent, setChannelContent] = useState<string>("");
   const [chatLogs, setChatLogs] = useState<Array<ChannelLogType>>([]);
@@ -24,11 +29,6 @@ function Channel() {
   const { channelId } = useParams();
 
   const inputRef = useRef<HTMLInputElement>(null);
-
-  const socket = socketIOClient(
-    `${process.env.REACT_APP_SERVER_BASE_URL}/chat`,
-    { path: "/chat-socket", transports: ["websocket"] }
-  );
 
   useEffect(() => {
     socket.emit("enter", {
@@ -54,6 +54,27 @@ function Channel() {
         })
       );
     })();
+    // 이게 맞나..?
+    // will unmount에서 이러한 작업을 수행해도 되는건가..?
+    return () => {
+      socket.on("chat", (data) => {
+        setChatLogs((prev) => {
+          return [
+            ...prev,
+            {
+              _id: data._id,
+              createdAt: data.createdAt,
+              roomId: data.roomId,
+              userId: data.userId,
+              chat: data.chat,
+              nickname: "foxmon",
+              profPic:
+                "https://elice-8seconds.s3.ap-northeast-2.amazonaws.com/1665109688589_image_1648301949725_750.jpeg",
+            },
+          ];
+        });
+      });
+    };
   }, []);
 
   const handleChannelContentChange = useCallback(
@@ -65,28 +86,9 @@ function Channel() {
 
   const handleChannelSendButtonClick = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (channelId) {
+    if (channelId)
       await channelMessageRequest("/api/chat/log", channelId, channelContent);
-      const { datas } = await channelChatLogRequest(
-        `/api/chat/log/${channelId}`
-      );
-      const { chatLogs, userInfo } = datas;
-      setChatLogs(
-        chatLogs.map((ch: ChannelLogObjectType, i: number) => {
-          const obj = {
-            _id: ch._id,
-            createdAt: ch.createdAt,
-            roomId: ch.roomId,
-            userId: ch.userId,
-            chat: ch.chat,
-            nickname: userInfo[i].nickname,
-            profPic: userInfo[i].profPic,
-          };
-          return obj;
-        })
-      );
-      if (inputRef.current) inputRef.current.value = "";
-    }
+    if (inputRef.current) inputRef.current.value = "";
   };
 
   return (
