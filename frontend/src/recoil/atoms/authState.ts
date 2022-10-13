@@ -37,11 +37,13 @@ export const authState = atom({
   },
 });
 const { persistAtom } = recoilPersist();
+
 export const loginUserIdState = atom<string>({
   key: "loginUserId",
   default: "",
   effects_UNSTABLE: [persistAtom],
 });
+
 export const curUserState = atom<IUser>({
   key: "curUser",
   default: {
