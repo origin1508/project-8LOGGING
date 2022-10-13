@@ -1,27 +1,27 @@
 const socket = require("socket.io");
 
-const socketConfig = (server) => {
-  const io = SocketIO(server, { path: "/chat-socket" });
+const socketConfig = (server, app) => {
+  const io = socket(server, { path: "/chat-socket" });
+  app.set("chatIO", io);
+  const chat = io.of("/chat");
 
-  io.on("connection", (socket) => {
-    const req = socket.request;
-    const clientIp =
-      req.headers["x-forwarded-for"] || req.connection.remoteAddress;
-    console.log(ip, socket.id, req.ip);
+  chat.on("connection", (socket) => {
+    console.log("chat 연결");
 
-    // 이벤트
     socket.on("enter", (data) => {
-      console.log(data);
+      console.log(data.roomId + "에 접속");
+      socket.join(data.roomId);
     });
 
-    socket.on("disconnection", () => {
-      console.log("연결 해제");
-      clearInterval(socket.interval);
+    socket.on("disconnect", (data) => {
+      console.log(data.roomId + "에서 연결 해제");
+      socket.leave(data.roomId);
     });
 
-    socket.interval = setInterval(() => {
-      socket.emit();
-    }, 5000);
+    socket.on("chat", (data) => {
+      socket.to(data.room).emit(data);
+    })
+
   });
 };
 
