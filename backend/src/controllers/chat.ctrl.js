@@ -26,14 +26,31 @@ module.exports = {
     try {
       const createdChat = await chatService.addChatLog(roomId, userId, chat);
 
-      req.app.get('chatIO').of('/chat').to(roomId).emit('chat', createdChat);
-      console.log(req.app.get('chatIO'));
+      req.app.get("chatIO").of("/chat").to(roomId).emit("chat", createdChat);
+      console.log(req.app.get("chatIO"));
 
       res.status(201).json({
         success: true,
         status: 201,
         message: "success creating new chat log",
         datas: createdChat,
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  async showChatLog(req, res, next) {
+    const { roomId } = req.params;
+
+    try {
+      const chatLog = await chatService.getChatLog(roomId);
+
+      res.status(200).json({
+        success: true,
+        status: 200,
+        message: "success loading chat logs",
+        datas: chatLog,
       });
     } catch (err) {
       next(err);
