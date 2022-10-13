@@ -10,7 +10,10 @@ interface Props {
   isShowMore: boolean;
   setIsShowMore: React.Dispatch<React.SetStateAction<boolean>>;
   channelDetailInfo: ChannelDetailType[];
-  onEnterDecideClickEvent: (selectedChannelId: string) => void;
+  onEnterDecideClickEvent: (
+    selectedChannelId: string,
+    channelTitle: string
+  ) => void;
   selectedChannelId: string;
 }
 
@@ -24,6 +27,7 @@ const ChannelDetail = ({
   const loginUserId = useRecoilValue(loginUserIdState);
   const ownerId = channelDetailInfo[0]?.ownerInfo.ownerId;
   const isLoginUserChannel = ownerId === loginUserId;
+  const curChannelTitle = channelDetailInfo[0]?.title;
   return (
     <ChannelDetailBackground isShowMore={isShowMore}>
       <ChannelDetailContainer>
@@ -46,7 +50,7 @@ const ChannelDetail = ({
           {!isLoginUserChannel && (
             <Button
               onClick={() => {
-                onEnterDecideClickEvent(selectedChannelId);
+                onEnterDecideClickEvent(selectedChannelId, curChannelTitle);
               }}
             >
               참가신청

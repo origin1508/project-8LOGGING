@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSetRecoilState } from "recoil";
+import { sidebarChannelsState } from "@/recoil/atoms/channelState";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import useModal from "@/hooks/useModal";
@@ -25,6 +27,7 @@ const ChannelList = () => {
   const isLoggedIn = useMemo(() => {
     return Storage.getToken() ? true : false;
   }, [Storage.getToken()]);
+  const setSidebarChannels = useSetRecoilState(sidebarChannelsState);
 
   const [channels, setChannels] = useState<Array<ChannelsType>>([]);
   const [resMessage, setResMessage] = useState("");
@@ -82,12 +85,24 @@ const ChannelList = () => {
     navigate("/channels/create");
   };
 
-  const handleChannelEnterDecideClick = async (selectedChannelId: string) => {
+  const handleChannelEnterDecideClick = async (
+    selectedChannelId: string,
+    channelTitle: string
+  ) => {
     try {
       await channelEnterRequest(
         `/api/channels/${selectedChannelId}/enter`,
         "Change"
       );
+      setSidebarChannels((prev) => {
+        return [
+          ...prev,
+          {
+            _id: selectedChannelId,
+            title: channelTitle,
+          },
+        ];
+      });
       setResMessage("참가신청이 완료되었습니다.");
     } catch (error) {
       const err = error as ErrorType;
