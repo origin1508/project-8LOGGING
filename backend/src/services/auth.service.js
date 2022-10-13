@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 
 const ApiError = require("../utils/ApiError");
 
-const { User, EmailAuth } = require("../models");
+const { User, EmailAuth, Channel } = require("../models");
 
 module.exports = {
   /**
@@ -63,10 +63,17 @@ module.exports = {
       throw ApiError.badRequest("비밀번호가 일치하지 않습니다.");
     }
 
+    // 채널 정보 포함시켜주기
+    const channels = await Promise.all(user.channels.map(async (channelId) => {
+      const channel = await Channel.findById(channelId);
+      return (({ _id, title, img })=>({ _id, title, img }))(channel)
+    }))
+
     return {
       userId: user._id,
       email: user.email,
       nickname: user.nickname,
+      channels
     };
   },
 
