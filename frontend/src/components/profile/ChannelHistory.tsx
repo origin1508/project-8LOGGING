@@ -126,6 +126,9 @@ const CardContainer = styled.div`
   flex-wrap: wrap;
   gap: rem;
   overflow-y: scroll;
+  &::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera*/
+  }
   & > * {
     margin-bottom: 2rem;
   }
