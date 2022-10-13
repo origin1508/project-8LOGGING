@@ -4,6 +4,7 @@ import {
   BsMapFill,
   BsCalendarDateFill,
   BsSearch,
+  BsFillBellFill,
 } from "react-icons/bs";
 import { VscTriangleDown, VscTriangleUp } from "react-icons/vsc";
 import { FaUserFriends } from "react-icons/fa";
@@ -36,6 +37,8 @@ const CustomIcon = ({ name, size, color }: CustomIconProps) => {
 
       case "following":
         return <FaUserFriends size={size} color={color}></FaUserFriends>;
+      case "bell":
+        return <BsFillBellFill size={size} color={color}></BsFillBellFill>;
       default:
         console.log("Not implemented!");
         return;
