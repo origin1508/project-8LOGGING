@@ -132,7 +132,8 @@ const ChannelFormCard = ({
 };
 
 const ChannelFormWrapper = styled.form`
-  width: 80%;
+  width: 90%;
+
   margin: 0 auto;
   margin-top: 2rem;
   padding: 1.725rem;
@@ -211,14 +212,14 @@ const ChannelImageBox = styled.div<CardImageProp>`
   cursor: pointer;
   display: block;
   width: 45%;
-  height: 330px;
+  height: 25rem;
   text-align: center;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
 `;
 
 const ChannelTextArea = styled.textarea`
   width: 98%;
-  height: 360px;
+  height: 25rem;
   padding: ${GlobalTheme.input.padding};
   border-radius: ${GlobalTheme.input.borderRadius};
   border: ${GlobalTheme.input.border};
