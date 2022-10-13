@@ -85,3 +85,12 @@ export async function channelMessageRequest(
   );
   return res.data;
 }
+
+export async function channelChatLogRequest(endPoint: string) {
+  const res = await customAxios.get(endPoint, {
+    headers: {
+      Authorization: `Bearer ${Storage.getToken()}`,
+    },
+  });
+  return res.data;
+}
