@@ -36,7 +36,7 @@ function Channel() {
         <ChatForm>
           <ContentContainer>
             <UserContainer>
-              <UserImg itemProp="logo192.png"></UserImg>
+              <UserImg itemProp="https://cdn.imweb.me/upload/S20211110a3d216dc49446/f7bfffacbb6de.png"></UserImg>
               <UserInfo>
                 <TextOne>들자구 </TextOne>
                 <TextTwo>ㅁㄴㅇㅁㄴㅇ</TextTwo>
