@@ -11,7 +11,7 @@ import ValidationUtil from "@/util/validationUtil";
 import { createChannelRequest } from "@/api/channelFetcher";
 import { imageResize } from "@/util/imageResizeUtil";
 import { channelListData } from "@/components/recruitingChannel/channelListData";
-import { channelsState } from "@/recoil/atoms/channelState";
+import { sidebarChannelsState } from "@/recoil/atoms/channelState";
 import { useSetRecoilState } from "recoil";
 
 const ChannelForm = () => {
@@ -20,7 +20,7 @@ const ChannelForm = () => {
   const [imagePreview, setImagePreview] = useState<
     string | ArrayBuffer | null
   >();
-  const setChannels = useSetRecoilState(channelsState);
+  const setSidebarChannels = useSetRecoilState(sidebarChannelsState);
   const [
     isOpenModal,
     isAccepted,
@@ -103,7 +103,7 @@ const ChannelForm = () => {
       image,
     });
     if (datas) {
-      setChannels((prev) => {
+      setSidebarChannels((prev) => {
         return [
           ...prev,
           {

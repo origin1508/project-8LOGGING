@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { channelsState } from "@/recoil/atoms/channelState";
+import { sidebarChannelsState } from "@/recoil/atoms/channelState";
 import { loginUserIdState } from "@/recoil/atoms/authState";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
@@ -15,13 +15,14 @@ interface ChannelContainerProps {
 
 const Channel: React.FC = () => {
   const loginUserId = useRecoilValue(loginUserIdState);
-  const [channels, setChannels] = useRecoilState(channelsState);
+  const [sidebarChannels, setSidebarChannels] =
+    useRecoilState(sidebarChannelsState);
 
   useEffect(() => {
     (async () => {
       if (Storage.getToken()) {
         const res = await Api.get(`/api/users/userinfo/${loginUserId}`);
-        setChannels(res.data.datas.channels);
+        setSidebarChannels(res.data.datas.channels);
       }
     })();
   }, [Storage.getToken()]);
@@ -48,7 +49,7 @@ const Channel: React.FC = () => {
       </TitleContainer>
 
       <ChannelContainer isToggle={!isToggle}>
-        {channels.map((channel, index) => {
+        {sidebarChannels.map((channel, index) => {
           return (
             <ChannelLink key={index} to={`/channel/${channel._id}`}>
               {channel.title}
