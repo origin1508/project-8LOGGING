@@ -41,7 +41,7 @@ class ValidationUtil {
   }
 
   static checkChannelMemberCountValidate(memberNum: number) {
-    if (memberNum > 25) return false;
+    if (memberNum > 25 || memberNum < 2) return false;
     return true;
   }
 
