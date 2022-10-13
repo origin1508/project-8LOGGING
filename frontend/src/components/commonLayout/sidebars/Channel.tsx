@@ -13,6 +13,8 @@ interface ChannelContainerProps {
 }
 
 const Channel: React.FC = () => {
+  const [isToggle, setIsToggle] = useState(false);
+
   const loginUserId = useRecoilValue(loginUserIdState);
   const [sidebarChannels, setSidebarChannels] =
     useRecoilState(sidebarChannelsState);
@@ -23,7 +25,7 @@ const Channel: React.FC = () => {
       setSidebarChannels(res.data.datas.channels);
     })();
   }, []);
-  const [isToggle, setIsToggle] = useState(false);
+
   return (
     <ChannelsContainer>
       <TitleContainer>
