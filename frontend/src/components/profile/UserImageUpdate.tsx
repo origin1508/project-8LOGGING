@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
+import { EditButton } from "@/styles/commonStyle";
 
 interface ProfileImageProp {
   backgroundImg?: string;
@@ -29,28 +30,32 @@ const UserImageUpdate = ({
         />
       </UserImageInputWrapper>
       <ProfileImageBox backgroundImg={profileImagePreview as string} />
-      <ProfileButton onClick={onProfileImageUploadClickEvent}>
+      <EditButton onClick={onProfileImageUploadClickEvent}>
         CHANGE PROFILE IMAGE
-      </ProfileButton>
+      </EditButton>
     </UserImageContainer>
   );
 };
 
 const UserImageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: auto;
   margin-top: 1rem;
-  margin-bottom: 1.725rem;
   font-size: ${GlobalTheme.fontSize.default};
 `;
 
 const UserImageUploadTitle = styled.h1`
-  font-size: ${GlobalTheme.fontSize.realBig};
+  font-size: ${GlobalTheme.fontSize.big2};
   line-height: 1rem;
+  margin-bottom: 3rem;
 `;
 
 const UserImageInputWrapper = styled.div`
   height: auto;
   text-align: left;
+  margin-bottom: 2rem;
 `;
 
 const UserImageUploadInput = styled.input`
@@ -63,21 +68,12 @@ const ProfileImageBox = styled.div<ProfileImageProp>`
   background-position: center;
   cursor: pointer;
   display: block;
-  width: 100%;
-  height: 330px;
-  text-align: center;
-  margin-bottom: 1rem;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-`;
+  width: 25rem;
+  height: 25rem;
 
-const ProfileButton = styled.div`
-  line-height: 4rem;
-  font-size: ${GlobalTheme.fontSize.littleBig};
-  color: ${GlobalTheme.colors.white};
-  background-color: ${GlobalTheme.colors.theme};
-  padding: 0.875rem;
   text-align: center;
-  cursor: pointer;
+  margin-bottom: 3rem;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
 `;
 
 export default UserImageUpdate;
