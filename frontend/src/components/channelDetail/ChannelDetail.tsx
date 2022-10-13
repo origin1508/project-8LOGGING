@@ -38,6 +38,7 @@ const ChannelDetail = ({
             memberNum={info.memberNum}
             ownerInfo={info.ownerInfo}
             membersInfo={info.membersInfo}
+            setIsShowMore={setIsShowMore}
           />
         ))}
 

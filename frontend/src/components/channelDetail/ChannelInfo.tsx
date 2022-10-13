@@ -5,6 +5,10 @@ import GlobalTheme from "@/styles/theme";
 import CustomIcon from "@/components/icons/CustomIcon";
 import { ChannelDetailType } from "@/types/channel/channelTypes";
 
+interface Props extends ChannelDetailType {
+  setIsShowMore: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
 const ChannelInfo = ({
   title,
   spec,
@@ -14,7 +18,8 @@ const ChannelInfo = ({
   memberNum,
   ownerInfo,
   membersInfo,
-}: ChannelDetailType) => {
+  setIsShowMore,
+}: Props) => {
   const navigate = useNavigate();
   return (
     <ChannelInfoContainer>
@@ -40,6 +45,7 @@ const ChannelInfo = ({
         </MainInfoContainer>
         <OwnerInfoContainer
           onClick={() => {
+            setIsShowMore(false);
             navigate(`/profile/${ownerInfo.ownerId}`);
           }}
         >
