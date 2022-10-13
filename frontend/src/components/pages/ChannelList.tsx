@@ -5,7 +5,6 @@ import { sidebarChannelsState } from "@/recoil/atoms/channelState";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import useModal from "@/hooks/useModal";
-import usePagination from "@/hooks/usePagination";
 import BasePageComponent from "@/components/hoc/BasePageComponent";
 import ChannelCard from "@/components/recruitingChannel/ChannelCard";
 import ChannelDetail from "@/components/channelDetail/ChannelDetail";
@@ -37,6 +36,9 @@ const ChannelList = () => {
   const [channelDetailInfo, setChannelDetailInfo] = useState<
     ChannelDetailType[]
   >([]);
+  const [page, setPage] = useState<number>(1);
+
+  const status = 0;
 
   const [
     isOpenModal,
@@ -45,14 +47,6 @@ const ChannelList = () => {
     ,
     handleModalCloseButtonClick,
   ] = useModal(false);
-
-  const {
-    page,
-    status,
-    handleNextButtonClick,
-    handlePrevButtonClick,
-    handlePageButtonClick,
-  } = usePagination({ page: 1, status: 0, totalPages: totalPages });
 
   const navigate = useNavigate();
 
@@ -152,9 +146,7 @@ const ChannelList = () => {
           <PaginateButton
             page={page}
             totalPages={totalPages}
-            onNextButtonClickEvent={handleNextButtonClick}
-            onPrevButtonClickEvent={handlePrevButtonClick}
-            onPageButtonClickEvent={handlePageButtonClick}
+            setPage={setPage}
           />
           <ChannelDetail
             isShowMore={isShowMore}
