@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
@@ -19,8 +19,13 @@ import {
 } from "@/api/channelFetcher";
 import CustomIcon from "@/components/icons/CustomIcon";
 import { ChannelDetailType } from "@/types/channel/channelTypes";
+import Storage from "@/storage/storage";
 
 const ChannelList = () => {
+  const isLoggedIn = useMemo(() => {
+    return Storage.getToken() ? true : false;
+  }, [Storage.getToken()]);
+
   const [channels, setChannels] = useState<Array<ChannelsType>>([]);
   const [resMessage, setResMessage] = useState("");
   const [selectedChannelId, setSelectedChannelId] = useState<string>("");
@@ -60,6 +65,11 @@ const ChannelList = () => {
   }, [page]);
 
   const handleMoreClick = async (channelUuid: string) => {
+    if (!isLoggedIn) {
+      setResMessage("로그인이 필요합니다.");
+      handleModalOpenButtonClick();
+      return;
+    }
     const res = await currentChannelDetailRequest(
       `/api/channels/${channelUuid}`
     );
@@ -92,9 +102,11 @@ const ChannelList = () => {
         <ChannelListForm>
           <TitleContainer>
             <BigTitle>Recruiting Channel</BigTitle>
-            <BigButton onClick={handleCreateChannelClick}>
-              채널생성하기
-            </BigButton>
+            {isLoggedIn && (
+              <BigButton onClick={handleCreateChannelClick}>
+                채널생성하기
+              </BigButton>
+            )}
           </TitleContainer>
           <Search>
             <SearchInput type="text" placeholder="Search"></SearchInput>
@@ -141,10 +153,8 @@ const ChannelList = () => {
       <Modal
         isOpenModal={isOpenModal}
         isAlertModal={true}
-        onModalCancelButtonClickEvent={() => {
-          handleModalCloseButtonClick();
-          setResMessage("");
-        }}
+        isShowImage={true}
+        onModalCancelButtonClickEvent={handleModalCloseButtonClick}
       >
         {resMessage}
       </Modal>
