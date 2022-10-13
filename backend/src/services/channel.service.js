@@ -316,11 +316,10 @@ module.exports = {
     const newMembers = [ ...channel.members, waitingId ]
     await Channel.findByIdAndUpdate(channelId, { members: newMembers })
 
-    // waiting user channels, waitReqList 수정
+    // waiting user waitReqList 수정
     const user = await User.findById(waitingId);
     const newWaitReqList  = user.waitReqList.filter( id => id.str!==waitList._id.str );
-    const newChannels = [ ...user.channels, channelId ];
-    await User.findByIdAndUpdate(waitingId, { waitReqList: newWaitReqList, channels: newChannels });
+    await User.findByIdAndUpdate(waitingId, { waitReqList: newWaitReqList });
 
     // 이메일 전송
     const owner = await User.findById(channel.ownerId);
