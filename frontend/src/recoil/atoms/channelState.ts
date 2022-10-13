@@ -6,7 +6,7 @@ interface ChannelsType {
   title: string;
 }
 
-export const channelsState = atom<Array<ChannelsType>>({
+export const channelsState = atom<ChannelsType[]>({
   key: "channels",
   default: [
     {
