@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { channelsState } from "@/recoil/atoms/channelState";
+import { sidebarChannelsState } from "@/recoil/atoms/channelState";
 import { loginUserIdState } from "@/recoil/atoms/authState";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import CustomIcon from "@/components/icons/CustomIcon";
-import Storage from "@/storage/storage";
 import * as Api from "@/api/api";
 
 interface ChannelContainerProps {
@@ -15,16 +14,15 @@ interface ChannelContainerProps {
 
 const Channel: React.FC = () => {
   const loginUserId = useRecoilValue(loginUserIdState);
-  const [channels, setChannels] = useRecoilState(channelsState);
+  const [sidebarChannels, setSidebarChannels] =
+    useRecoilState(sidebarChannelsState);
 
   useEffect(() => {
     (async () => {
-      if (Storage.getToken()) {
-        const res = await Api.get(`/api/users/userinfo/${loginUserId}`);
-        setChannels(res.data.datas.channels);
-      }
+      const res = await Api.get(`/api/users/userinfo/${loginUserId}`);
+      setSidebarChannels(res.data.datas.channels);
     })();
-  }, [Storage.getToken()]);
+  }, []);
   const [isToggle, setIsToggle] = useState(false);
   return (
     <ChannelsContainer>
@@ -48,7 +46,7 @@ const Channel: React.FC = () => {
       </TitleContainer>
 
       <ChannelContainer isToggle={!isToggle}>
-        {channels.map((channel, index) => {
+        {sidebarChannels.map((channel, index) => {
           return (
             <ChannelLink key={index} to={`/channel/${channel._id}`}>
               {channel.title}
@@ -88,15 +86,23 @@ const TitleContainer = styled.div`
 const ChannelContainer = styled.div<ChannelContainerProps>`
   display: flex;
   overflow: auto;
+  padding-top: 1rem;
   &::-webkit-scrollbar {
-    width: 5px;
+    display: none;
   }
-  &::-webkit-scrollbar-thumb {
-    background: ${GlobalTheme.colors.theme};
-    border-radius: 4px;
-  }
-  &::-webkit-scrollbar-track {
-    background: ${GlobalTheme.colors.lightThreeGray};
+
+  &:hover {
+    &::-webkit-scrollbar {
+      display: block;
+      width: 5px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: ${GlobalTheme.colors.theme};
+      border-radius: 4px;
+    }
+    &::-webkit-scrollbar-track {
+      background: ${GlobalTheme.colors.lightThreeGray};
+    }
   }
   ${(props) =>
     props.isToggle

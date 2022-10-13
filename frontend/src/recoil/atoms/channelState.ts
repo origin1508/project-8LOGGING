@@ -6,8 +6,8 @@ interface ChannelsType {
   title: string;
 }
 
-export const channelsState = atom<ChannelsType[]>({
-  key: "channels",
+export const sidebarChannelsState = atom<ChannelsType[]>({
+  key: "sidebarChannels",
   default: [
     {
       _id: "",
