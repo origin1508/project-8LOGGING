@@ -12,7 +12,6 @@ const customAxios = axios.create({
 
 customAxios.interceptors.request.use(
   (req) => {
-    // 딱히 여기서 무엇을 알려줘야 하는지,,
     return req;
   },
   (error) => {
