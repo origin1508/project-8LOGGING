@@ -31,7 +31,7 @@ customAxios.interceptors.response.use(
     }
     if (error.response.status >= 500) {
       console.log(error);
-      throw new Error(`This is server error!`);
+      throw new Error("This is server error!");
     }
   }
 );
