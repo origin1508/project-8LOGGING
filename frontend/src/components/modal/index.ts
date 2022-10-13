@@ -39,6 +39,7 @@ export const ModalContainer = styled.div`
   border-radius: 8px;
   background-color: ${GlobalTheme.colors.white};
   padding: 1.25rem;
+  box-shadow: 1px 1px 3px ${GlobalTheme.colors.gray};
   ${isVisibleModal};
 `;
 export const ModalHeader = styled.div`
@@ -75,6 +76,7 @@ export const ModalButtonContainer = styled.div`
   display: flex;
   justify-content: center;
   margin-bottom: 3rem;
+  gap: 2rem;
 `;
 
 export const ModalAcceptButton = styled.button`
@@ -86,7 +88,6 @@ export const ModalAcceptButton = styled.button`
   color: ${GlobalTheme.colors.white};
   background-color: ${GlobalTheme.colors.theme};
   font-size: ${GlobalTheme.fontSize.littleBig};
-  margin-right: 1rem;
 `;
 
 export const ModalButton = styled.button`
