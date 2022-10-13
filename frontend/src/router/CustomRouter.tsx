@@ -31,17 +31,16 @@ const CustomRouter = () => {
         <Routes>
           <Route path="/" element={<MainComponentPage />} />
           <Route path="/auth" element={<LoginComponentPage />} />
+          <Route path="/about" element={<AboutPloggingComponent />} />
+          <Route path="/profile" element={<ProfileComponentPage />} />
+          <Route path="/profile/:userId" element={<ProfileComponentPage />} />
+          <Route path="/channels" element={<ChannelListPageComponent />} />
           <Route
             path="/channels/create"
             element={<ChannelFormComponentPage />}
           />
-          <Route path="/profile/:userId" element={<ProfileComponentPage />} />
-          <Route path="/profile" element={<ProfileComponentPage />} />
-
-          <Route path="/channels" element={<ChannelListPageComponent />} />
-          <Route path="/about" element={<AboutPloggingComponent />} />
           <Route
-            path="/channel/:channelID"
+            path="/channels/:channelId"
             element={<ChannelPageComponent />}
           />
         </Routes>
