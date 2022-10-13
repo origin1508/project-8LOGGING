@@ -7,10 +7,10 @@ const chatLogSchema = new Schema(
       required: true,
       ref: "ChatRoom",
     },
-    chatLog: {
+    chat: {
       type: String,
     },
-    user: {
+    userId: {
       type: String,
       required: true,
     },

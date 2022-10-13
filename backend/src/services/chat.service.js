@@ -1,4 +1,4 @@
-const { ChatRoom } = require("../models");
+const { ChatRoom, ChatLog } = require("../models");
 
 module.exports = {
   async addChatRoom(title, userId, max) {
@@ -6,4 +6,10 @@ module.exports = {
 
     return room;
   },
+
+  async addChatLog(roomId, userId, chat) {
+    const log = await ChatLog.create({roomId, userId, chat});
+
+    return log;
+  }
 };

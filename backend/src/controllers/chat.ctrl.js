@@ -18,4 +18,22 @@ module.exports = {
       next(err);
     }
   },
+
+  async createChatLog(req, res, next) {
+    const userId = req.userId;
+    const { roomId, chat } = req.body;
+
+    try {
+      const createdLog = await chatService.addChatLog(roomId, userId, chat);
+
+      res.status(201).json({
+        success: true,
+        status: 201,
+        message: "success creating new chat log",
+        datas: createdLog,
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
 };
