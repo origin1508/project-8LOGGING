@@ -213,7 +213,7 @@ const ChatInput = styled.input`
 
 const ContentContainer = styled.div`
   width: 100%;
-  height: 100%;
+  height: 88%;
   padding: 1rem 0rem 0rem 3rem;
   overflow-y: auto;
 `;
