@@ -18,7 +18,7 @@ const ChannelForm = () => {
   const [image, setImage] = useState<Blob>();
   const [selectedCity, setSelectedCity] = useState<string>("가평군");
   const [imagePreview, setImagePreview] = useState<string | ArrayBuffer | null>(
-    "/images/preview-form-img"
+    `${process.env.PUBLIC_URL}/images/preview-form-img.png`
   );
   const setSidebarChannels = useSetRecoilState(sidebarChannelsState);
   const [
