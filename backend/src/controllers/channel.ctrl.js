@@ -244,5 +244,21 @@ module.exports = {
     } catch (err) {
       next(err);
     }
-  }
+  },
+
+  async leaveChannel(req, res, next) {
+    const userId = req.userId;
+    const { channelId } = req.params;
+
+    try {
+      await channelService.quitChannel(userId, channelId);
+
+      res.status(201).json({
+        success: true,
+        message: "channel leave success",
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
 };
