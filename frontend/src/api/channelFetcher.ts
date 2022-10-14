@@ -104,3 +104,43 @@ export async function channelChatLogRequest(endPoint: string) {
   });
   return res.data;
 }
+
+export async function channelChatLogDeleteRequest(
+  endPoint: string,
+  roomId: string,
+  chatId: string
+) {
+  const bodyData = JSON.stringify({
+    roomId: roomId,
+    chatId: chatId,
+  });
+  const res = await customAxios.delete(endPoint, {
+    data: bodyData,
+    headers: {
+      Authorization: `Bearer ${Storage.getToken()}`,
+    },
+  });
+  return res.data;
+}
+
+export async function channelChatLogUpdateRequest(
+  endPoint: string,
+  roomId: string,
+  chatId: string,
+  chat: string
+) {
+  const res = await customAxios.put(
+    endPoint,
+    {
+      roomId: roomId,
+      chatId: chatId,
+      chat: chat,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${Storage.getToken()}`,
+      },
+    }
+  );
+  return res.data;
+}
