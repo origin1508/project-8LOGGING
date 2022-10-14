@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useContextMenu } from "react-contexify";
 import styled from "styled-components";
 import { loginUserIdState } from "@/recoil/atoms/authState";
 import { useRecoilValue } from "recoil";
@@ -9,32 +10,31 @@ import {
   channelJoinAcceptRequet,
 } from "@/api/channelFetcher";
 import { MainChannelType } from "@/types/channel/channelTypes";
-import Modal from "@/components/modal/Modal";
 import useModal from "@/hooks/useModal";
-import BaseCardContainerStyle from "@/components/hoc/BaseCardContainer";
+import Modal from "@/components/modal/Modal";
 import BasePageComponent from "@/components/hoc/BasePageComponent";
 import GlobalTheme from "@/styles/theme";
 import ChannelHeader from "@/components/channel/ChannelHeader";
 import MemberList from "@/components/channel/MemberList";
 import ChannelSendButton from "@/components/channel/ChannelSendButton";
+import ContextMenu from "@/components/contextMenu/ContextMenu";
 import { TextOne, TextTwo } from "@/styles/commonStyle";
 import {
   channelMessageRequest,
   channelChatLogRequest,
 } from "@/api/channelFetcher";
-import {
-  ChannelLogObjectType,
-  ChannelLogType,
-} from "@/types/channel/channelTypes";
+import { ChannelLogObjectType } from "@/types/channel/channelTypes";
 
 const socket = socketIOClient(`${process.env.REACT_APP_SERVER_BASE_URL}/chat`, {
   path: "/chat-socket",
   transports: ["websocket"],
 });
 
+const CONTEXT_MENU_ID = "CONTEXT_MENU_ID";
+
 function Channel() {
   const [channelContent, setChannelContent] = useState<string>("");
-  const [chatLogs, setChatLogs] = useState<Array<ChannelLogType>>([]);
+  const [chatLogs, setChatLogs] = useState<Array<ChannelLogObjectType>>([]);
   const [channelData, setChannelData] = useState<MainChannelType[]>([]);
   const [entryFailureMessage, setEntryFailureMessage] = useState();
   const [isShowWaitList, setIsShowWaitList] = useState(false);
@@ -48,7 +48,21 @@ function Channel() {
     ,
     handleModalCloseButtonClick,
   ] = useModal(false);
+
   const inputRef = useRef<HTMLInputElement>(null);
+  const chatRef: any = useRef();
+  const prepareScroll = () => {
+    setTimeout(scrollToBottom, 500);
+  };
+  const scrollToBottom = () => {
+    chatRef.current.scrollTop = chatRef.current.scrollHeight;
+  };
+
+  const { show } = useContextMenu({
+    id: CONTEXT_MENU_ID,
+  });
+
+  const menuItems = ["답장하기", "수정하기", "삭제하기"];
 
   useEffect(() => {
     socket.emit("enter", {
@@ -69,17 +83,18 @@ function Channel() {
       const { datas } = await channelChatLogRequest(
         `/api/chat/log/${channelId}`
       );
-      const { chatLogs, userInfo } = datas;
       setChatLogs(
-        chatLogs.map((ch: ChannelLogObjectType, i: number) => {
+        datas.map((ch: ChannelLogObjectType) => {
           const obj = {
             _id: ch._id,
             createdAt: ch.createdAt,
             roomId: ch.roomId,
             userId: ch.userId,
             chat: ch.chat,
-            nickname: userInfo[i].nickname,
-            profPic: userInfo[i].profPic,
+            userInfo: {
+              nickname: ch.userInfo.nickname,
+              profPic: ch.userInfo.profPic,
+            },
           };
           return obj;
         })
@@ -89,18 +104,20 @@ function Channel() {
     // will unmount에서 이러한 작업을 수행해도 되는건가..?
     return () => {
       socket.on("chat", (data) => {
+        const [d] = data;
         setChatLogs((prev) => {
           return [
             ...prev,
             {
-              _id: data._id,
-              createdAt: data.createdAt,
-              roomId: data.roomId,
-              userId: data.userId,
-              chat: data.chat,
-              nickname: "foxmon",
-              profPic:
-                "https://elice-8seconds.s3.ap-northeast-2.amazonaws.com/1665109688589_image_1648301949725_750.jpeg",
+              _id: d._id,
+              createdAt: d.createdAt,
+              roomId: d.roomId,
+              userId: d.userId,
+              chat: d.chat,
+              userInfo: {
+                nickname: d.userInfo.nickname,
+                profPic: d.userInfo.profPic,
+              },
             },
           ];
         });
@@ -120,6 +137,7 @@ function Channel() {
     if (channelId)
       await channelMessageRequest("/api/chat/log", channelId, channelContent);
     if (inputRef.current) inputRef.current.value = "";
+    scrollToBottom();
   };
 
   const handleChannelJoinAcceptButtonClick = async (waitingId: string) => {
@@ -143,12 +161,12 @@ function Channel() {
                   memberNums={data.membersInfo.length}
                 />
                 <ChatForm>
-                  <ContentContainer>
+                  <ContentContainer ref={chatRef}>
                     {chatLogs.map((chat) => (
                       <UserContainer key={chat._id}>
-                        <UserImg itemProp={chat.profPic} />
-                        <UserInfo>
-                          <TextOne>{chat.nickname}</TextOne>
+                        <UserImg itemProp={chat.userInfo.profPic} />
+                        <UserInfo onContextMenu={show}>
+                          <TextOne>{chat.userInfo.nickname}</TextOne>
                           <TextTwo>{chat.chat}</TextTwo>
                         </UserInfo>
                       </UserContainer>
@@ -156,7 +174,7 @@ function Channel() {
                   </ContentContainer>
                   <ChatInput
                     ref={inputRef}
-                    placeholder={"메시지 입력"}
+                    placeholder="메시지 입력"
                     onChange={handleChannelContentChange}
                   />
                   <ChannelSendButton
@@ -186,6 +204,7 @@ function Channel() {
       >
         {entryFailureMessage}
       </Modal>
+      <ContextMenu items={menuItems} />
     </BasePageComponent>
   );
 }
