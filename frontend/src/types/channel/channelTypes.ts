@@ -68,3 +68,13 @@ export interface ChannelLogType {
   nickname: string;
   profPic: string;
 }
+
+export interface waitListType {
+  userId: string;
+  nickname: string;
+  profPic: string;
+}
+
+export interface MainChannelType extends ChannelDetailType {
+  waitList: Array<waitListType>;
+}
