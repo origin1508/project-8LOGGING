@@ -333,7 +333,7 @@ module.exports = {
     // waitList에 있는 user 정보들 반환
     const waitList = await Promise.all(rawWaitList.waiting.map( async (id) => {
       const user = await User.findById(id);
-      return { userId, nickname: user.nickname, profPic: user.profPic }
+      return { userId: id, nickname: user.nickname, profPic: user.profPic }
     }))
 
     return waitList
