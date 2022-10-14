@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
 import { PsEditFormInitialType } from "@/types/auth/authTypes";
 
 const usePsEditForm = (
@@ -9,13 +9,10 @@ const usePsEditForm = (
 ] => {
   const [values, setValues] = useState(initialState);
 
-  const handleEditFormChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const { name, value } = e.target;
-      setValues({ ...values, [name]: value });
-    },
-    [setValues]
-  );
+  const handleEditFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setValues({ ...values, [name]: value });
+  };
 
   return [values, handleEditFormChange];
 };
