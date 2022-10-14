@@ -85,7 +85,7 @@ function Channel() {
       );
       if (res.success) {
         setChannelData([res.datas]);
-        setWaitList(res.datas.waitList);
+        if (res.datas.waitList) setWaitList(res.datas.waitList);
       } else {
         setChannelData([]);
         handleModalOpenButtonClick();
