@@ -14,7 +14,7 @@ import {
   authProfileImageUpdate,
   deleteAccountRequest,
 } from "@/api/authFetcher";
-import * as Api from "../../api/api";
+import { getAuthInformationById } from "@/api/authFetcher";
 import Storage from "@/storage/storage";
 import { imageResize } from "@/util/imageResizeUtil";
 
@@ -47,9 +47,11 @@ function Profile() {
   ] = useModal(false);
 
   const fetchProfileOwner = async (loginUserId: string) => {
-    const res = await Api.get("/api/users/userinfo", loginUserId);
-    const curUserData = res.data.datas;
-    setCurUser(curUserData);
+    const res = await getAuthInformationById(
+      "/api/users/userinfo",
+      loginUserId
+    );
+    setCurUser(res);
   };
 
   const handleProfileImageUploadChange = async (

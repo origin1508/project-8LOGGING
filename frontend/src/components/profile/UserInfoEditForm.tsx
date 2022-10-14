@@ -5,9 +5,13 @@ import { curUserState } from "@/recoil/atoms/authState";
 import { useRecoilState } from "recoil";
 import BaseValidateTextContainer from "@/components/hoc/BaseValidateTextContainer";
 import useEditForm from "@/hooks/useEditForm";
-import * as Api from "@/api/api";
 import BaseCardContainer from "../hoc/BaseCardContainer";
 import Modal from "../modal/Modal";
+import { ErrorType } from "@/types/error/errorType";
+import {
+  authProfileNickUpdate,
+  authProfileDescriptionUpdate,
+} from "@/api/authFetcher";
 
 import {
   BigTitle,
@@ -61,25 +65,24 @@ function UserInfoEditForm({
   const handleSubmitClick = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await Api.put("/api/users/nickname", {
-        newNickname: values.nickname,
-      });
-      const res2 = await Api.put("/api/users/description", {
-        newDescription: values.description,
-      });
-
-      const newNickname = res.data.datas.nickname;
-      const newDescription = res2.data.datas.description;
-
+      const { nickname } = await authProfileNickUpdate(
+        "/api/users/nickname",
+        values.nickname
+      );
+      const { description } = await authProfileDescriptionUpdate(
+        "/api/users/description",
+        values.description
+      );
       setCurUser({
         ...curUser,
-        nickname: newNickname,
-        description: newDescription,
+        nickname: nickname,
+        description: description,
       });
 
       setIsEditing(false);
-    } catch (e: any) {
-      const erorrMessage = e.response.data.message;
+    } catch (e) {
+      const err = e as ErrorType;
+      const erorrMessage = err.response.data.message;
       setErorrMessage(erorrMessage);
       setIsOpenModal(true);
     }
