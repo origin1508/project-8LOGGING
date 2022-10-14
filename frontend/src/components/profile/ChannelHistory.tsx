@@ -3,14 +3,21 @@ import styled from "styled-components";
 import { curUserState } from "@/recoil/atoms/authState";
 import { useRecoilValue } from "recoil";
 import GlobalTheme from "@/styles/theme";
-import ChannelCard from "@/components/recruitingChannel/ChannelCard";
+import ChannelHistoryCard from "./ChannelHistoryCard";
 import { BigTitle } from "@/styles/commonStyle";
-import { currentChannelDetailRequest } from "@/api/channelFetcher";
+import {
+  currentChannelDetailRequest,
+  channelEnteredCancelRequest,
+} from "@/api/channelFetcher";
 import { ChannelDetailType } from "@/types/channel/channelTypes";
+import { ErrorType } from "@/types/error/errorType";
 import ChannelDetail from "../channelDetail/ChannelDetail";
+import Modal from "../modal/Modal";
+import useModal from "@/hooks/useModal";
 
 function ChannelHistory() {
   const curUser = useRecoilValue(curUserState);
+  const [resMessage, setResMessage] = useState("");
   const channels = curUser.channels;
   const [tabIndex, setTabIndex] = useState(0);
   const TapMenu = ["생성 채널", "가입 채널", "가입 대기 채널"];
@@ -19,14 +26,39 @@ function ChannelHistory() {
   const [channelDetailInfo, setChannelDetailInfo] = useState<
     ChannelDetailType[]
   >([]);
-
-  const handleMoreClick = async (channelUuid: string) => {
+  const [
+    isOpenModal,
+    ,
+    handleModalOpenButtonClick,
+    ,
+    handleModalCloseButtonClick,
+  ] = useModal(false);
+  const [index, setIndex] = useState(0);
+  const handleMoreClick = async (channelUuid: string, index?: number) => {
     const res = await currentChannelDetailRequest(
       `/api/channels/${channelUuid}`
     );
     setChannelDetailInfo([res.datas]);
     setSelectedChannelId(res.datas._id);
     setIsShowMore(true);
+    if (index) {
+      setIndex(index);
+    }
+  };
+
+  const handleChannelCancellation = async (selectedChannelId: string) => {
+    try {
+      await channelEnteredCancelRequest(
+        `/api/channels/${selectedChannelId}/enter`
+      );
+      handleModalOpenButtonClick();
+      setIsShowMore(false);
+      setResMessage("취소 완료");
+    } catch (error) {
+      const err = error as ErrorType;
+      setResMessage(err.response.data.message);
+      console.log(err.response.data.message);
+    }
   };
 
   return (
@@ -62,7 +94,7 @@ function ChannelHistory() {
       <CardContainer>
         {channels.map((ch) =>
           ch.position === tabIndex ? (
-            <ChannelCard
+            <ChannelHistoryCard
               key={ch._id}
               img={ch.img}
               title={ch.title}
@@ -71,6 +103,7 @@ function ChannelHistory() {
               locationDist={ch.locationDist}
               locationCity={ch.locationCity}
               onMoreClick={handleMoreClick}
+              index={ch.position}
             />
           ) : (
             ""
@@ -83,7 +116,17 @@ function ChannelHistory() {
         channelDetailInfo={channelDetailInfo}
         onEnterDecideClickEvent={(s) => console.log(s)}
         selectedChannelId={selectedChannelId}
+        onEnterdCancleClickEvent={handleChannelCancellation}
+        channelStatus={index}
       />
+      <Modal
+        isOpenModal={isOpenModal}
+        isAlertModal={true}
+        isShowImage={false}
+        onModalCancelButtonClickEvent={handleModalCloseButtonClick}
+      >
+        {resMessage}
+      </Modal>
     </ChannelHistoryContainer>
   );
 }
