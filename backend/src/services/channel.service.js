@@ -294,7 +294,7 @@ module.exports = {
     // user channels, waitReqList 수정
     const user = await User.findById(userId);
     const newWaitReqList = user.waitReqList.filter( id => id.str!==waitList._id.str );
-    const newChannels = user.channels.filter( id => id.str!=channelId.str ); 
+    const newChannels = user.channels.filter( id => id!=channelId );
     await User.findByIdAndUpdate(userId, { 
       waitReqList: newWaitReqList,
       channels: newChannels
