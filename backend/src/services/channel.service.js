@@ -457,6 +457,7 @@ module.exports = {
    * 
    * @param {String} userId 
    * @param {String} channelId 
+   * @returns
    */
   async quitChannel(userId, channelId) {
     const channel = await Channel.findById(channelId);
@@ -472,10 +473,17 @@ module.exports = {
     // user의 채널 정보, channel의 멤버 정보 수정
     const user = await User.findById(userId);
     const updatedChannels = user.channels.filter(id => id!=channelId);
-    await User.findByIdAndUpdate(userId, { channels: updatedChannels });
+    const updatedUser = await User.findByIdAndUpdate(userId, { channels: updatedChannels });
 
     const updatedMembers = channel.members.filter(id => id!=userId);
     await Channel.findByIdAndUpdate(channelId, { members: updatedMembers })
+
+    // 채널 정보 반환
+    const channels = await Promise.all(updatedUser.channels.map(async (channelId) => {
+      const channel = await Channel.findById(channelId);
+      return (({ _id, title, img })=>({ _id, title, img }))(channel)
+    }))
+    return channels
   }
 
 };

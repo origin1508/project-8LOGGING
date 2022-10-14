@@ -253,11 +253,12 @@ module.exports = {
     const { channelId } = req.params;
 
     try {
-      await channelService.quitChannel(userId, channelId);
+      const channels = await channelService.quitChannel(userId, channelId);
 
       res.status(201).json({
         success: true,
         message: "channel leave success",
+        datas: channels
       });
     } catch (err) {
       next(err);
