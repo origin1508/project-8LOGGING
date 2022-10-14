@@ -130,7 +130,10 @@ function Channel() {
                       <UserContainer key={chat._id}>
                         <UserImg itemProp={chat.userInfo.profPic} />
                         <UserInfo onContextMenu={show}>
-                          <TextOne>{chat.userInfo.nickname}</TextOne>
+                          <ContentInfoContainer>
+                            <TextOne>{chat.userInfo.nickname}</TextOne>
+                            <TextTwo>{chat.createdAt}</TextTwo>
+                          </ContentInfoContainer>
                           <TextTwo>{chat.chat}</TextTwo>
                         </UserInfo>
                       </UserContainer>
@@ -222,8 +225,8 @@ const UserContainer = styled.div`
 `;
 
 const UserImg = styled.div`
-  width: 3.5rem;
-  height: 3.5rem;
+  width: 3rem;
+  height: 3rem;
   background-image: url(${(props) => props.itemProp});
   background-size: cover;
   border-radius: 100%;
@@ -232,6 +235,11 @@ const UserImg = styled.div`
 const UserInfo = styled.div`
   display: flex;
   flex-direction: column;
+`;
+
+const ContentInfoContainer = styled.div`
+  display: flex;
+  gap: 1rem;
 `;
 
 export default Channel;
