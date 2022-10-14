@@ -21,8 +21,8 @@ const SendButton = styled.button`
   border: none;
   background: none;
   position: absolute;
-  bottom: 8%;
-  right: 8%;
+  bottom: 3%;
+  right: 5%;
   cursor: pointer;
   &:hover {
     transform: translateY(-0.3rem);

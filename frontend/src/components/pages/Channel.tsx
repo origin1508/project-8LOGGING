@@ -1,13 +1,20 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import GlobalTheme from "@/styles/theme";
-import { TextOne, TextTwo } from "@/styles/commonStyle";
+import { loginUserIdState } from "@/recoil/atoms/authState";
+import { useRecoilValue } from "recoil";
 import socketIOClient from "socket.io-client";
+import { currentChannelDetailRequest } from "@/api/channelFetcher";
+import { MainChannelType } from "@/types/channel/channelTypes";
+import Modal from "@/components/modal/Modal";
+import useModal from "@/hooks/useModal";
 import BaseCardContainerStyle from "@/components/hoc/BaseCardContainer";
 import BasePageComponent from "@/components/hoc/BasePageComponent";
+import GlobalTheme from "@/styles/theme";
 import ChannelHeader from "@/components/channel/ChannelHeader";
+import MemberList from "@/components/channel/MemberList";
 import ChannelSendButton from "@/components/channel/ChannelSendButton";
+import { TextOne, TextTwo } from "@/styles/commonStyle";
 import {
   channelMessageRequest,
   channelChatLogRequest,
@@ -25,9 +32,19 @@ const socket = socketIOClient(`${process.env.REACT_APP_SERVER_BASE_URL}/chat`, {
 function Channel() {
   const [channelContent, setChannelContent] = useState<string>("");
   const [chatLogs, setChatLogs] = useState<Array<ChannelLogType>>([]);
-
+  const [channelData, setChannelData] = useState<MainChannelType[]>([]);
+  const [entryFailureMessage, setEntryFailureMessage] = useState();
+  const [isShowWaitList, setIsShowWaitList] = useState(false);
   const { channelId } = useParams();
-
+  const loginUserId = useRecoilValue(loginUserIdState);
+  const navigate = useNavigate();
+  const [
+    isOpenModal,
+    ,
+    handleModalOpenButtonClick,
+    ,
+    handleModalCloseButtonClick,
+  ] = useModal(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -35,6 +52,17 @@ function Channel() {
       roomId: channelId,
     });
     (async () => {
+      const res = await currentChannelDetailRequest(
+        `/api/channels/${channelId}/main`
+      );
+      if (res.success) {
+        setChannelData([res.datas]);
+      } else {
+        setChannelData([]);
+        handleModalOpenButtonClick();
+        setEntryFailureMessage(res.message);
+      }
+
       const { datas } = await channelChatLogRequest(
         `/api/chat/log/${channelId}`
       );
@@ -75,7 +103,7 @@ function Channel() {
         });
       });
     };
-  }, []);
+  }, [channelId]);
 
   const handleChannelContentChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -93,53 +121,99 @@ function Channel() {
 
   return (
     <BasePageComponent>
-      <BaseCardContainerStyle width="100rem">
-        <ChannelHeader />
-        <ChatForm>
-          <ContentContainer>
-            {chatLogs.map((chat) => (
-              <UserContainer key={chat._id}>
-                <UserImg itemProp={chat.profPic} />
-                <UserInfo>
-                  <TextOne>{chat.nickname}</TextOne>
-                  <TextTwo>{chat.chat}</TextTwo>
-                </UserInfo>
-              </UserContainer>
-            ))}
-          </ContentContainer>
-          <ChatInput ref={inputRef} onChange={handleChannelContentChange} />
-          <ChannelSendButton
-            onChannelSendButtonEvent={handleChannelSendButtonClick}
-          />
-        </ChatForm>
-      </BaseCardContainerStyle>
+      {channelData &&
+        channelData.map((data) => {
+          const isOwner = data.ownerInfo.ownerId === loginUserId ? true : false;
+          return (
+            <React.Fragment key={data._id}>
+              <ChannelContainer>
+                <ChannelHeader
+                  title={data.title}
+                  memberNums={data.membersInfo.length}
+                />
+                <ChatForm>
+                  <ContentContainer>
+                    {chatLogs.map((chat) => (
+                      <UserContainer key={chat._id}>
+                        <UserImg itemProp={chat.profPic} />
+                        <UserInfo>
+                          <TextOne>{chat.nickname}</TextOne>
+                          <TextTwo>{chat.chat}</TextTwo>
+                        </UserInfo>
+                      </UserContainer>
+                    ))}
+                  </ContentContainer>
+                  <ChatInput
+                    ref={inputRef}
+                    placeholder={"메시지 입력"}
+                    onChange={handleChannelContentChange}
+                  />
+                  <ChannelSendButton
+                    onChannelSendButtonEvent={handleChannelSendButtonClick}
+                  />
+                </ChatForm>
+              </ChannelContainer>
+              <MemberList
+                channelMemberList={data.membersInfo}
+                waitMemberList={data.waitList}
+                isOwner={isOwner}
+                isShowWaitList={isShowWaitList}
+                setIsShowWaitList={setIsShowWaitList}
+              />
+            </React.Fragment>
+          );
+        })}
+      <Modal
+        isOpenModal={isOpenModal}
+        isAlertModal={true}
+        isShowImage={true}
+        onModalCancelButtonClickEvent={() => {
+          handleModalCloseButtonClick;
+          navigate("/profile", { replace: true });
+        }}
+      >
+        {entryFailureMessage}
+      </Modal>
     </BasePageComponent>
   );
 }
 
+const ChannelContainer = styled.div`
+  overflow: hidden;
+  width: 70%;
+  height: 90%;
+  background-color: ${GlobalTheme.colors.white};
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+`;
+
 const ChatForm = styled.form`
-  height: 100%;
   width: 100%;
+  height: 100%;
   position: relative;
   display: flex;
   justify-content: center;
   align-items: start;
+  overflow: hidden;
 `;
 
 const ChatInput = styled.input`
   position: absolute;
-  bottom: 2rem;
+  bottom: 2%;
   padding: 0rem 2rem;
   font-size: ${GlobalTheme.fontSize.littleBig};
   width: 90%;
-  height: 13%;
-  border-radius: 2rem;
+  height: 4rem;
+  margin-top: 2rem;
+  border-radius: 3rem;
   border: 1.2px solid ${GlobalTheme.colors.theme};
 `;
 
 const ContentContainer = styled.div`
   width: 100%;
-  height: 40rem;
+  height: 100%;
   padding: 1rem 0rem 0rem 3rem;
   overflow-y: scroll;
 `;
