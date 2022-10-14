@@ -136,7 +136,7 @@ const ChannelList = () => {
                 img={ch.img}
                 title={ch.title}
                 channelUuid={ch._id}
-                curMemberNum={`${ch.memberNum}/${ch.members.length}`}
+                curMemberNum={`${ch.members.length}/${ch.memberNum}`}
                 locationDist={ch.locationDist}
                 locationCity={ch.locationCity}
                 onMoreClick={handleMoreClick}
