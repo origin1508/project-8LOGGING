@@ -193,9 +193,11 @@ const TitleContainer = styled.div`
 `;
 const ChannelListForm = styled.div`
   position: relative;
-  width: 110rem;
+  width: 80%;
+  min-width: 105rem;
+  min-height: 75rem;
   overflow: hidden;
-  height: 80rem;
+  height: 80vh;
   border-radius: 1rem;
   background-color: ${GlobalTheme.colors.lightGray};
   display: flex;
