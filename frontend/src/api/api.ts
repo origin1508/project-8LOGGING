@@ -1,5 +1,6 @@
 import axios from "axios";
 import Storage from "@/storage/storage";
+import customAxios from "@/util/customAxios";
 
 const serverUrl = process.env.REACT_APP_SERVER_BASE_URL;
 interface dataType {
@@ -13,7 +14,7 @@ interface dataType {
 
 export async function put(endpoint: string, data: dataType) {
   const bodyData = JSON.stringify(data);
-  console.log("token", Storage.getToken());
+
   return axios.put(serverUrl + endpoint, bodyData, {
     headers: {
       "Content-Type": "application/json",
@@ -21,6 +22,18 @@ export async function put(endpoint: string, data: dataType) {
     },
   });
 }
+
+// export async function userProfileUpdate(endpoint: string, data: dataType) {
+//   const bodyData = JSON.stringify(data);
+//   const res = axios.put(endpoint, bodyData, {
+//     headers: {
+//       "Content-Type": "application/json",
+//       Authorization: `Bearer ${Storage.getToken()}`,
+//     },
+//   });
+//   const { datas } = (await res).data;
+//   return datas;
+// }
 
 export async function get(endpoint: string, params = "") {
   return axios.get(serverUrl + endpoint + "/" + params, {
