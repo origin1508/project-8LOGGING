@@ -1,40 +1,58 @@
 import React from "react";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
-import { BsPeopleFill, BsMapFill, BsCalendarDateFill } from "react-icons/bs";
-interface CardImgProps {
-  bg: string;
+import CustomIcon from "@/components/icons/CustomIcon";
+
+interface ChannelHistoryCardPropsType {
+  img: string;
+  title: string;
+  channelUuid: string;
+  curMemberNum: string;
+  locationDist: string;
+  locationCity: string;
+  onMoreClick: (channelUuid: string, index?: number) => void;
+  index?: number;
 }
 
-function ChannelHistoryCard() {
+function ChannelHistoryCard({
+  img,
+  title,
+  channelUuid,
+  curMemberNum,
+  locationDist,
+  locationCity,
+  onMoreClick,
+  index,
+}: ChannelHistoryCardPropsType) {
   return (
     <CardContainer>
-      <CardImg bg="cardImg1.png"></CardImg>
+      <CardImg src={img} />
       <CardContent>
-        <CardTitle>제주에서 플로깅</CardTitle>
-
+        <CardTitle>{title}</CardTitle>
         <CardInfoList>
           <List>
-            <BsPeopleFill
-              size="20"
+            <CustomIcon
+              name="people"
+              size="15"
               color={GlobalTheme.colors.theme}
-            ></BsPeopleFill>
-            <PeopleCount>12명</PeopleCount>
+            />
+            <PeopleCount>{curMemberNum}</PeopleCount>
           </List>
           <List>
-            <BsMapFill size="20" color={GlobalTheme.colors.theme}></BsMapFill>
-            <Location>제주도</Location>
-          </List>
-          <List>
-            <BsCalendarDateFill
-              size="20"
-              color={GlobalTheme.colors.theme}
-            ></BsCalendarDateFill>
-            <Date>22/10/22</Date>
+            <CustomIcon name="map" size="15" color={GlobalTheme.colors.theme} />
+            <Location>{locationDist}</Location>
+            <Location>{locationCity}</Location>
           </List>
         </CardInfoList>
         <ButtonContainer>
-          <Button>More</Button>
+          <Button
+            onClick={() => {
+              onMoreClick(channelUuid, index);
+              console.log(index);
+            }}
+          >
+            More
+          </Button>
         </ButtonContainer>
       </CardContent>
     </CardContainer>
@@ -42,19 +60,18 @@ function ChannelHistoryCard() {
 }
 
 const CardContainer = styled.div`
-  width: 24rem;
-  height: 24rem;
+  width: 27rem;
+  height: 27rem;
+  margin: auto;
   border-radius: 0.7rem;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-  font-size: ${GlobalTheme.fontSize.small};
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 `;
 
-const CardImg = styled.div<CardImgProps>`
+const CardImg = styled.img`
   height: 50%;
-  background-image: url(${(props) => props.bg});
   background-size: cover;
 `;
 
@@ -65,18 +82,20 @@ const CardContent = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  font-size: ${GlobalTheme.fontSize.medium};
 `;
 
-const CardTitle = styled.h3`
+const CardTitle = styled.h1`
   font-family: ${GlobalTheme.fontStyle.regular};
+  font-size: ${GlobalTheme.fontSize.littleBig};
 `;
 const CardInfoList = styled.ul`
   display: flex;
-  justify-content: space-between;
+  justify-content: left;
 `;
 const List = styled.li`
   display: flex;
-  margin-right: 1rem;
+  margin-right: 2rem;
   span {
     margin-left: 1rem;
   }
@@ -84,19 +103,20 @@ const List = styled.li`
 
 const PeopleCount = styled.span``;
 const Location = styled.span``;
-const Date = styled.span``;
+
 const ButtonContainer = styled.div`
   display: flex;
-  gap: 1rem;
+  gap: 2rem;
 `;
 
 const Button = styled.button`
   ${GlobalTheme.buttons}
   background:none;
   color: ${GlobalTheme.colors.theme};
+  font-size: ${GlobalTheme.fontSize.littleBig};
   padding: 0.7rem 1.2rem;
   border: 0.1rem solid ${GlobalTheme.colors.theme};
-
+  cursor: pointer;
   &:hover {
     transform: translateY(-0.3rem);
   }
