@@ -1,19 +1,20 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useContextMenu } from "react-contexify";
 import styled from "styled-components";
 import { loginUserIdState } from "@/recoil/atoms/authState";
 import { useRecoilValue } from "recoil";
 import socketIOClient from "socket.io-client";
 import { currentChannelDetailRequest } from "@/api/channelFetcher";
 import { MainChannelType } from "@/types/channel/channelTypes";
-import Modal from "@/components/modal/Modal";
 import useModal from "@/hooks/useModal";
-import BaseCardContainerStyle from "@/components/hoc/BaseCardContainer";
+import Modal from "@/components/modal/Modal";
 import BasePageComponent from "@/components/hoc/BasePageComponent";
 import GlobalTheme from "@/styles/theme";
 import ChannelHeader from "@/components/channel/ChannelHeader";
 import MemberList from "@/components/channel/MemberList";
 import ChannelSendButton from "@/components/channel/ChannelSendButton";
+import ContextMenu from "@/components/contextMenu/ContextMenu";
 import { TextOne, TextTwo } from "@/styles/commonStyle";
 import {
   channelMessageRequest,
@@ -28,6 +29,8 @@ const socket = socketIOClient(`${process.env.REACT_APP_SERVER_BASE_URL}/chat`, {
   path: "/chat-socket",
   transports: ["websocket"],
 });
+
+const CONTEXT_MENU_ID = "CONTEXT_MENU_ID";
 
 function Channel() {
   const [channelContent, setChannelContent] = useState<string>("");
@@ -45,7 +48,14 @@ function Channel() {
     ,
     handleModalCloseButtonClick,
   ] = useModal(false);
+
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const { show } = useContextMenu({
+    id: CONTEXT_MENU_ID,
+  });
+
+  const menuItems = ["답장하기", "수정하기", "삭제하기"];
 
   useEffect(() => {
     socket.emit("enter", {
@@ -136,7 +146,7 @@ function Channel() {
                     {chatLogs.map((chat) => (
                       <UserContainer key={chat._id}>
                         <UserImg itemProp={chat.profPic} />
-                        <UserInfo>
+                        <UserInfo onContextMenu={show}>
                           <TextOne>{chat.nickname}</TextOne>
                           <TextTwo>{chat.chat}</TextTwo>
                         </UserInfo>
@@ -174,6 +184,7 @@ function Channel() {
       >
         {entryFailureMessage}
       </Modal>
+      <ContextMenu items={menuItems} />
     </BasePageComponent>
   );
 }
