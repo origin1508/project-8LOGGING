@@ -47,12 +47,14 @@ function Channel() {
   ] = useModal(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
-  const chatRef: any = useRef();
+  const chatRef = useRef<HTMLDivElement>(null);
   const prepareScroll = () => {
     setTimeout(scrollToBottom, 500);
   };
   const scrollToBottom = () => {
-    chatRef.current.scrollTop = chatRef.current.scrollHeight;
+    if (chatRef.current) {
+      chatRef.current.scrollTop = chatRef.current?.scrollHeight;
+    }
   };
 
   const { show } = useContextMenu({
@@ -62,6 +64,7 @@ function Channel() {
   const menuItems = ["답장하기", "수정하기", "삭제하기"];
 
   useEffect(() => {
+    prepareScroll();
     socket.emit("enter", {
       roomId: channelId,
     });
@@ -80,43 +83,15 @@ function Channel() {
       const { datas } = await channelChatLogRequest(
         `/api/chat/log/${channelId}`
       );
-      setChatLogs(
-        datas.map((ch: ChannelLogObjectType) => {
-          const obj = {
-            _id: ch._id,
-            createdAt: ch.createdAt,
-            roomId: ch.roomId,
-            userId: ch.userId,
-            chat: ch.chat,
-            userInfo: {
-              nickname: ch.userInfo.nickname,
-              profPic: ch.userInfo.profPic,
-            },
-          };
-          return obj;
-        })
-      );
+
+      setChatLogs(datas);
     })();
     // 이게 맞나..?
     // will unmount에서 이러한 작업을 수행해도 되는건가..?
     return () => {
       socket.on("chat", (data) => {
-        const [d] = data;
         setChatLogs((prev) => {
-          return [
-            ...prev,
-            {
-              _id: d._id,
-              createdAt: d.createdAt,
-              roomId: d.roomId,
-              userId: d.userId,
-              chat: d.chat,
-              userInfo: {
-                nickname: d.userInfo.nickname,
-                profPic: d.userInfo.profPic,
-              },
-            },
-          ];
+          return [...prev, data];
         });
       });
     };
