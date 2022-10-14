@@ -111,7 +111,3 @@ export async function deleteAccountRequest(endPoint: string) {
   });
   return res.data;
 }
-
-export async function get(endpoint: string, params = "") {
-  return customAxios.get(endpoint + "/" + params);
-}
