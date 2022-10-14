@@ -192,7 +192,10 @@ function Channel() {
                 <ChatForm>
                   <ContentContainer ref={chatRef}>
                     {chatLogs.map((chat) => (
-                      <UserContainer key={chat._id}>
+                      <UserContainer
+                        key={chat._id}
+                        onContextMenu={handleShowContextMenuClick(chat._id)}
+                      >
                         <UserImg itemProp={chat.userInfo.profPic} />
                         <UserInfo onContextMenu={show}>
                           <ContentInfoContainer>
