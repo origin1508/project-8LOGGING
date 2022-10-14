@@ -5,7 +5,7 @@ import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import { curUserState } from "@/recoil/atoms/authState";
 import { useRecoilValue } from "recoil";
-import * as Api from "@/api/api";
+import { authFollowingRequest } from "@/api/authFetcher";
 import { TextOne, TextTwo, SmallButton, BigTitle } from "@/styles/commonStyle";
 import Modal from "../modal/Modal";
 
@@ -24,13 +24,12 @@ export default function FollowList() {
 
   const handleFollowingClick = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      setIsShow(true);
-      const res = await Api.get("/api/follow/list", curUser._id);
-      setFollowList(res.data.datas);
-    } catch (e) {
-      console.log(e);
-    }
+    setIsShow(true);
+    const { datas } = await authFollowingRequest(
+      "/api/follow/list",
+      curUser._id
+    );
+    setFollowList(datas);
   };
   return (
     <>
