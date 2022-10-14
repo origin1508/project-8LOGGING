@@ -94,18 +94,19 @@ function Channel() {
     // will unmount에서 이러한 작업을 수행해도 되는건가..?
     return () => {
       socket.on("chat", (data) => {
+        const [d] = data;
         setChatLogs((prev) => {
           return [
             ...prev,
             {
-              _id: data._id,
-              createdAt: data.createdAt,
-              roomId: data.roomId,
-              userId: data.userId,
-              chat: data.chat,
+              _id: d._id,
+              createdAt: d.createdAt,
+              roomId: d.roomId,
+              userId: d.userId,
+              chat: d.chat,
               userInfo: {
-                nickname: data.userInfo.nickname,
-                profPic: data.userInfo.profPic,
+                nickname: d.userInfo.nickname,
+                profPic: d.userInfo.profPic,
               },
             },
           ];
