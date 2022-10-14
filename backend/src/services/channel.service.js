@@ -435,6 +435,26 @@ module.exports = {
     if (channel.members.includes(userId)) return 1;
     // 상기 모두 해당 없으면
     return 3;
+  },
+
+  async quitChannel(userId, channelId) {
+    const channel = await Channel.findById(channelId);
+    // 채널 owner 여부 확인
+    if (channel.ownerId == userId) {
+      throw ApiError.badRequest("채널 개설자는 채널에서 나갈 수 없습니다.")
+    }
+    // 채널 member 여부 확인
+    if (!channel.members.includes(userId)) {
+      throw ApiError.badRequest("채널 소속 멤버만 채널을 나갈 수 있습니다.")
+    }
+
+    // user의 채널 정보, channel의 멤버 정보 수정
+    const user = await User.findById(userId);
+    const updatedChannels = user.channels.filter(id => id!=channelId);
+    await User.findByIdAndUpdate(userId, { channels: updatedChannels });
+
+    const updatedMembers = channel.members.filter(id => id!=userId);
+    await Channel.findByIdAndUpdate(channelId, { members: updatedMembers })
   }
 
 };

@@ -54,12 +54,15 @@ function Channel() {
 
   const inputRef = useRef<HTMLInputElement>(null);
   const editInputRef = useRef<HTMLInputElement>(null);
-  const chatRef: any = useRef();
+  const chatRef = useRef<HTMLDivElement>(null);
+
   const prepareScroll = () => {
     setTimeout(scrollToBottom, 500);
   };
   const scrollToBottom = () => {
-    chatRef.current.scrollTop = chatRef.current.scrollHeight;
+    if (chatRef.current) {
+      chatRef.current.scrollTop = chatRef.current?.scrollHeight;
+    }
   };
 
   const { show } = useContextMenu({
@@ -69,6 +72,7 @@ function Channel() {
   const menuItems = ["답장하기", "수정하기", "삭제하기"];
 
   useEffect(() => {
+    prepareScroll();
     socket.emit("enter", {
       roomId: channelId,
     });
@@ -190,10 +194,11 @@ function Channel() {
                     {chatLogs.map((chat) => (
                       <UserContainer key={chat._id}>
                         <UserImg itemProp={chat.userInfo.profPic} />
-                        <UserInfo
-                          onContextMenu={handleShowContextMenuClick(chat._id)}
-                        >
-                          <TextOne>{chat.userInfo.nickname}</TextOne>
+                        <UserInfo onContextMenu={show}>
+                          <ContentInfoContainer>
+                            <TextOne>{chat.userInfo.nickname}</TextOne>
+                            <TextTwo>{chat.createdAt}</TextTwo>
+                          </ContentInfoContainer>
                           <TextTwo>{chat.chat}</TextTwo>
                           {selectedChat === chat._id && isChatLogEditMode && (
                             <ChannelEdit
@@ -299,8 +304,8 @@ const UserContainer = styled.div`
 `;
 
 const UserImg = styled.div`
-  width: 3.5rem;
-  height: 3.5rem;
+  width: 3rem;
+  height: 3rem;
   background-image: url(${(props) => props.itemProp});
   background-size: cover;
   border-radius: 100%;
@@ -309,6 +314,11 @@ const UserImg = styled.div`
 const UserInfo = styled.div`
   display: flex;
   flex-direction: column;
+`;
+
+const ContentInfoContainer = styled.div`
+  display: flex;
+  gap: 1rem;
 `;
 
 export default Channel;
