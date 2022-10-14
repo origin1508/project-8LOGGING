@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { sidebarChannelsState } from "@/recoil/atoms/channelState";
-import { loginUserIdState } from "@/recoil/atoms/authState";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { sidebarChannelsState } from "@/recoil/atoms/channelState";
+import { loginUserIdState } from "@/recoil/atoms/authState";
 import CustomIcon from "@/components/icons/CustomIcon";
-import { loginUserChannelListRequest } from "@/api/channelFetcher";
+import { getAuthInformationById } from "@/api/authFetcher";
 
 interface ChannelContainerProps {
   isToggle: boolean;
@@ -21,10 +21,11 @@ const Channel: React.FC = () => {
 
   useEffect(() => {
     (async () => {
-      const res = await loginUserChannelListRequest(
-        `/api/users/userinfo/${loginUserId}`
+      const res = await getAuthInformationById(
+        "/api/users/userinfo",
+        loginUserId
       );
-      setSidebarChannels(res.datas.channels);
+      setSidebarChannels(res.channels);
     })();
   }, []);
 

@@ -3,7 +3,11 @@ import { curUserState } from "@/recoil/atoms/authState";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
-import * as Api from "@/api/api";
+import {
+  authFollowRequest,
+  authUnFollowRequest,
+  authFollowingRequest,
+} from "@/api/authFetcher";
 
 export default function Follow() {
   const curUser = useRecoilValue(curUserState);
@@ -11,27 +15,21 @@ export default function Follow() {
   const curUserId = curUser._id;
   const handleFollowClick = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      if (!followed) {
-        await Api.post("/api/follow", { targetId: curUser._id });
-        console.log("팔로우");
-        setFollowed(true);
-      } else {
-        await Api.del("/api/follow", { targetId: curUser._id });
-        console.log("팔로우취소");
-        setFollowed(false);
-      }
-    } catch (e) {
-      console.log(e);
+    if (!followed) {
+      await authFollowRequest("/api/follow", curUser._id);
+      setFollowed(true);
+    } else {
+      await authUnFollowRequest("/api/follow", curUser._id);
+      setFollowed(false);
     }
   };
 
   useEffect(() => {
     if (curUserId) {
-      Api.get("/api/follow", curUserId).then((res) => {
-        const isFollowed = res.data.datas.isFollowed;
-        setFollowed(isFollowed);
-      });
+      (async () => {
+        const { datas } = await authFollowingRequest("/api/follow", curUserId);
+        setFollowed(datas.isFollowed);
+      })();
     }
   }, [curUserId]);
   return (
@@ -40,6 +38,7 @@ export default function Follow() {
     </FollowButton>
   );
 }
+
 const FollowButton = styled.button`
   ${GlobalTheme.buttons}
   background-color:${(props) =>

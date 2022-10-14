@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import { curUserState } from "@/recoil/atoms/authState";
@@ -29,7 +29,7 @@ function UserCard({
   };
 
   return (
-    <BaseCardContainer width="40rem">
+    <BaseCardContainer width="45vh">
       <TitleContainer>
         <BigTitle>
           {isEditable ? `My` : `${curUser.nickname}'s`} Profile
