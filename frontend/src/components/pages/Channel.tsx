@@ -47,6 +47,13 @@ function Channel() {
   ] = useModal(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
+  const chatRef: any = useRef();
+  const prepareScroll = () => {
+    setTimeout(scrollToBottom, 500);
+  };
+  const scrollToBottom = () => {
+    chatRef.current.scrollTop = chatRef.current.scrollHeight;
+  };
 
   const { show } = useContextMenu({
     id: CONTEXT_MENU_ID,
@@ -127,6 +134,7 @@ function Channel() {
     if (channelId)
       await channelMessageRequest("/api/chat/log", channelId, channelContent);
     if (inputRef.current) inputRef.current.value = "";
+    scrollToBottom();
   };
 
   return (
@@ -142,7 +150,7 @@ function Channel() {
                   memberNums={data.membersInfo.length}
                 />
                 <ChatForm>
-                  <ContentContainer>
+                  <ContentContainer ref={chatRef}>
                     {chatLogs.map((chat) => (
                       <UserContainer key={chat._id}>
                         <UserImg itemProp={chat.userInfo.profPic} />
