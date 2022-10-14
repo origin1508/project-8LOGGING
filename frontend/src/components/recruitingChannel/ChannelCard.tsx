@@ -113,7 +113,7 @@ const Button = styled.button`
   font-size: ${GlobalTheme.fontSize.littleBig};
   padding: 0.7rem 1.2rem;
   border: 0.1rem solid ${GlobalTheme.colors.theme};
-
+  cursor: pointer;
   &:hover {
     transform: translateY(-0.3rem);
   }

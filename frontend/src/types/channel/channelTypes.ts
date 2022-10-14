@@ -51,6 +51,24 @@ export interface ChannelMemberType {
   memberPic: string;
 }
 
+export interface ChannelLogObjectType {
+  _id: string;
+  createdAt: string;
+  roomId: string;
+  userId: string;
+  chat: string;
+}
+
+export interface ChannelLogType {
+  _id: string;
+  createdAt: string;
+  roomId: string;
+  userId: string;
+  chat: string;
+  nickname: string;
+  profPic: string;
+}
+
 export interface waitListType {
   userId: string;
   nickname: string;
