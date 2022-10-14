@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { io } from "socket.io-client";
+import socketIOClient from "socket.io-client";
 import { currentChannelDetailRequest } from "@/api/channelFetcher";
 import { MainChannelType } from "@/types/channel/channelTypes";
 import Modal from "@/components/modal/Modal";
