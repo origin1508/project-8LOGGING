@@ -20,10 +20,7 @@ import {
   channelMessageRequest,
   channelChatLogRequest,
 } from "@/api/channelFetcher";
-import {
-  ChannelLogObjectType,
-  ChannelLogType,
-} from "@/types/channel/channelTypes";
+import { ChannelLogObjectType } from "@/types/channel/channelTypes";
 
 const socket = socketIOClient(`${process.env.REACT_APP_SERVER_BASE_URL}/chat`, {
   path: "/chat-socket",
@@ -34,7 +31,7 @@ const CONTEXT_MENU_ID = "CONTEXT_MENU_ID";
 
 function Channel() {
   const [channelContent, setChannelContent] = useState<string>("");
-  const [chatLogs, setChatLogs] = useState<Array<ChannelLogType>>([]);
+  const [chatLogs, setChatLogs] = useState<Array<ChannelLogObjectType>>([]);
   const [channelData, setChannelData] = useState<MainChannelType[]>([]);
   const [entryFailureMessage, setEntryFailureMessage] = useState();
   const [isShowWaitList, setIsShowWaitList] = useState(false);
@@ -76,17 +73,18 @@ function Channel() {
       const { datas } = await channelChatLogRequest(
         `/api/chat/log/${channelId}`
       );
-      const { chatLogs, userInfo } = datas;
       setChatLogs(
-        chatLogs.map((ch: ChannelLogObjectType, i: number) => {
+        datas.map((ch: ChannelLogObjectType) => {
           const obj = {
             _id: ch._id,
             createdAt: ch.createdAt,
             roomId: ch.roomId,
             userId: ch.userId,
             chat: ch.chat,
-            nickname: userInfo[i].nickname,
-            profPic: userInfo[i].profPic,
+            userInfo: {
+              nickname: ch.userInfo.nickname,
+              profPic: ch.userInfo.profPic,
+            },
           };
           return obj;
         })
@@ -105,9 +103,10 @@ function Channel() {
               roomId: data.roomId,
               userId: data.userId,
               chat: data.chat,
-              nickname: "foxmon",
-              profPic:
-                "https://elice-8seconds.s3.ap-northeast-2.amazonaws.com/1665109688589_image_1648301949725_750.jpeg",
+              userInfo: {
+                nickname: data.userInfo.nickname,
+                profPic: data.userInfo.profPic,
+              },
             },
           ];
         });
@@ -145,9 +144,9 @@ function Channel() {
                   <ContentContainer>
                     {chatLogs.map((chat) => (
                       <UserContainer key={chat._id}>
-                        <UserImg itemProp={chat.profPic} />
+                        <UserImg itemProp={chat.userInfo.profPic} />
                         <UserInfo onContextMenu={show}>
-                          <TextOne>{chat.nickname}</TextOne>
+                          <TextOne>{chat.userInfo.nickname}</TextOne>
                           <TextTwo>{chat.chat}</TextTwo>
                         </UserInfo>
                       </UserContainer>
@@ -155,7 +154,7 @@ function Channel() {
                   </ContentContainer>
                   <ChatInput
                     ref={inputRef}
-                    placeholder={"메시지 입력"}
+                    placeholder="메시지 입력"
                     onChange={handleChannelContentChange}
                   />
                   <ChannelSendButton
