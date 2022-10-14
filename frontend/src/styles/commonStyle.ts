@@ -24,7 +24,7 @@ export const MediumSubTitle = styled.div`
 `;
 export const TextOne = styled.p`
   font-weight: bold;
-  font-size: ${GlobalTheme.fontSize.littleBig};
+  font-size: ${GlobalTheme.fontSize.medium};
   line-height: 1.4;
   margin: 0;
 `;
