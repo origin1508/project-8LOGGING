@@ -74,6 +74,14 @@ export async function channelEnterRequest(endPoint: string, message: string) {
   );
   return res.data;
 }
+export async function channelEnteredCancelRequest(endPoint: string) {
+  const res = await customAxios.delete(endPoint, {
+    headers: {
+      Authorization: `Bearer ${Storage.getToken()}`,
+    },
+  });
+  return res.data;
+}
 
 export async function channelMessageRequest(
   endPoint: string,
