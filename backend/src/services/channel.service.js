@@ -123,19 +123,14 @@ module.exports = {
     const allChannels = await Channel.find({ status });
 
     // 필터 설정하기
-    const filterNone = (channel, keyword)=>{
-      const titleIncl = channel.title.includes(keyword);
-      const l1Incl = channel.locationDist.includes(keyword);
-      const l2Incl = channel.locationCity.includes(keyword);
-      return titleIncl || l1Incl || l2Incl
-    };
     const filterTitle = (channel, keyword)=>{
       return channel.title.includes(keyword)
     };
     const filterRegion = (channel, keyword)=>{
       const l1Incl = channel.locationDist.includes(keyword);
       const l2Incl = channel.locationCity.includes(keyword);
-      return l1Incl || l2Incl 
+      const lBothIncl = `${channel.locationDist} ${channel.locationCity}`.includes(keyword);
+      return l1Incl || l2Incl || lBothIncl
     };
 
     const filteredChannels = allChannels.filter(channel => {
@@ -144,7 +139,7 @@ module.exports = {
       } else if (filter=="region") {
         return filterRegion(channel, keyword)
       } else {
-        return filterNone(channel, keyword)
+        return filterTitle(channel, keyword) || filterRegion(channel, keyword)
       }
     });
 
