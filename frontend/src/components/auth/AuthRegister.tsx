@@ -73,6 +73,7 @@ const AuthReigster: React.FC<Props> = ({
         )}
         {isVerifiedEmail ? (
           <VerifiedEmailButton
+            type="button"
             onClick={(e) => {
               e.preventDefault();
               setIsVerifiedEmail(false);
@@ -82,6 +83,7 @@ const AuthReigster: React.FC<Props> = ({
           </VerifiedEmailButton>
         ) : (
           <EmailVerificationButton
+            type="button"
             onClick={(e) => {
               onSendVerficationCodeClickEvent(e, authFormState.email);
             }}
