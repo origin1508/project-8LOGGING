@@ -126,21 +126,22 @@ function Channel() {
       `/api/channels/${channelId}/waiting`,
       waitingId
     );
-    if (res)
+    if (res) {
       setWaitList((prev) =>
         prev.filter((member) => member.userId !== waitingId)
       );
+    }
   };
   const handleChannelJoinRejectButtonClick = async (waitingId: string) => {
     const res = await channelJoinRejectRequet(
       `/api/channels/${channelId}/waiting`,
       waitingId
     );
-    console.log(res);
-    if (res.success)
+    if (res.success) {
       setWaitList((prev) =>
         prev.filter((member) => member.userId !== waitingId)
       );
+    }
   };
 
   return (
@@ -184,6 +185,7 @@ function Channel() {
                 channelMemberList={data.membersInfo}
                 waitMemberList={waitList}
                 isOwner={isOwner}
+                ownerId={data.ownerInfo.ownerId}
                 isShowWaitList={isShowWaitList}
                 setIsShowWaitList={setIsShowWaitList}
                 onChannelJoinAcceptEvent={handleChannelJoinAcceptButtonClick}
