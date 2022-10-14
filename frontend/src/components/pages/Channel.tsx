@@ -1,33 +1,95 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
-import { io } from "socket.io-client";
+import GlobalTheme from "@/styles/theme";
+import { TextOne, TextTwo } from "@/styles/commonStyle";
+import socketIOClient from "socket.io-client";
 import BaseCardContainerStyle from "@/components/hoc/BaseCardContainer";
 import BasePageComponent from "@/components/hoc/BasePageComponent";
-import GlobalTheme from "@/styles/theme";
 import ChannelHeader from "@/components/channel/ChannelHeader";
 import ChannelSendButton from "@/components/channel/ChannelSendButton";
-import { TextOne, TextTwo } from "@/styles/commonStyle";
+import {
+  channelMessageRequest,
+  channelChatLogRequest,
+} from "@/api/channelFetcher";
+import {
+  ChannelLogObjectType,
+  ChannelLogType,
+} from "@/types/channel/channelTypes";
+
+const socket = socketIOClient(`${process.env.REACT_APP_SERVER_BASE_URL}/chat`, {
+  path: "/chat-socket",
+  transports: ["websocket"],
+});
 
 function Channel() {
   const [channelContent, setChannelContent] = useState<string>("");
+  const [chatLogs, setChatLogs] = useState<Array<ChannelLogType>>([]);
 
-  // const socket = io(`${process.env.REACT_APP_SERVER_BASE_URL}`);
+  const { channelId } = useParams();
+
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    // socket.emit("enter", "안녕하세요?");
+    socket.emit("enter", {
+      roomId: channelId,
+    });
+    (async () => {
+      const { datas } = await channelChatLogRequest(
+        `/api/chat/log/${channelId}`
+      );
+      const { chatLogs, userInfo } = datas;
+      setChatLogs(
+        chatLogs.map((ch: ChannelLogObjectType, i: number) => {
+          const obj = {
+            _id: ch._id,
+            createdAt: ch.createdAt,
+            roomId: ch.roomId,
+            userId: ch.userId,
+            chat: ch.chat,
+            nickname: userInfo[i].nickname,
+            profPic: userInfo[i].profPic,
+          };
+          return obj;
+        })
+      );
+    })();
+    // 이게 맞나..?
+    // will unmount에서 이러한 작업을 수행해도 되는건가..?
+    return () => {
+      socket.on("chat", (data) => {
+        setChatLogs((prev) => {
+          return [
+            ...prev,
+            {
+              _id: data._id,
+              createdAt: data.createdAt,
+              roomId: data.roomId,
+              userId: data.userId,
+              chat: data.chat,
+              nickname: "foxmon",
+              profPic:
+                "https://elice-8seconds.s3.ap-northeast-2.amazonaws.com/1665109688589_image_1648301949725_750.jpeg",
+            },
+          ];
+        });
+      });
+    };
   }, []);
 
   const handleChannelContentChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setChannelContent(e.target.value);
     },
-    [setChannelContent]
+    [channelContent, setChannelContent]
   );
 
-  const handleChannelSendButtonClick = useCallback((e: React.FormEvent) => {
+  const handleChannelSendButtonClick = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(channelContent);
-  }, []);
+    if (channelId)
+      await channelMessageRequest("/api/chat/log", channelId, channelContent);
+    if (inputRef.current) inputRef.current.value = "";
+  };
 
   return (
     <BasePageComponent>
@@ -35,15 +97,17 @@ function Channel() {
         <ChannelHeader />
         <ChatForm>
           <ContentContainer>
-            <UserContainer>
-              <UserImg itemProp="https://cdn.imweb.me/upload/S20211110a3d216dc49446/f7bfffacbb6de.png"></UserImg>
-              <UserInfo>
-                <TextOne>들자구 </TextOne>
-                <TextTwo>ㅁㄴㅇㅁㄴㅇ</TextTwo>
-              </UserInfo>
-            </UserContainer>
+            {chatLogs.map((chat) => (
+              <UserContainer key={chat._id}>
+                <UserImg itemProp={chat.profPic} />
+                <UserInfo>
+                  <TextOne>{chat.nickname}</TextOne>
+                  <TextTwo>{chat.chat}</TextTwo>
+                </UserInfo>
+              </UserContainer>
+            ))}
           </ContentContainer>
-          <ChatInput onChange={handleChannelContentChange} />
+          <ChatInput ref={inputRef} onChange={handleChannelContentChange} />
           <ChannelSendButton
             onChannelSendButtonEvent={handleChannelSendButtonClick}
           />
@@ -75,7 +139,7 @@ const ChatInput = styled.input`
 
 const ContentContainer = styled.div`
   width: 100%;
-  height: 80%;
+  height: 40rem;
   padding: 1rem 0rem 0rem 3rem;
   overflow-y: scroll;
 `;

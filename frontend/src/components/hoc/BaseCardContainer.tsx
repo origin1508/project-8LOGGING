@@ -2,7 +2,6 @@ import React from "react";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import { BaseComponentType } from "@/types/common/baseComponentType";
-import { isTemplateExpression } from "typescript";
 
 interface BaseCardContaineProps extends BaseComponentType {
   width: string;

@@ -35,8 +35,8 @@ function UserCard({
           {isEditable ? `My` : `${curUser.nickname}'s`} Profile
         </BigTitle>
       </TitleContainer>
-      <Img img={curUser?.profPic}></Img>
-      {isEditable && <FollowList></FollowList>}
+      <Img img={curUser?.profPic} />
+      {isEditable && <FollowList />}
 
       <InforContainer>
         <UserNicname>{curUser?.nickname}</UserNicname>

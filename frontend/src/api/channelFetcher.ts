@@ -64,3 +64,33 @@ export async function channelEnterRequest(endPoint: string, message: string) {
   );
   return res.data;
 }
+
+export async function channelMessageRequest(
+  endPoint: string,
+  roomId: string,
+  message: string
+) {
+  const res = await customAxios.post(
+    endPoint,
+    {
+      roomId: roomId,
+      chat: message,
+    },
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${Storage.getToken()}`,
+      },
+    }
+  );
+  return res.data;
+}
+
+export async function channelChatLogRequest(endPoint: string) {
+  const res = await customAxios.get(endPoint, {
+    headers: {
+      Authorization: `Bearer ${Storage.getToken()}`,
+    },
+  });
+  return res.data;
+}
