@@ -51,13 +51,15 @@ const Channel: React.FC = () => {
       </TitleContainer>
 
       <ChannelContainer isToggle={!isToggle}>
-        {sidebarChannels.map((channel, index) => {
-          return (
-            <ChannelLink key={index} to={`/channels/${channel._id}`}>
-              {channel.title}
-            </ChannelLink>
-          );
-        })}
+        {sidebarChannels
+          .filter((channel) => channel.position !== 2)
+          .map((channel, index) => {
+            return (
+              <ChannelLink key={index} to={`/channels/${channel._id}`}>
+                {channel.title}
+              </ChannelLink>
+            );
+          })}
       </ChannelContainer>
     </ChannelsContainer>
   );
