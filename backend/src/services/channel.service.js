@@ -110,6 +110,53 @@ module.exports = {
   },
 
   /**
+   * 채널 검색하기
+   * 
+   * @param {Number} page 
+   * @param {Number} status 
+   * @param {String} keyword 
+   * @param {String} filter 
+   * @returns 
+   */
+  async searchChannel(page, status, keyword, filter) {
+    const perPage = 9; // 페이지당 9개씩 보여주기
+    const allChannels = await Channel.find({ status });
+
+    // 필터 설정하기
+    const filterTitle = (channel, keyword)=>{
+      return channel.title.includes(keyword)
+    };
+    const filterRegion = (channel, keyword)=>{
+      const l1Incl = channel.locationDist.includes(keyword);
+      const l2Incl = channel.locationCity.includes(keyword);
+      const lBothIncl = `${channel.locationDist} ${channel.locationCity}`.includes(keyword);
+      return l1Incl || l2Incl || lBothIncl
+    };
+
+    const filteredChannels = allChannels.filter(channel => {
+      if (filter=="title") {
+        return filterTitle(channel, keyword)
+      } else if (filter=="region") {
+        return filterRegion(channel, keyword)
+      } else {
+        return filterTitle(channel, keyword) || filterRegion(channel, keyword)
+      }
+    });
+
+    const totalPages = Math.floor(filteredChannels.length / perPage + 1);
+    const channels = filteredChannels.slice((page-1)*perPage, page*perPage)
+    const channelItems = channels.map((channel) => {
+      channel.createdAt = dateToString(channel.createdAt);
+      return channel;
+    });
+
+    return {
+      channelItems,
+      totalPages,
+    };
+  },
+
+  /**
    * 채널 정보 확인
    *
    * @param {String} channelId
