@@ -104,3 +104,17 @@ export async function channelChatLogRequest(endPoint: string) {
   });
   return res.data;
 }
+
+export async function channelJoinAcceptRequet(
+  endPoint: string,
+  waitingId: string
+) {
+  const res = await customAxios.put(endPoint, {
+    waitingId: waitingId,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${Storage.getToken()}`,
+    },
+  });
+  return res.data;
+}
