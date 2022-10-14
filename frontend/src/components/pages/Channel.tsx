@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { loginUserIdState } from "@/recoil/atoms/authState";
+import { useRecoilValue } from "recoil";
 import socketIOClient from "socket.io-client";
 import { currentChannelDetailRequest } from "@/api/channelFetcher";
 import { MainChannelType } from "@/types/channel/channelTypes";
@@ -32,7 +34,9 @@ function Channel() {
   const [chatLogs, setChatLogs] = useState<Array<ChannelLogType>>([]);
   const [channelData, setChannelData] = useState<MainChannelType[]>([]);
   const [entryFailureMessage, setEntryFailureMessage] = useState();
+  const [isShowWaitList, setIsShowWaitList] = useState(false);
   const { channelId } = useParams();
+  const loginUserId = useRecoilValue(loginUserIdState);
   const navigate = useNavigate();
   const [
     isOpenModal,
@@ -58,8 +62,7 @@ function Channel() {
         handleModalOpenButtonClick();
         setEntryFailureMessage(res.message);
       }
-    })();
-    (async () => {
+
       const { datas } = await channelChatLogRequest(
         `/api/chat/log/${channelId}`
       );
@@ -120,13 +123,13 @@ function Channel() {
     <BasePageComponent>
       {channelData &&
         channelData.map((data) => {
+          const isOwner = data.ownerInfo.ownerId === loginUserId ? true : false;
           return (
             <React.Fragment key={data._id}>
-              <BaseCardContainerStyle width="100rem">
+              <ChannelContainer>
                 <ChannelHeader
                   title={data.title}
                   memberNums={data.membersInfo.length}
-                  waitNums={data.waitList.length}
                 />
                 <ChatForm>
                   <ContentContainer>
@@ -142,16 +145,20 @@ function Channel() {
                   </ContentContainer>
                   <ChatInput
                     ref={inputRef}
+                    placeholder={"메시지 입력"}
                     onChange={handleChannelContentChange}
                   />
                   <ChannelSendButton
                     onChannelSendButtonEvent={handleChannelSendButtonClick}
                   />
                 </ChatForm>
-              </BaseCardContainerStyle>
+              </ChannelContainer>
               <MemberList
                 channelMemberList={data.membersInfo}
                 waitMemberList={data.waitList}
+                isOwner={isOwner}
+                isShowWaitList={isShowWaitList}
+                setIsShowWaitList={setIsShowWaitList}
               />
             </React.Fragment>
           );
@@ -171,29 +178,42 @@ function Channel() {
   );
 }
 
+const ChannelContainer = styled.div`
+  overflow: hidden;
+  width: 70%;
+  height: 90%;
+  background-color: ${GlobalTheme.colors.white};
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+`;
+
 const ChatForm = styled.form`
-  height: 100%;
   width: 100%;
+  height: 100%;
   position: relative;
   display: flex;
   justify-content: center;
   align-items: start;
+  overflow: hidden;
 `;
 
 const ChatInput = styled.input`
   position: absolute;
-  bottom: 2rem;
+  bottom: 2%;
   padding: 0rem 2rem;
   font-size: ${GlobalTheme.fontSize.littleBig};
   width: 90%;
-  height: 13%;
-  border-radius: 2rem;
+  height: 4rem;
+  margin-top: 2rem;
+  border-radius: 3rem;
   border: 1.2px solid ${GlobalTheme.colors.theme};
 `;
 
 const ContentContainer = styled.div`
   width: 100%;
-  height: 40rem;
+  height: 100%;
   padding: 1rem 0rem 0rem 3rem;
   overflow-y: scroll;
 `;

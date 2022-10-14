@@ -5,15 +5,21 @@ import GlobalTheme from "@/styles/theme";
 import CustomIcon from "@/components/icons/CustomIcon";
 import { TextOne, TextTwo, SmallButton, BigTitle } from "@/styles/commonStyle";
 import { ChannelMemberType, waitListType } from "@/types/channel/channelTypes";
-
+import BaseCardContainerStyle from "@/components/hoc/BaseCardContainer";
 interface MemberListProps {
   channelMemberList: ChannelMemberType[];
   waitMemberList: waitListType[];
+  isOwner: boolean;
+  isShowWaitList: boolean;
+  setIsShowWaitList: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function MemberList({
   channelMemberList,
   waitMemberList,
+  isOwner,
+  isShowWaitList,
+  setIsShowWaitList,
 }: MemberListProps) {
   const navigate = useNavigate();
 
@@ -21,16 +27,23 @@ export default function MemberList({
     <MemberListWrapper>
       <MemberListContainer>
         <BigTitle>Members</BigTitle>
-        <NewPeopleContainer>
-          <IconBox>
-            <CustomIcon
-              name="following"
-              size="30"
-              color={GlobalTheme.colors.theme}
-            ></CustomIcon>
-            <Notification>{waitMemberList.length}</Notification>
-          </IconBox>
-        </NewPeopleContainer>
+        {isOwner && (
+          <NewPeopleContainer
+            onClick={() => {
+              console.log(isShowWaitList);
+              setIsShowWaitList((prev) => !prev);
+            }}
+          >
+            <IconBox>
+              <CustomIcon
+                name="following"
+                size="30"
+                color={GlobalTheme.colors.theme}
+              ></CustomIcon>
+              <Notification>{waitMemberList.length}</Notification>
+            </IconBox>
+          </NewPeopleContainer>
+        )}
         {channelMemberList.map((data) => {
           return (
             <UserContainer key={data.memberId}>
@@ -38,69 +51,73 @@ export default function MemberList({
                 <UserImg itemProp={data.memberPic}></UserImg>
                 <TextOne>{data.memberNickname}</TextOne>
               </UserInfo>
-              <SmallButton>follow</SmallButton>
             </UserContainer>
           );
         })}
       </MemberListContainer>
-
-      {waitMemberList &&
-        waitMemberList.map((data) => {
+      <WaitListContainer isShowWaitList={isShowWaitList}>
+        <BigTitle>Waiting Member</BigTitle>
+        {waitMemberList.map((data) => {
           return (
-            <WaitListContainer key={data.userId}>
-              <BigTitle>Waiting Member</BigTitle>
-              <UserContainer>
-                <UserInfo onClick={() => navigate(`/profile/${data.userId}`)}>
-                  <UserImg itemProp={data.profPic}></UserImg>
-                  <TextOne>{data.nickname}</TextOne>
-                </UserInfo>
-                <ButtonContainer>
-                  <SmallButton>수락</SmallButton>
-                  <SmallButton>거절</SmallButton>
-                </ButtonContainer>
-              </UserContainer>
-            </WaitListContainer>
+            <UserContainer key={data.userId}>
+              <UserInfo onClick={() => navigate(`/profile/${data.userId}`)}>
+                <UserImg itemProp={data.profPic}></UserImg>
+                <TextOne>{data.nickname}</TextOne>
+              </UserInfo>
+              <ButtonContainer>
+                <SmallButton>수락</SmallButton>
+                <SmallButton>거절</SmallButton>
+              </ButtonContainer>
+            </UserContainer>
           );
         })}
+      </WaitListContainer>
+
+      {isOwner ? (
+        <ChannelButton>채널 삭제</ChannelButton>
+      ) : (
+        <ChannelButton>채널 나가기</ChannelButton>
+      )}
     </MemberListWrapper>
   );
 }
 const MemberListWrapper = styled.div`
   position: relative;
-  width: 20%;
-  height: 65rem;
+  width: 35rem;
+  height: 90%;
   background-color: ${GlobalTheme.colors.white};
   display: flex;
   align-items: center;
   flex-direction: column;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-  border-radius: 1rem;
-  margin-left: 2rem;
+  margin-left: 1rem;
 `;
 
 const MemberListContainer = styled.div`
   padding: 3rem;
   width: 80%;
-  height: 100%;
+  height: 90%;
+  vertical-align: middle;
 `;
-const WaitListContainer = styled.div`
-  display: none;
+const WaitListContainer = styled.div<{ isShowWaitList: boolean }>`
+  display: ${(props) => (props.isShowWaitList ? "" : "none")};
   position: absolute;
+  top: 8rem;
   padding: 3rem;
-  width: 80%;
+  width: 70%;
   height: 60%;
   border-radius: 8px;
   background-color: ${GlobalTheme.colors.lightTwoGray};
+  box-shadow: 1px 1px 5px ${GlobalTheme.colors.gray};
 `;
 const UserContainer = styled.div`
   margin-top: 2rem;
-  display: flex;
+  // display: flex;
   width: 100%;
   justify-content: center;
   align-items: center;
   gap: 3rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid ${GlobalTheme.colors.black};
 `;
 const UserImg = styled.div`
   width: 3.5rem;
@@ -161,4 +178,11 @@ const Notification = styled.span`
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+
+const ChannelButton = styled.button`
+  ${GlobalTheme.buttons}
+  height: 5rem;
+  width: 80%;
+  margin-bottom: 2rem;
 `;

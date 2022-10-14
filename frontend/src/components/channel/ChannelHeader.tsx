@@ -7,14 +7,13 @@ import CustomIcon from "@/components/icons/CustomIcon";
 interface PropsType {
   title: string;
   memberNums: number;
-  waitNums: number;
 }
 
-const ChannelHeader = ({ title, memberNums, waitNums }: PropsType) => {
+const ChannelHeader = ({ title, memberNums }: PropsType) => {
   return (
     <TitleContainer>
       <BigTitle>Channel</BigTitle>
-      <MediumTitle>{title}</MediumTitle>
+      <MediumTitle># {title}</MediumTitle>
       <MediumSubTitle>
         <PeopleContainer>
           <CustomIcon
@@ -24,7 +23,7 @@ const ChannelHeader = ({ title, memberNums, waitNums }: PropsType) => {
           />
           {memberNums}
         </PeopleContainer>
-        <Application>new applicant {waitNums}</Application>
+        {/* <Application>new applicant {waitNums}</Application> */}
       </MediumSubTitle>
     </TitleContainer>
   );
@@ -33,7 +32,7 @@ const ChannelHeader = ({ title, memberNums, waitNums }: PropsType) => {
 const TitleContainer = styled.div`
   position: relative;
   padding: 2rem;
-  height: 20%;
+  height: 10rem;
   width: 100%;
   border-bottom: solid 1px ${GlobalTheme.colors.lightTwoGray};
   display: flex;
