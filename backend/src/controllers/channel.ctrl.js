@@ -136,11 +136,12 @@ module.exports = {
     console.log(message);
 
     try {
-      await channelService.requestEnter(userId, channelId);
+      const channels = await channelService.requestEnter(userId, channelId);
 
       res.status(201).json({
         success: true,
         message: "Channel enter request success",
+        datas: channels
       });
     } catch (err) {
       next(err);
@@ -152,11 +153,12 @@ module.exports = {
     const { channelId } = req.params;
   
     try {
-      await channelService.cancelEnter(userId, channelId);
+      const channels = await channelService.cancelEnter(userId, channelId);
 
       res.status(201).json({
         success: true,
-        message: "Channel enter cancel success"
+        message: "Channel enter cancel success",
+        datas: channels
       });
     } catch (err) {
       next(err);
