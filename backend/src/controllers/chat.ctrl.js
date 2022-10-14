@@ -26,7 +26,6 @@ module.exports = {
     try {
       const createdChat = await chatService.addChatLog(roomId, userId, chat);
       const userChatInfo = await chatService.getUserChatLog(createdChat._id);
-      console.log(userChatInfo);
 
       req.app.get("chatIO").of("/chat").to(roomId).emit("chat", userChatInfo);
 
@@ -35,6 +34,44 @@ module.exports = {
         status: 201,
         message: "success creating new chat log",
         datas: userChatInfo,
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  async modifyChatLog(req, res, next) {
+    const { chatId, chat, roomId } = req.body;
+
+    try {
+      await chatService.updateChatLog(chatId, chat);
+
+      const userChatInfo = await chatService.getUserChatLog(chatId);
+
+      req.app.get("chatIO").of("/chat").to(roomId).emit("chat", userChatInfo);
+
+      res.status(201).json({
+        success: true,
+        status: 201,
+        message: "success modifying chat",
+        datas: userChatInfo,
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  async removeChatLog(req, res, next) {
+    const { chatId, roomId } = req.body;
+    try {
+      await chatService.deleteChatLog(chatId, roomId);
+
+      req.app.get("chatIO").of("/chat").to(roomId).emit("chat", { chatId });
+
+      res.status(201).json({
+        success: true,
+        status: 201,
+        message: "success removing chat",
       });
     } catch (err) {
       next(err);
