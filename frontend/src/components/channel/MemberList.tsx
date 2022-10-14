@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import CustomIcon from "@/components/icons/CustomIcon";
-import { TextOne, TextTwo, SmallButton, BigTitle } from "@/styles/commonStyle";
+import { TextOne, SmallButton, BigTitle } from "@/styles/commonStyle";
 import { ChannelMemberType, waitListType } from "@/types/channel/channelTypes";
-import BaseCardContainerStyle from "@/components/hoc/BaseCardContainer";
+
 interface MemberListProps {
   channelMemberList: ChannelMemberType[];
   waitMemberList: waitListType[];
@@ -14,7 +14,7 @@ interface MemberListProps {
   setIsShowWaitList: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function MemberList({
+function MemberList({
   channelMemberList,
   waitMemberList,
   isOwner,
@@ -30,7 +30,6 @@ export default function MemberList({
         {isOwner && (
           <NewPeopleContainer
             onClick={() => {
-              console.log(isShowWaitList);
               setIsShowWaitList((prev) => !prev);
             }}
           >
@@ -99,6 +98,7 @@ const MemberListContainer = styled.div`
   height: 90%;
   vertical-align: middle;
 `;
+
 const WaitListContainer = styled.div<{ isShowWaitList: boolean }>`
   display: ${(props) => (props.isShowWaitList ? "" : "none")};
   position: absolute;
@@ -110,6 +110,7 @@ const WaitListContainer = styled.div<{ isShowWaitList: boolean }>`
   background-color: ${GlobalTheme.colors.lightTwoGray};
   box-shadow: 1px 1px 5px ${GlobalTheme.colors.gray};
 `;
+
 const UserContainer = styled.div`
   margin-top: 2rem;
   // display: flex;
@@ -119,6 +120,7 @@ const UserContainer = styled.div`
   gap: 3rem;
   padding-bottom: 1rem;
 `;
+
 const UserImg = styled.div`
   width: 3.5rem;
   height: 3.5rem;
@@ -126,6 +128,7 @@ const UserImg = styled.div`
   background-size: cover;
   border-radius: 100%;
 `;
+
 const UserInfo = styled.div`
   display: flex;
   flex-direction: row;
@@ -186,3 +189,5 @@ const ChannelButton = styled.button`
   width: 80%;
   margin-bottom: 2rem;
 `;
+
+export default MemberList;
