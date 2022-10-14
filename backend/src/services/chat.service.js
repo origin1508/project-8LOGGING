@@ -54,11 +54,11 @@ module.exports = {
     return resultLog;
   },
 
-  async getUserChatLog(_id) {
+  async getUserChatLog(chatId) {
     const logs = await ChatLog.aggregate([
       {
         $match: {
-          _id: ObjectId(_id),
+          _id: ObjectId(chatId),
         },
       },
       {
@@ -91,4 +91,12 @@ module.exports = {
 
     return resultLog[0];
   },
+
+  async updateChatLog(chatId, chat) {
+    await ChatLog.updateOne({_id: chatId}, {chat});
+  },
+
+  async deleteChatLog(chatId) {
+    await ChatLog.deleteOne({_id: chatId});
+  }
 };
