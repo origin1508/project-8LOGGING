@@ -55,6 +55,27 @@ module.exports = {
     }
   },
 
+  async searchChannelList(req, res, next) {
+    try {
+      // status == 0 : 모집 중인 채널
+      // status == 1 : 모집 완료된 채널
+      // status == 2 : 활동 종료된 채널
+      const { page, status, keyword, filter } = req.query;
+
+      const channels = await channelService.searchChannel(page, status, keyword, filter);
+
+      res.status(200).json({
+        success: true,
+        status: 200,
+        message: "Search result load success",
+        totalPages: channels.totalPages,
+        datas: channels.channelItems,
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
+
   async showChannelInfo(req, res, next) {
     const { channelId } = req.params;
     try {

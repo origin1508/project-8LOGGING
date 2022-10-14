@@ -7,6 +7,7 @@ const router = express.Router();
 
 router.post("/", jwtVerification, upload.single("image"), channelCtrl.makeChannel); // 채널 생성
 router.get("/", channelCtrl.showChannelList); // 채널 목록 반환(모집 중, 모집 완료, 활동 종료)
+router.get("/search", channelCtrl.searchChannelList); // 채널 검색
 router.get("/:channelId", jwtVerification, channelCtrl.showChannelInfo); // 채널 정보 확인
 router.put("/:channelId", jwtVerification, upload.single("image"), channelCtrl.changeChannelInfo); // 채널 정보 변경
 router.put("/:channelId/enter", jwtVerification, channelCtrl.requestChannelEnter); // 채널 입장 신청
