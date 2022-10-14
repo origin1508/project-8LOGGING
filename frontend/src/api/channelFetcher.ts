@@ -109,16 +109,21 @@ export async function channelJoinAcceptRequet(
   endPoint: string,
   waitingId: string
 ) {
-  const res = await customAxios.put(endPoint, {
-    waitingId: waitingId,
-    headers: {
-      Authorization: `Bearer ${Storage.getToken()}`,
+  const res = await customAxios.put(
+    endPoint,
+    {
+      waitingId: waitingId,
     },
-  });
+    {
+      headers: {
+        Authorization: `Bearer ${Storage.getToken()}`,
+      },
+    }
+  );
   return res.data;
 }
 
-export async function channelJoinRefusalRequet(
+export async function channelJoinRejectRequet(
   endPoint: string,
   waitingId: string
 ) {
