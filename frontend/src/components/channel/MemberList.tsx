@@ -68,7 +68,7 @@ function MemberList({
         })}
       </MemberListContainer>
       <WaitListContainer isShowWaitList={isShowWaitList}>
-        <BigTitle>Waiting Member</BigTitle>
+        <BigTitle>Waiting List</BigTitle>
         {waitMemberList.map((data) => {
           return (
             <UserContainer key={data.userId}>
@@ -77,20 +77,20 @@ function MemberList({
                 <TextOne>{data.nickname}</TextOne>
               </UserInfo>
               <ButtonContainer>
-                <SmallButton
+                <AcceptButton
                   onClick={() => {
                     onChannelJoinAcceptEvent(data.userId);
                   }}
                 >
                   수락
-                </SmallButton>
-                <SmallButton
+                </AcceptButton>
+                <RejectButton
                   onClick={() => {
                     onChannelJoinRejectEvent(data.userId);
                   }}
                 >
                   거절
-                </SmallButton>
+                </RejectButton>
               </ButtonContainer>
             </UserContainer>
           );
@@ -138,9 +138,9 @@ const WaitListContainer = styled.div<{ isShowWaitList: boolean }>`
 
 const UserContainer = styled.div`
   margin-top: 2rem;
-  // display: flex;
+  display: flex;
   width: 100%;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   gap: 3rem;
   padding-bottom: 1rem;
@@ -213,6 +213,16 @@ const ChannelButton = styled.button`
   height: 5rem;
   width: 80%;
   margin-bottom: 2rem;
+`;
+
+const AcceptButton = styled(SmallButton)`
+  width: 5rem;
+`;
+const RejectButton = styled(SmallButton)`
+  width: 5rem;
+  color: ${GlobalTheme.colors.theme};
+  background-color: ${GlobalTheme.colors.white};
+  border: 1px solid ${GlobalTheme.colors.theme};
 `;
 
 export default MemberList;
