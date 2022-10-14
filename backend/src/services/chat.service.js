@@ -89,6 +89,6 @@ module.exports = {
       return log;
     });
 
-    return resultLog;
+    return resultLog[0];
   },
 };
