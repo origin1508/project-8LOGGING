@@ -102,8 +102,10 @@ const Tab = styled.div`
 
 const ChannelHistoryContainer = styled.div`
   overflow: hidden;
-  width: 60rem;
-  height: 65rem;
+  min-width: 60rem;
+  width: 45%;
+  height: 80vh;
+  min-height: 75rem;
   border-radius: 1rem;
   background-color: white;
   display: flex;
