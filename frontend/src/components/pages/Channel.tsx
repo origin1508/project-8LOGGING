@@ -120,10 +120,9 @@ function Channel() {
 const ChatForm = styled.form`
   height: 100%;
   width: 100%;
-  position: relative;
   display: flex;
   justify-content: center;
-  align-items: start;
+  position: relative;
 `;
 
 const ChatInput = styled.input`
@@ -140,8 +139,11 @@ const ChatInput = styled.input`
 const ContentContainer = styled.div`
   width: 100%;
   height: 40rem;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
   padding: 1rem 0rem 0rem 3rem;
-  overflow-y: scroll;
+  overflow-y: auto;
 `;
 
 const UserContainer = styled.div`
