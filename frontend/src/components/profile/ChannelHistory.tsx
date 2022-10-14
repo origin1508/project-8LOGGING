@@ -11,7 +11,7 @@ import {
 } from "@/api/channelFetcher";
 import { ChannelDetailType } from "@/types/channel/channelTypes";
 import { ErrorType } from "@/types/error/errorType";
-import ChannelDetail from "../channelDetail/ChannelDetail";
+import ChannelHistoryDetail from "./ChannelHistoryDetail";
 import Modal from "../modal/Modal";
 import useModal from "@/hooks/useModal";
 
@@ -110,7 +110,7 @@ function ChannelHistory() {
           )
         )}
       </CardContainer>
-      <ChannelDetail
+      <ChannelHistoryDetail
         isShowMore={isShowMore}
         setIsShowMore={setIsShowMore}
         channelDetailInfo={channelDetailInfo}
