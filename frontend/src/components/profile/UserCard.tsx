@@ -29,7 +29,7 @@ function UserCard({
   };
 
   return (
-    <BaseCardContainer width="45vh">
+    <BaseCardContainer width="50vh">
       <TitleContainer>
         <BigTitle>
           {isEditable ? `My` : `${curUser.nickname}'s`} Profile
