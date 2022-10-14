@@ -10,6 +10,7 @@ interface MemberListProps {
   channelMemberList: ChannelMemberType[];
   waitMemberList: waitListType[];
   isOwner: boolean;
+  ownerId: string;
   isShowWaitList: boolean;
   setIsShowWaitList: React.Dispatch<React.SetStateAction<boolean>>;
   onChannelJoinAcceptEvent: (waitingId: string) => void;
@@ -20,6 +21,7 @@ function MemberList({
   channelMemberList,
   waitMemberList,
   isOwner,
+  ownerId,
   isShowWaitList,
   setIsShowWaitList,
   onChannelJoinAcceptEvent,
@@ -53,6 +55,13 @@ function MemberList({
               <UserInfo onClick={() => navigate(`/profile/${data.memberId}`)}>
                 <UserImg itemProp={data.memberPic}></UserImg>
                 <TextOne>{data.memberNickname}</TextOne>
+                {ownerId === data.memberId && (
+                  <CustomIcon
+                    name="crown"
+                    size="30"
+                    color={GlobalTheme.colors.theme}
+                  ></CustomIcon>
+                )}
               </UserInfo>
             </UserContainer>
           );
