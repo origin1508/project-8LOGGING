@@ -12,7 +12,8 @@ interface MemberListProps {
   isOwner: boolean;
   isShowWaitList: boolean;
   setIsShowWaitList: React.Dispatch<React.SetStateAction<boolean>>;
-  onChannelJoinAcceptEvenet: (waitingId: string) => void;
+  onChannelJoinAcceptEvent: (waitingId: string) => void;
+  onChannelJoinRefusalEvent: (waitingId: string) => void;
 }
 
 function MemberList({
@@ -21,7 +22,8 @@ function MemberList({
   isOwner,
   isShowWaitList,
   setIsShowWaitList,
-  onChannelJoinAcceptEvenet,
+  onChannelJoinAcceptEvent,
+  onChannelJoinRefusalEvent,
 }: MemberListProps) {
   const navigate = useNavigate();
 
@@ -68,12 +70,18 @@ function MemberList({
               <ButtonContainer>
                 <SmallButton
                   onClick={() => {
-                    onChannelJoinAcceptEvenet(data.userId);
+                    onChannelJoinAcceptEvent(data.userId);
                   }}
                 >
                   수락
                 </SmallButton>
-                <SmallButton>거절</SmallButton>
+                <SmallButton
+                  onClick={() => {
+                    onChannelJoinRefusalEvent(data.userId);
+                  }}
+                >
+                  거절
+                </SmallButton>
               </ButtonContainer>
             </UserContainer>
           );

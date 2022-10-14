@@ -8,8 +8,13 @@ import socketIOClient from "socket.io-client";
 import {
   currentChannelDetailRequest,
   channelJoinAcceptRequet,
+  channelJoinRefusalRequet,
 } from "@/api/channelFetcher";
-import { MainChannelType } from "@/types/channel/channelTypes";
+import {
+  MainChannelType,
+  ChannelLogObjectType,
+  waitListType,
+} from "@/types/channel/channelTypes";
 import useModal from "@/hooks/useModal";
 import Modal from "@/components/modal/Modal";
 import BasePageComponent from "@/components/hoc/BasePageComponent";
@@ -23,7 +28,6 @@ import {
   channelMessageRequest,
   channelChatLogRequest,
 } from "@/api/channelFetcher";
-import { ChannelLogObjectType } from "@/types/channel/channelTypes";
 
 const socket = socketIOClient(`${process.env.REACT_APP_SERVER_BASE_URL}/chat`, {
   path: "/chat-socket",
@@ -37,6 +41,7 @@ function Channel() {
   const [chatLogs, setChatLogs] = useState<Array<ChannelLogObjectType>>([]);
   const [channelData, setChannelData] = useState<MainChannelType[]>([]);
   const [entryFailureMessage, setEntryFailureMessage] = useState();
+  const [waitList, setWaitList] = useState<waitListType[]>([]);
   const [isShowWaitList, setIsShowWaitList] = useState(false);
   const { channelId } = useParams();
   const loginUserId = useRecoilValue(loginUserIdState);
@@ -74,6 +79,7 @@ function Channel() {
       );
       if (res.success) {
         setChannelData([res.datas]);
+        setWaitList(res.datas.waitList);
       } else {
         setChannelData([]);
         handleModalOpenButtonClick();
@@ -145,7 +151,21 @@ function Channel() {
       `/api/channels/${channelId}/waiting`,
       waitingId
     );
+    if (res)
+      setWaitList((prev) =>
+        prev.filter((member) => member.userId !== waitingId)
+      );
+  };
+  const handleChannelJoinRefusalButtonClick = async (waitingId: string) => {
+    const res = await channelJoinRefusalRequet(
+      `/api/channels/${channelId}/waiting`,
+      waitingId
+    );
     console.log(res);
+    if (res.success)
+      setWaitList((prev) =>
+        prev.filter((member) => member.userId !== waitingId)
+      );
   };
 
   return (
@@ -184,11 +204,12 @@ function Channel() {
               </ChannelContainer>
               <MemberList
                 channelMemberList={data.membersInfo}
-                waitMemberList={data.waitList}
+                waitMemberList={waitList}
                 isOwner={isOwner}
                 isShowWaitList={isShowWaitList}
                 setIsShowWaitList={setIsShowWaitList}
-                onChannelJoinAcceptEvenet={handleChannelJoinAcceptButtonClick}
+                onChannelJoinAcceptEvent={handleChannelJoinAcceptButtonClick}
+                onChannelJoinRefusalEvent={handleChannelJoinRefusalButtonClick}
               />
             </React.Fragment>
           );
