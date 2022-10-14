@@ -3,12 +3,14 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useContextMenu } from "react-contexify";
 import styled from "styled-components";
 import { loginUserIdState } from "@/recoil/atoms/authState";
-import { useRecoilValue } from "recoil";
+import { sidebarChannelsState } from "@/recoil/atoms/channelState";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import socketIOClient from "socket.io-client";
 import {
   currentChannelDetailRequest,
   channelJoinAcceptRequet,
   channelJoinRejectRequet,
+  channelLeaveRequest,
 } from "@/api/channelFetcher";
 import {
   MainChannelType,
@@ -45,6 +47,7 @@ function Channel() {
   const [isShowWaitList, setIsShowWaitList] = useState(false);
   const { channelId } = useParams();
   const loginUserId = useRecoilValue(loginUserIdState);
+  const setSidebarChannels = useSetRecoilState(sidebarChannelsState);
   const navigate = useNavigate();
   const [
     isOpenModal,
@@ -143,6 +146,14 @@ function Channel() {
       );
     }
   };
+  const handleChannelLeaveButtonClick = async () => {
+    const res = await channelLeaveRequest(`/api/channels/${channelId}/leave`);
+    if (res.success) {
+      setSidebarChannels((prev) =>
+        prev.filter((channel) => channel._id !== channelId)
+      );
+    }
+  };
 
   return (
     <BasePageComponent>
@@ -190,6 +201,7 @@ function Channel() {
                 setIsShowWaitList={setIsShowWaitList}
                 onChannelJoinAcceptEvent={handleChannelJoinAcceptButtonClick}
                 onChannelJoinRejectEvent={handleChannelJoinRejectButtonClick}
+                onChannelLeaveEvent={handleChannelLeaveButtonClick}
               />
             </React.Fragment>
           );

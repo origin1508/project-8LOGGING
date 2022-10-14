@@ -135,3 +135,12 @@ export async function channelJoinRejectRequet(
   });
   return res.data;
 }
+
+export async function channelLeaveRequest(endPoint: string) {
+  const res = await customAxios.delete(endPoint, {
+    headers: {
+      Authorization: `Bearer ${Storage.getToken()}`,
+    },
+  });
+  return res.data;
+}

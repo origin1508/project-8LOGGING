@@ -15,6 +15,7 @@ interface MemberListProps {
   setIsShowWaitList: React.Dispatch<React.SetStateAction<boolean>>;
   onChannelJoinAcceptEvent: (waitingId: string) => void;
   onChannelJoinRejectEvent: (waitingId: string) => void;
+  onChannelLeaveEvent: () => void;
 }
 
 function MemberList({
@@ -26,6 +27,7 @@ function MemberList({
   setIsShowWaitList,
   onChannelJoinAcceptEvent,
   onChannelJoinRejectEvent,
+  onChannelLeaveEvent,
 }: MemberListProps) {
   const navigate = useNavigate();
 
@@ -100,7 +102,7 @@ function MemberList({
       {isOwner ? (
         <ChannelButton>채널 삭제</ChannelButton>
       ) : (
-        <ChannelButton>채널 나가기</ChannelButton>
+        <ChannelButton onClick={onChannelLeaveEvent}>채널 나가기</ChannelButton>
       )}
     </MemberListWrapper>
   );
