@@ -4,7 +4,10 @@ import styled from "styled-components";
 import { loginUserIdState } from "@/recoil/atoms/authState";
 import { useRecoilValue } from "recoil";
 import socketIOClient from "socket.io-client";
-import { currentChannelDetailRequest } from "@/api/channelFetcher";
+import {
+  currentChannelDetailRequest,
+  channelJoinAcceptRequet,
+} from "@/api/channelFetcher";
 import { MainChannelType } from "@/types/channel/channelTypes";
 import Modal from "@/components/modal/Modal";
 import useModal from "@/hooks/useModal";
@@ -119,6 +122,14 @@ function Channel() {
     if (inputRef.current) inputRef.current.value = "";
   };
 
+  const handleChannelJoinAcceptButtonClick = async (waitingId: string) => {
+    const res = await channelJoinAcceptRequet(
+      `/api/channels/${channelId}/waiting`,
+      waitingId
+    );
+    console.log(res);
+  };
+
   return (
     <BasePageComponent>
       {channelData &&
@@ -159,6 +170,7 @@ function Channel() {
                 isOwner={isOwner}
                 isShowWaitList={isShowWaitList}
                 setIsShowWaitList={setIsShowWaitList}
+                onChannelJoinAcceptEvenet={handleChannelJoinAcceptButtonClick}
               />
             </React.Fragment>
           );

@@ -12,6 +12,7 @@ interface MemberListProps {
   isOwner: boolean;
   isShowWaitList: boolean;
   setIsShowWaitList: React.Dispatch<React.SetStateAction<boolean>>;
+  onChannelJoinAcceptEvenet: (waitingId: string) => void;
 }
 
 export default function MemberList({
@@ -20,6 +21,7 @@ export default function MemberList({
   isOwner,
   isShowWaitList,
   setIsShowWaitList,
+  onChannelJoinAcceptEvenet,
 }: MemberListProps) {
   const navigate = useNavigate();
 
@@ -65,7 +67,13 @@ export default function MemberList({
                 <TextOne>{data.nickname}</TextOne>
               </UserInfo>
               <ButtonContainer>
-                <SmallButton>수락</SmallButton>
+                <SmallButton
+                  onClick={() => {
+                    onChannelJoinAcceptEvenet(data.userId);
+                  }}
+                >
+                  수락
+                </SmallButton>
                 <SmallButton>거절</SmallButton>
               </ButtonContainer>
             </UserContainer>
