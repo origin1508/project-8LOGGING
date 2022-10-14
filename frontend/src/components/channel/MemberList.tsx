@@ -13,7 +13,7 @@ interface MemberListProps {
   isShowWaitList: boolean;
   setIsShowWaitList: React.Dispatch<React.SetStateAction<boolean>>;
   onChannelJoinAcceptEvent: (waitingId: string) => void;
-  onChannelJoinRefusalEvent: (waitingId: string) => void;
+  onChannelJoinRejectEvent: (waitingId: string) => void;
 }
 
 function MemberList({
@@ -23,7 +23,7 @@ function MemberList({
   isShowWaitList,
   setIsShowWaitList,
   onChannelJoinAcceptEvent,
-  onChannelJoinRefusalEvent,
+  onChannelJoinRejectEvent,
 }: MemberListProps) {
   const navigate = useNavigate();
 
@@ -77,7 +77,7 @@ function MemberList({
                 </SmallButton>
                 <SmallButton
                   onClick={() => {
-                    onChannelJoinRefusalEvent(data.userId);
+                    onChannelJoinRejectEvent(data.userId);
                   }}
                 >
                   거절

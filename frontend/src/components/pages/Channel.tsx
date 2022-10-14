@@ -8,7 +8,7 @@ import socketIOClient from "socket.io-client";
 import {
   currentChannelDetailRequest,
   channelJoinAcceptRequet,
-  channelJoinRefusalRequet,
+  channelJoinRejectRequet,
 } from "@/api/channelFetcher";
 import {
   MainChannelType,
@@ -156,8 +156,8 @@ function Channel() {
         prev.filter((member) => member.userId !== waitingId)
       );
   };
-  const handleChannelJoinRefusalButtonClick = async (waitingId: string) => {
-    const res = await channelJoinRefusalRequet(
+  const handleChannelJoinRejectButtonClick = async (waitingId: string) => {
+    const res = await channelJoinRejectRequet(
       `/api/channels/${channelId}/waiting`,
       waitingId
     );
@@ -209,7 +209,7 @@ function Channel() {
                 isShowWaitList={isShowWaitList}
                 setIsShowWaitList={setIsShowWaitList}
                 onChannelJoinAcceptEvent={handleChannelJoinAcceptButtonClick}
-                onChannelJoinRefusalEvent={handleChannelJoinRefusalButtonClick}
+                onChannelJoinRejectEvent={handleChannelJoinRejectButtonClick}
               />
             </React.Fragment>
           );
