@@ -237,6 +237,7 @@ module.exports = {
    * 
    * @param {String} userId 
    * @param {String} channelId 
+   * @returns 
    */
   async requestEnter(userId, channelId) {
     // 채널 소유권 확인
@@ -259,10 +260,10 @@ module.exports = {
 
     // user channels, waitReqList 수정
     const user = await User.findById(userId);
-    await User.findByIdAndUpdate(userId, {
+    const updatedUser = await User.findByIdAndUpdate(userId, {
       waitReqList: [...user.waitReqList, waitList._id],
-      channels: [...user.channels, channelId]
-    });
+      channels: [...user.channels, channel._id]
+    }, { new: true });
 
     // 이메일 전송
     const owner = await User.findById(channel.ownerId);
@@ -273,6 +274,13 @@ module.exports = {
     const text = `${user.nickname} 님께서 회원님의 채널 [ ${channel.title} ]에 입장 신청하였습니다. 입장을 수락 혹은 거절해주세요!`;
     const html = `<b>${user.nickname}</b>님께서 회원님의 채널 <b>[ ${channel.title} ]</b>에 입장 신청하였습니다.<br/><br/>입장을 수락 혹은 거절해주세요!`;
     await sendEmail(from, to, subject, text, html);
+
+    // 채널 정보 반환
+    const channels = await Promise.all(updatedUser.channels.map(async (channelId) => {
+      const channel = await Channel.findById(channelId);
+      return (({ _id, title, img })=>({ _id, title, img }))(channel)
+    }))
+    return channels
   },
 
   /**
@@ -280,6 +288,7 @@ module.exports = {
    * 
    * @param {String} userId 
    * @param {String} channelId 
+   * @returns
    */
   async cancelEnter(userId, channelId) {
     // waitList 수정
@@ -294,11 +303,11 @@ module.exports = {
     // user channels, waitReqList 수정
     const user = await User.findById(userId);
     const newWaitReqList = user.waitReqList.filter( id => id.str!==waitList._id.str );
-    const newChannels = user.channels.filter( id => id.str!=channelId.str ); 
-    await User.findByIdAndUpdate(userId, { 
+    const newChannels = user.channels.filter( id => id!=channelId );
+    const updatedUser = await User.findByIdAndUpdate(userId, { 
       waitReqList: newWaitReqList,
       channels: newChannels
-    });
+    }, { new: true });
 
     // 이메일 전송
     const channel = await Channel.findById(channelId);
@@ -311,6 +320,12 @@ module.exports = {
     const html = `<b>${user.nickname}</b>님께서 회원님의 채널 <b>[ ${channel.title} ]</b> 입장 신청을 취소하였습니다.`;
     await sendEmail(from, to, subject, text, html);
 
+    // 채널 정보 반환
+    const channels = await Promise.all(updatedUser.channels.map(async (channelId) => {
+      const channel = await Channel.findById(channelId);
+      return (({ _id, title, img })=>({ _id, title, img }))(channel)
+    }))
+    return channels
   },
 
   /**
@@ -401,7 +416,7 @@ module.exports = {
     // waiting user channels, waitReqList 수정
     const user = await User.findById(waitingId);
     const newWaitReqList = user.waitReqList.filter( id => id.str!==waitList._id.str );
-    const newChannels = user.channels.filter( id => id.str!=channelId.str ); 
+    const newChannels = user.channels.filter( id => id!=channelId ); 
     await User.findByIdAndUpdate(waitingId, { 
       waitReqList: newWaitReqList,
       channels: newChannels
@@ -437,6 +452,13 @@ module.exports = {
     return 3;
   },
 
+  /**
+   * 채널 떠나기
+   * 
+   * @param {String} userId 
+   * @param {String} channelId 
+   * @returns
+   */
   async quitChannel(userId, channelId) {
     const channel = await Channel.findById(channelId);
     // 채널 owner 여부 확인
@@ -451,10 +473,17 @@ module.exports = {
     // user의 채널 정보, channel의 멤버 정보 수정
     const user = await User.findById(userId);
     const updatedChannels = user.channels.filter(id => id!=channelId);
-    await User.findByIdAndUpdate(userId, { channels: updatedChannels });
+    const updatedUser = await User.findByIdAndUpdate(userId, { channels: updatedChannels });
 
     const updatedMembers = channel.members.filter(id => id!=userId);
     await Channel.findByIdAndUpdate(channelId, { members: updatedMembers })
+
+    // 채널 정보 반환
+    const channels = await Promise.all(updatedUser.channels.map(async (channelId) => {
+      const channel = await Channel.findById(channelId);
+      return (({ _id, title, img })=>({ _id, title, img }))(channel)
+    }))
+    return channels
   }
 
 };
