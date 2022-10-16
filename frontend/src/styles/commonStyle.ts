@@ -9,12 +9,14 @@ export const BigTitle = styled.h1`
 
   font-size: ${GlobalTheme.fontSize.moreBig};
 `;
+
 export const MediumTitle = styled.div`
   margin-left: 3.5rem;
   font-weight: bold;
   line-height: 1.4;
   font-size: ${GlobalTheme.fontSize.littleBig};
 `;
+
 export const MediumSubTitle = styled.div`
   margin-left: 3.5rem;
   font-size: ${GlobalTheme.fontSize.littleBig};
@@ -22,6 +24,7 @@ export const MediumSubTitle = styled.div`
   display: flex;
   gap: 1rem;
 `;
+
 export const TextOne = styled.p`
   font-weight: bold;
   font-size: ${GlobalTheme.fontSize.medium};
@@ -35,6 +38,7 @@ export const TextTwo = styled.p`
   line-height: 1.7;
   margin: 0;
 `;
+
 export const TitleContainer = styled.div`
   padding: 2rem;
   height: 12%;
@@ -47,6 +51,7 @@ export const EditButtonWrapper = styled.div`
   display: flex;
   gap: 1rem;
 `;
+
 export const EditButton = styled.button<ButtonProps>`
   ${GlobalTheme.buttons}
   background-color:${GlobalTheme.colors.theme};

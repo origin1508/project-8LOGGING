@@ -125,7 +125,8 @@ function Channel() {
       show(e);
     };
 
-  const handleChatLogConfirmClick = async () => {
+  const handleChatLogConfirmClick = async (e: React.FormEvent) => {
+    e.preventDefault();
     if (editInputRef.current) {
       const chatMessage = editInputRef.current.value;
       if (!chatMessage) {
@@ -139,9 +140,13 @@ function Channel() {
           selectedChat,
           chatMessage
         );
+        const { datas } = await channelChatLogRequest(
+          `/api/chat/log/${channelId}`
+        );
+        setChatLogs(datas);
+        setIsChatLogEditMode(false);
       }
     }
-    setIsChatLogEditMode(false);
   };
 
   const handleChatLogCancelClick = () => {

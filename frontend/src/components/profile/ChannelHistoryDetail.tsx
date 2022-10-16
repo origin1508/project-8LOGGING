@@ -3,7 +3,7 @@ import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import ChannelInfo from "@/components/channelDetail/ChannelInfo";
 import { ChannelDetailType } from "@/types/channel/channelTypes";
-import { loginUserIdState, curUserState } from "@/recoil/atoms/authState";
+import { loginUserIdState } from "@/recoil/atoms/authState";
 import { useRecoilValue } from "recoil";
 
 interface Props {

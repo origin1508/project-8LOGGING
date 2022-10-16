@@ -4,7 +4,7 @@ import GlobalTheme from "@/styles/theme";
 
 interface ChannelEditProps {
   editInputRef: React.RefObject<HTMLInputElement>;
-  onChatLogEditConfirmClickEvent: () => void;
+  onChatLogEditConfirmClickEvent: (e: React.FormEvent) => void;
   onChatLogEditCancelClickEvent: () => void;
 }
 
@@ -16,7 +16,7 @@ const ChannelEdit = ({
   return (
     <ChatEditContainer>
       <ChatEditInput ref={editInputRef} placeholder="내용을 입력하세요" />
-      <ChatEditButton onClick={onChatLogEditConfirmClickEvent}>
+      <ChatEditButton type="submit" onClick={onChatLogEditConfirmClickEvent}>
         Confirm
       </ChatEditButton>
       <ChatEditButton onClick={onChatLogEditCancelClickEvent}>
@@ -26,7 +26,7 @@ const ChannelEdit = ({
   );
 };
 
-const ChatEditContainer = styled.div`
+const ChatEditContainer = styled.form`
   width: auto;
 `;
 
