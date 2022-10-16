@@ -30,6 +30,7 @@ customAxios.interceptors.response.use(
       // throw new Error(`This is request error!`);
     }
     if (error.response.status >= 500) {
+      // status 500번대 서버 에러의 경우 Server에서 에러가 났다는 UI를 사용자에게 알려줌
       console.log(error);
       throw new Error("This is server error!");
     }
