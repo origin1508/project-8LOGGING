@@ -92,7 +92,12 @@ module.exports = {
   async getChannelList(page, status) {
     const perPage = 9; // 페이지당 9개씩 보여주기
     const allChannelsCount = await Channel.find({}).count();
-    const totalPages = Math.floor(allChannelsCount / perPage + 1);
+    let totalPages = null;
+    if (allChannelsCount % perPage === 0) {
+      totalPages = allChannelsCount / perPage;
+    } else {
+      totalPages = Math.floor(allChannelsCount / perPage + 1);
+    }
 
     const channels = await Channel.find({ status })
       .sort({ _id: -1 })
