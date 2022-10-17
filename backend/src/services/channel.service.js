@@ -148,7 +148,12 @@ module.exports = {
       }
     });
 
-    const totalPages = Math.floor(filteredChannels.length / perPage + 1);
+    let totalPages = null;
+    if (filteredChannels.length % perPage === 0) {
+      totalPages = filteredChannels.length / perPage;
+    } else {
+      totalPages = Math.floor(filteredChannels.length / perPage + 1);
+    }
     const channels = filteredChannels.slice((page-1)*perPage, page*perPage)
     const channelItems = channels.map((channel) => {
       channel.createdAt = dateToString(channel.createdAt);
