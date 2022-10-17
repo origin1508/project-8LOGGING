@@ -27,7 +27,7 @@ customAxios.interceptors.response.use(
     if (error.response.status >= 400 && error.response.status < 500) {
       console.log(error);
       return Promise.reject(error);
-      // throw new Error(`This is request error!`);
+      // throw new Error(error);
     }
     if (error.response.status >= 500) {
       // status 500번대 서버 에러의 경우 Server에서 에러가 났다는 UI를 사용자에게 알려줌
