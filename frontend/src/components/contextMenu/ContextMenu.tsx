@@ -6,13 +6,16 @@ const CONTEXT_MENU_ID = "CONTEXT_MENU_ID";
 
 interface ContextMenuProps {
   items: Array<string>;
+  onContextMenuClickEvent: (itemName: string) => () => void;
 }
 
-const ContextMenu = ({ items }: ContextMenuProps) => {
+const ContextMenu = ({ items, onContextMenuClickEvent }: ContextMenuProps) => {
   return (
     <Menu id={CONTEXT_MENU_ID}>
       {items.map((item) => (
-        <Item key={item}>{item}</Item>
+        <Item key={item} onClick={onContextMenuClickEvent(item)}>
+          {item}
+        </Item>
       ))}
     </Menu>
   );

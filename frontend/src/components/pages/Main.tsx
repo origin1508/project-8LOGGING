@@ -6,6 +6,7 @@ import BasePageComponent from "@/components/hoc/BasePageComponent";
 
 function Main() {
   const navigate = useNavigate();
+
   return (
     <BasePageComponent>
       <MainContent>

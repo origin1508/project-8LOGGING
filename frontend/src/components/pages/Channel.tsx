@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useContextMenu } from "react-contexify";
 import styled from "styled-components";
+import GlobalTheme from "@/styles/theme";
 import { loginUserIdState } from "@/recoil/atoms/authState";
 import { sidebarChannelsState } from "@/recoil/atoms/channelState";
 import { useRecoilValue, useSetRecoilState } from "recoil";
@@ -20,15 +21,17 @@ import {
 import useModal from "@/hooks/useModal";
 import Modal from "@/components/modal/Modal";
 import BasePageComponent from "@/components/hoc/BasePageComponent";
-import GlobalTheme from "@/styles/theme";
 import ChannelHeader from "@/components/channel/ChannelHeader";
 import MemberList from "@/components/channel/MemberList";
 import ChannelSendButton from "@/components/channel/ChannelSendButton";
 import ContextMenu from "@/components/contextMenu/ContextMenu";
+import ChannelEdit from "@/components/channel/ChannelEdit";
 import { TextOne, TextTwo } from "@/styles/commonStyle";
 import {
   channelMessageRequest,
   channelChatLogRequest,
+  channelChatLogDeleteRequest,
+  channelChatLogUpdateRequest,
 } from "@/api/channelFetcher";
 
 const socket = socketIOClient(`${process.env.REACT_APP_SERVER_BASE_URL}/chat`, {
@@ -45,8 +48,11 @@ function Channel() {
   const [entryFailureMessage, setEntryFailureMessage] = useState();
   const [waitList, setWaitList] = useState<waitListType[]>([]);
   const [isShowWaitList, setIsShowWaitList] = useState(false);
-  const { channelId } = useParams();
+  const [selectedChat, setSelectedChat] = useState("");
+  const [isChatLogEditMode, setIsChatLogEditMode] = useState(false);
   const loginUserId = useRecoilValue(loginUserIdState);
+
+  const { channelId } = useParams();
   const setSidebarChannels = useSetRecoilState(sidebarChannelsState);
   const navigate = useNavigate();
   const [
@@ -58,7 +64,9 @@ function Channel() {
   ] = useModal(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
+  const editInputRef = useRef<HTMLInputElement>(null);
   const chatRef = useRef<HTMLDivElement>(null);
+
   const prepareScroll = () => {
     setTimeout(scrollToBottom, 500);
   };
@@ -95,7 +103,6 @@ function Channel() {
       const { datas } = await channelChatLogRequest(
         `/api/chat/log/${channelId}`
       );
-
       setChatLogs(datas);
     })();
     // 이게 맞나..?
@@ -155,6 +162,69 @@ function Channel() {
     }
   };
 
+  const handleShowContextMenuClick =
+    (channelId: string) => (e: React.MouseEvent) => {
+      setSelectedChat(channelId);
+      show(e);
+    };
+
+  const handleChatLogConfirmClick = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (editInputRef.current) {
+      const chatMessage = editInputRef.current.value;
+      if (!chatMessage) {
+        setIsChatLogEditMode(false);
+        return;
+      }
+      if (channelId) {
+        await channelChatLogUpdateRequest(
+          "/api/chat/log",
+          channelId,
+          selectedChat,
+          chatMessage
+        );
+        const { datas } = await channelChatLogRequest(
+          `/api/chat/log/${channelId}`
+        );
+        setChatLogs(datas);
+        setIsChatLogEditMode(false);
+      }
+    }
+  };
+
+  const handleChatLogCancelClick = () => {
+    setIsChatLogEditMode(false);
+  };
+
+  const handleContextMenuuClick = (itemName: string) => async () => {
+    switch (itemName) {
+      case "답장하기": {
+        break;
+      }
+
+      case "수정하기": {
+        setIsChatLogEditMode(true);
+        break;
+      }
+
+      case "삭제하기":
+        {
+          if (channelId) {
+            await channelChatLogDeleteRequest(
+              "/api/chat/log",
+              channelId,
+              selectedChat
+            );
+            setSelectedChat("");
+          }
+        }
+        break;
+
+      default:
+        throw new Error("This function is not implemented");
+    }
+  };
+
   return (
     <BasePageComponent>
       {channelData &&
@@ -170,7 +240,10 @@ function Channel() {
                 <ChatForm>
                   <ContentContainer ref={chatRef}>
                     {chatLogs.map((chat) => (
-                      <UserContainer key={chat._id}>
+                      <UserContainer
+                        key={chat._id}
+                        onContextMenu={handleShowContextMenuClick(chat._id)}
+                      >
                         <UserImg itemProp={chat.userInfo.profPic} />
                         <UserInfo onContextMenu={show}>
                           <ContentInfoContainer>
@@ -178,6 +251,17 @@ function Channel() {
                             <TextTwo>{chat.createdAt}</TextTwo>
                           </ContentInfoContainer>
                           <TextTwo>{chat.chat}</TextTwo>
+                          {selectedChat === chat._id && isChatLogEditMode && (
+                            <ChannelEdit
+                              editInputRef={editInputRef}
+                              onChatLogEditConfirmClickEvent={
+                                handleChatLogConfirmClick
+                              }
+                              onChatLogEditCancelClickEvent={
+                                handleChatLogCancelClick
+                              }
+                            />
+                          )}
                         </UserInfo>
                       </UserContainer>
                     ))}
@@ -217,7 +301,10 @@ function Channel() {
       >
         {entryFailureMessage}
       </Modal>
-      <ContextMenu items={menuItems} />
+      <ContextMenu
+        items={menuItems}
+        onContextMenuClickEvent={handleContextMenuuClick}
+      />
     </BasePageComponent>
   );
 }
@@ -251,7 +338,7 @@ const ChatInput = styled.input`
   width: 90%;
   height: 4rem;
   margin-top: 2rem;
-  border-radius: 3rem;
+  border-radius: 4px;
   border: 1.2px solid ${GlobalTheme.colors.theme};
 `;
 

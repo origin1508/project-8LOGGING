@@ -74,6 +74,14 @@ export async function channelEnterRequest(endPoint: string, message: string) {
   );
   return res.data;
 }
+export async function channelEnteredCancelRequest(endPoint: string) {
+  const res = await customAxios.delete(endPoint, {
+    headers: {
+      Authorization: `Bearer ${Storage.getToken()}`,
+    },
+  });
+  return res.data;
+}
 
 export async function channelMessageRequest(
   endPoint: string,
@@ -102,6 +110,46 @@ export async function channelChatLogRequest(endPoint: string) {
       Authorization: `Bearer ${Storage.getToken()}`,
     },
   });
+  return res.data;
+}
+
+export async function channelChatLogDeleteRequest(
+  endPoint: string,
+  roomId: string,
+  chatId: string
+) {
+  const bodyData = JSON.stringify({
+    roomId: roomId,
+    chatId: chatId,
+  });
+  const res = await customAxios.delete(endPoint, {
+    data: bodyData,
+    headers: {
+      Authorization: `Bearer ${Storage.getToken()}`,
+    },
+  });
+  return res.data;
+}
+
+export async function channelChatLogUpdateRequest(
+  endPoint: string,
+  roomId: string,
+  chatId: string,
+  chat: string
+) {
+  const res = await customAxios.put(
+    endPoint,
+    {
+      roomId: roomId,
+      chatId: chatId,
+      chat: chat,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${Storage.getToken()}`,
+      },
+    }
+  );
   return res.data;
 }
 

@@ -1,13 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { aboutChartDataRequest } from "@/api/aboutFetcher";
-
-interface ChartDataType {
-  labels: Array<string>;
-  data?: Array<number>;
-  data1?: Array<number>;
-  data2?: Array<number>;
-  data3?: Array<number>;
-}
+import { ChartDataType } from "@/types/chart/chartDataType";
 
 const useChartData = (dataName: string, initialValue: ChartDataType) => {
   const [chartInfo, setCharttInfo] = useState<ChartDataType>(initialValue);
@@ -19,7 +12,9 @@ const useChartData = (dataName: string, initialValue: ChartDataType) => {
     })();
   }, []);
 
-  return [chartInfo];
+  const rtnChartData = useMemo(() => chartInfo, [chartInfo]);
+
+  return [rtnChartData];
 };
 
 export default useChartData;
