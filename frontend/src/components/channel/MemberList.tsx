@@ -117,6 +117,7 @@ const MemberListWrapper = styled.div`
   flex-direction: column;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   margin-left: 1rem;
+  margin-right: 1rem;
 `;
 
 const MemberListContainer = styled.div`
@@ -127,15 +128,18 @@ const MemberListContainer = styled.div`
 `;
 
 const WaitListContainer = styled.div<{ isShowWaitList: boolean }>`
-  display: ${(props) => (props.isShowWaitList ? "" : "none")};
   position: absolute;
   top: 8rem;
   padding: 3rem;
   width: 70%;
   height: 60%;
-  border-radius: 8px;
+  transform: scale(0);
+  transform-origin: 90% -4%;
+  border-radius: 2px;
+  transition: all 0.25s ease;
   background-color: ${GlobalTheme.colors.lightTwoGray};
   box-shadow: 1px 1px 5px ${GlobalTheme.colors.gray};
+  ${(props) => props.isShowWaitList && "transform: scale(1);"};
 `;
 
 const UserContainer = styled.div`
