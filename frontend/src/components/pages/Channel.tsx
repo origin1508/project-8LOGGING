@@ -112,9 +112,12 @@ function Channel() {
         return prev.filter((chat) => chat._id !== data._id);
       });
     });
-    // return () => {
-    //   customSocket.disconnect();
-    // };
+    return () => {
+      customSocket.off("receive-chatLog");
+      customSocket.off("receive-create-chat");
+      customSocket.off("receive-modify-chat");
+      customSocket.off("receive-remove-chat");
+    };
   }, [channelId]);
 
   const handleChannelContentChange = useCallback(
