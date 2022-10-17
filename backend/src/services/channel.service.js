@@ -319,16 +319,17 @@ module.exports = {
     await WaitList.findOneAndUpdate(
       { channelId },
       {
-        waiting: waitList.waiting.filter((id) => id != userId),
+        waiting: waitList.waiting.filter((id) => String(id) != String(userId)),
       }
     );
 
     // user channels, waitReqList 수정
     const user = await User.findById(userId);
     const newWaitReqList = user.waitReqList.filter(
-      (id) => id.str !== waitList._id.str
+      (id) => String(id) !== String(waitList._id)
     );
-    const newChannels = user.channels.filter((id) => id != channelId);
+    console.log("newWaitreqlist:",newWaitReqList);
+    const newChannels = user.channels.filter((id) => String(id) != String(channelId));
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       {
