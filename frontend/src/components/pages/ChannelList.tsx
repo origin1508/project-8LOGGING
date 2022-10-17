@@ -170,6 +170,7 @@ const CardsContainer = styled.div`
   display: flex;
   height: 80%;
   align-itmes: center;
+  justify-content: start;
   flex-wrap: wrap;
   gap: 3rem;
 `;
