@@ -48,7 +48,6 @@ function ChannelHistoryCard({
           <Button
             onClick={() => {
               onMoreClick(channelUuid, index);
-              console.log(index);
             }}
           >
             More
@@ -60,9 +59,8 @@ function ChannelHistoryCard({
 }
 
 const CardContainer = styled.div`
-  width: 27rem;
-  height: 27rem;
-  margin: auto;
+  width: 25rem;
+  height: 25rem;
   border-radius: 0.7rem;
   display: flex;
   flex-direction: column;

@@ -153,6 +153,7 @@ const Tab = styled.div`
 
 const ChannelHistoryContainer = styled.div`
   overflow: hidden;
+  background-color: blue;
   min-width: 60rem;
   width: 45%;
   height: 80vh;
@@ -160,8 +161,9 @@ const ChannelHistoryContainer = styled.div`
   border-radius: 1rem;
   background-color: white;
   display: flex;
-  align-items: center;
   flex-direction: column;
+  align-items: center;
+
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 `;
 const TitleContainer = styled.div`
@@ -174,16 +176,14 @@ const TitleContainer = styled.div`
 
 const CardContainer = styled.div`
   display: flex;
-  justify-content: center;
+  padding: 4rem;
+  justify-content: start;
   align-items: center;
   flex-wrap: wrap;
-  gap: rem;
+  gap: 2rem;
   overflow-y: scroll;
   &::-webkit-scrollbar {
     display: none; /* Chrome, Safari, Opera*/
-  }
-  & > * {
-    margin-bottom: 2rem;
   }
 `;
 
