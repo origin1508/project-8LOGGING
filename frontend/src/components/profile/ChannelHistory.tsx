@@ -35,6 +35,7 @@ function ChannelHistory() {
     handleModalCloseButtonClick,
   ] = useModal(false);
   const [index, setIndex] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchProfileOwner = async (curUserId: string) => {
     const res = await getAuthInformationById("/api/users/userinfo", curUserId);
@@ -48,12 +49,14 @@ function ChannelHistory() {
     setChannelDetailInfo([res.datas]);
     setSelectedChannelId(res.datas._id);
     setIsShowMore(true);
+    console.log(channels);
     if (index) {
       setIndex(index);
     }
   };
 
   const handleChannelCancellation = async (selectedChannelId: string) => {
+    setIsLoading(true);
     try {
       await channelEnteredCancelRequest(
         `/api/channels/${selectedChannelId}/enter`
@@ -68,6 +71,7 @@ function ChannelHistory() {
       setResMessage(errorMessage);
       console.log(errorMessage);
     }
+    setIsLoading(false);
   };
 
   return (
@@ -121,6 +125,7 @@ function ChannelHistory() {
       </CardContainer>
       <ChannelHistoryDetail
         isShowMore={isShowMore}
+        isLoading={isLoading}
         setIsShowMore={setIsShowMore}
         channelDetailInfo={channelDetailInfo}
         selectedChannelId={selectedChannelId}
@@ -177,7 +182,6 @@ const TitleContainer = styled.div`
 const CardContainer = styled.div`
   display: flex;
   padding: 4rem;
-  justify-content: start;
   align-items: center;
   flex-wrap: wrap;
   gap: 2rem;
