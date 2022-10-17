@@ -124,7 +124,7 @@ module.exports = {
    * @returns
    */
   async searchChannel(page, status, keyword, filter) {
-    const perPage = 9; // 페이지당 9개씩 보여주기
+    const perPage = 12; // 페이지당 9개씩 보여주기
     const allChannels = await Channel.find({ status });
 
     // 필터 설정하기
