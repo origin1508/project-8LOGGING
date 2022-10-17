@@ -7,17 +7,19 @@ interface Props {
   verificationCode: string;
   setVerificationCode: React.Dispatch<React.SetStateAction<string>>;
   errMessage: string;
+  emailToSend: string;
 }
 
 const AuthEmailVerification = ({
   verificationCode,
   setVerificationCode,
   errMessage,
+  emailToSend,
 }: Props) => {
   return (
     <EmailVerificationContainer>
-      <Title>Email Verification</Title>
-      <Text>Please enter the verification code sent to email</Text>
+      <Title>이메일 인증</Title>
+      <Text>{emailToSend}로 전송된 인증코드를 입력해주세요.</Text>
       <CodeInput
         placeholder="enter code"
         value={verificationCode}

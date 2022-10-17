@@ -56,7 +56,7 @@ const AuthReigster: React.FC<Props> = ({
     <RegistrationFormContainer>
       <BaseIntputContainer>
         <RegistrationInput
-          placeholder="Email"
+          placeholder="이메일"
           name="email"
           value={authFormState.email}
           isDuplicated={isDuplicated.email}
@@ -68,7 +68,7 @@ const AuthReigster: React.FC<Props> = ({
         />
         {authFormState.email && !isValidEmail && (
           <BaseValidateTextContainer>
-            Please check your email
+            올바른 이메일을 입력해주세요.
           </BaseValidateTextContainer>
         )}
         {isVerifiedEmail ? (
@@ -79,7 +79,7 @@ const AuthReigster: React.FC<Props> = ({
               setIsVerifiedEmail(false);
             }}
           >
-            Verify
+            인증확인
           </VerifiedEmailButton>
         ) : (
           <EmailVerificationButton
@@ -89,13 +89,13 @@ const AuthReigster: React.FC<Props> = ({
             }}
             disabled={!isValidEmail && true}
           >
-            Verify
+            인증요청
           </EmailVerificationButton>
         )}
       </BaseIntputContainer>
       <BaseIntputContainer>
         <RegistrationInput
-          placeholder="Nickname"
+          placeholder="닉네임"
           name="nickname"
           value={authFormState.nickname}
           isDuplicated={isDuplicated.nickname}
@@ -106,13 +106,13 @@ const AuthReigster: React.FC<Props> = ({
         />
         {authFormState.nickname && !isValidNickname && (
           <BaseValidateTextContainer>
-            Please check your nickname
+            닉네임을 4글자 이상 사용해주세요.
           </BaseValidateTextContainer>
         )}
       </BaseIntputContainer>
       <BaseIntputContainer>
         <RegistrationInput
-          placeholder="Password"
+          placeholder="비밀번호"
           type="password"
           name="password"
           value={authFormState.password}
@@ -120,13 +120,13 @@ const AuthReigster: React.FC<Props> = ({
         />
         {authFormState.password && !isValidPassword && (
           <BaseValidateTextContainer>
-            Special characters and numbers from 8 to 15.
+            8~15자 영문 소문자, 숫자, 특수문자를 사용해주세요.
           </BaseValidateTextContainer>
         )}
       </BaseIntputContainer>
       <BaseIntputContainer>
         <RegistrationInput
-          placeholder="Confirm password"
+          placeholder="비밀번호 재확인"
           type="password"
           name="confirmPassword"
           value={authFormState.confirmPassword}
@@ -134,7 +134,7 @@ const AuthReigster: React.FC<Props> = ({
         />
         {authFormState.confirmPassword && !isPasswordSame && (
           <BaseValidateTextContainer>
-            Please check your password and confirm password
+            비밀번호가 일치하지 않습니다.
           </BaseValidateTextContainer>
         )}
       </BaseIntputContainer>
@@ -144,7 +144,7 @@ const AuthReigster: React.FC<Props> = ({
           type="submit"
           onClick={onRegisterSubmitEvent}
         >
-          Register
+          가입하기
         </RegistrationButton>
       </RegistrationButtonContainer>
     </RegistrationFormContainer>

@@ -20,7 +20,7 @@ import {
 } from "@/api/authFetcher";
 import { useSetRecoilState } from "recoil";
 import { loginUserIdState } from "@/recoil/atoms/authState";
-const TapMenu = ["Sign in", "Registration"];
+const TapMenu = ["로그인", "회원가입"];
 
 const Auth = () => {
   const [tabIndex, setTabIndex] = useState(0);
@@ -90,7 +90,7 @@ const Auth = () => {
     e.preventDefault();
     const { email, nickname, password } = authFormState;
     if (!isVerifiedEmail) {
-      setErrMessage("Please verify email");
+      setErrMessage("이메일 인증이 필요합니다.");
       handleModalOpenButtonClick();
       return;
     }
@@ -115,8 +115,9 @@ const Auth = () => {
     } catch (error) {
       const err = error as ErrorType;
       const status = err.response.data.status;
-      if (status === 400) setErrMessage("Incorret email or password");
-      if (status === 403) setErrMessage("Your account has been deleted");
+      if (status === 400)
+        setErrMessage("이메일 혹은 비밀번호가 올바르지 않습니다.");
+      if (status === 403) setErrMessage("탈퇴된 회원입니다.");
       handleModalOpenButtonClick();
     }
   };
@@ -150,7 +151,7 @@ const Auth = () => {
         setVerificationCode("");
         handleEmailVerificationAcceptButtonClick();
       } else {
-        setErrMessage(res.message);
+        setErrMessage("이메일 인증번호가 일치하지 않습니다.");
       }
     }
   };
@@ -227,6 +228,7 @@ const Auth = () => {
           verificationCode={verificationCode}
           setVerificationCode={setVerificationCode}
           errMessage={errMessage}
+          emailToSend={authFormState.email}
         />
       </Modal>
     </BasePageComponent>

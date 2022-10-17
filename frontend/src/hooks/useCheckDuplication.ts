@@ -31,7 +31,10 @@ const useCheckDuplication = (initialState: InitialState) => {
         });
       }
     } catch (error) {
-      setErrMessage(`${endPoint} already exist`);
+      if (endPoint === "email") setErrMessage("이미 사용 중인 이메일입니다.");
+      if (endPoint === "nickname")
+        setErrMessage("이미 사용 중인 닉네임입니다.");
+
       setIsDuplicated((prev) => {
         return {
           ...prev,

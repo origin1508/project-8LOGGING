@@ -20,6 +20,9 @@ const AboutPloggingComponent = React.lazy(
 const ChannelPageComponent = React.lazy(
   () => import("@/components/pages/Channel")
 );
+const NotFoundPageComponent = React.lazy(
+  () => import("@/components/pages/NotFound")
+);
 const CustomRouter = () => {
   return (
     <React.Fragment>
@@ -43,6 +46,7 @@ const CustomRouter = () => {
             path="/channels/:channelId"
             element={<ChannelPageComponent />}
           />
+          <Route path="*" element={<NotFoundPageComponent />} />
         </Routes>
       </Suspense>
       <Footer />

@@ -24,7 +24,7 @@ const AuthLogin = ({
     <AuthLoginFormContainer onSubmit={onLoginSubmitEvent}>
       <BaseIntputContainer>
         <AuthLoginInput
-          placeholder="Email"
+          placeholder="이메일"
           type="email"
           name="email"
           onChange={onLoginFormChangeEvent}
@@ -32,13 +32,13 @@ const AuthLogin = ({
         />
         {loginValue.email && !isValid.email && (
           <BaseValidateTextContainer>
-            Please check your email
+            올바른 이메일을 입력해주세요.
           </BaseValidateTextContainer>
         )}
       </BaseIntputContainer>
       <BaseIntputContainer>
         <AuthLoginInput
-          placeholder="Password"
+          placeholder="비밀번호"
           type="password"
           name="password"
           onChange={onLoginFormChangeEvent}
@@ -46,13 +46,13 @@ const AuthLogin = ({
         />
         {loginValue.password && !isValid.password && (
           <BaseValidateTextContainer>
-            Please check your password
+            올바른 비밀번호를 입력해주세요.
           </BaseValidateTextContainer>
         )}
       </BaseIntputContainer>
       <AuthLoginButtonContainer>
         <AuthLoginButton type="submit" disabled={!isValidAll && true}>
-          Sign in
+          로그인
         </AuthLoginButton>
       </AuthLoginButtonContainer>
     </AuthLoginFormContainer>
@@ -93,6 +93,10 @@ const AuthLoginButton = styled.button`
   background-color: ${GlobalTheme.colors.theme};
   text-align: center;
   cursor: pointer;
+  &:disabled {
+    color: ${GlobalTheme.colors.lightGray};
+    background-color: ${GlobalTheme.colors.gray};
+  }
 `;
 
 export default AuthLogin;

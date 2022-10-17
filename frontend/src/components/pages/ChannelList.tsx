@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSetRecoilState } from "recoil";
-import { sidebarChannelsState } from "@/recoil/atoms/channelState";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import useModal from "@/hooks/useModal";
@@ -26,7 +24,6 @@ const ChannelList = () => {
   const isLoggedIn = useMemo(() => {
     return Storage.getToken() ? true : false;
   }, [Storage.getToken()]);
-  const setSidebarChannels = useSetRecoilState(sidebarChannelsState);
 
   const [channels, setChannels] = useState<Array<ChannelsType>>([]);
   const [resMessage, setResMessage] = useState("");
@@ -39,7 +36,7 @@ const ChannelList = () => {
   const [page, setPage] = useState<number>(1);
   const [keyword, setKeyword] = useState("");
   const [filter, setFilter] = useState("none");
-
+  const [isLoading, setIsLoading] = useState(false);
   const status = 0;
 
   const [
@@ -105,6 +102,7 @@ const ChannelList = () => {
   };
 
   const handleChannelEnterDecideClick = async (selectedChannelId: string) => {
+    setIsLoading(true);
     try {
       await channelEnterRequest(
         `/api/channels/${selectedChannelId}/enter`,
@@ -115,6 +113,7 @@ const ChannelList = () => {
       const err = error as ErrorType;
       setResMessage(err.response.data.message);
     }
+    setIsLoading(false);
     handleModalOpenButtonClick();
   };
 
@@ -172,6 +171,7 @@ const ChannelList = () => {
           <ChannelDetail
             isShowMore={isShowMore}
             setIsShowMore={setIsShowMore}
+            isLoading={isLoading}
             channelDetailInfo={channelDetailInfo}
             onEnterDecideClickEvent={handleChannelEnterDecideClick}
             selectedChannelId={selectedChannelId}

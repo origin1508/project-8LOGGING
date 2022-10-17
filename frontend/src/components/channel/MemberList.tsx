@@ -5,6 +5,7 @@ import GlobalTheme from "@/styles/theme";
 import CustomIcon from "@/components/icons/CustomIcon";
 import { TextOne, SmallButton, BigTitle } from "@/styles/commonStyle";
 import { ChannelMemberType, waitListType } from "@/types/channel/channelTypes";
+import LoadingCycle from "@/components/loading/LoadingCycle";
 
 interface MemberListProps {
   channelMemberList: ChannelMemberType[];
@@ -12,9 +13,12 @@ interface MemberListProps {
   isOwner: boolean;
   ownerId: string;
   isShowWaitList: boolean;
+  isLoading: boolean;
   setIsShowWaitList: React.Dispatch<React.SetStateAction<boolean>>;
-  onChannelJoinAcceptEvent: (waitingId: string) => void;
-  onChannelJoinRejectEvent: (waitingId: string) => void;
+  onChannelJoinPermissionButtonClickEvent: (
+    e: React.MouseEvent<HTMLButtonElement>,
+    waitingId: string
+  ) => void;
   onChannelLeaveEvent: () => void;
 }
 
@@ -24,9 +28,9 @@ function MemberList({
   isOwner,
   ownerId,
   isShowWaitList,
+  isLoading,
   setIsShowWaitList,
-  onChannelJoinAcceptEvent,
-  onChannelJoinRejectEvent,
+  onChannelJoinPermissionButtonClickEvent,
   onChannelLeaveEvent,
 }: MemberListProps) {
   const navigate = useNavigate();
@@ -104,20 +108,23 @@ function MemberList({
               </UserInfo>
               <ButtonContainer>
                 <AcceptButton
-                  onClick={() => {
-                    onChannelJoinAcceptEvent(data.userId);
+                  name="accept"
+                  onClick={(e) => {
+                    onChannelJoinPermissionButtonClickEvent(e, data.userId);
                   }}
                 >
                   수락
                 </AcceptButton>
                 <RejectButton
-                  onClick={() => {
-                    onChannelJoinRejectEvent(data.userId);
+                  name="reject"
+                  onClick={(e) => {
+                    onChannelJoinPermissionButtonClickEvent(e, data.userId);
                   }}
                 >
                   거절
                 </RejectButton>
               </ButtonContainer>
+              {isLoading && <LoadingCycle />}
             </UserContainer>
           );
         })}
@@ -174,6 +181,7 @@ const UserContainer = styled.div`
   align-items: center;
   gap: 3rem;
   padding-bottom: 1rem;
+  position: relative;
 `;
 
 const UserImg = styled.div`
@@ -193,6 +201,7 @@ const UserInfo = styled.div`
 `;
 
 const ButtonContainer = styled.div`
+  width: 100%;
   display: flex;
   gap: 1rem;
 `;
@@ -246,10 +255,10 @@ const ChannelButton = styled.button`
 `;
 
 const AcceptButton = styled(SmallButton)`
-  width: 5rem;
+  width: 4.5rem;
 `;
 const RejectButton = styled(SmallButton)`
-  width: 5rem;
+  width: 4.5rem;
   color: ${GlobalTheme.colors.theme};
   background-color: ${GlobalTheme.colors.white};
   border: 1px solid ${GlobalTheme.colors.theme};
