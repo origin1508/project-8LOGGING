@@ -494,6 +494,52 @@ module.exports = {
       return (({ _id, title, img })=>({ _id, title, img }))(channel)
     }))
     return channels
+  },
+
+  /**
+   * 채널 삭제하기
+   * 
+   * @param {String} userId 
+   * @param {String} channelId 
+   * @returns
+   */
+  async deleteChannel(userId, channelId) {
+    const channel = await Channel.findById(channelId);
+    // 채널 owner 여부 확인
+    if (channel.ownerId != userId) {
+      throw ApiError.badRequest("채널 개설자만 채널을 삭제할 수 있습니다.")
+    }
+
+    // 각 멤버의 채널 정보 수정
+    await Promise.all(channel.members.map( async (memberId) => {
+      const user = await User.findById(memberId);
+      const updatedChannels = user.channels.filter(id => id!=channelId);
+      await User.findByIdAndUpdate(memberId, { channels: updatedChannels });
+    } ));
+
+    // waitResList 수정
+    const waitList = await WaitList.findOne({ channelId });
+    const owner = await User.findById(userId);
+    const updatedWaitResList = owner.waitResList.filter( waitListId => waitListId!=waitList._id );
+    const updatedUser = await User.findByIdAndUpdate(userId, { waitResList: updatedWaitResList });
+
+    // waitReqList 수정
+    await Promise.all(waitList.waiting.map( async (userId) => {
+      const user = await User.findById(userId);
+      const updatedWaitReqList = user.waitReqList.filter( waitListId => waitListId!=waitList._id );
+      await User.findByIdAndUpdate(userId, { waitReqList: updatedWaitReqList });
+    } ))
+
+    // channel, waitList 삭제
+    await Channel.findByIdAndDelete(channelId);
+    await WaitList.findByIdAndDelete(waitList._id)
+
+    // 채널 정보 반환
+    const channels = await Promise.all(updatedUser.channels.map(async (channelId) => {
+      const channel = await Channel.findById(channelId);
+      return (({ _id, title, img })=>({ _id, title, img }))(channel)
+    }))
+    return channels
   }
 
 };
