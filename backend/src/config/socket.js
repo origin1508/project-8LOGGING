@@ -9,10 +9,12 @@ const socketConfig = (server) => {
     console.log(`chat 연결 ${socket.id}`);
     
 
-    socket.on("enter", (data) => {
+    socket.on("enter-chat", async (data) => {
       console.log(data.roomId + "에 접속");
       socket.roomId = data.roomId;
-      socket.join(data.roomId);
+      const chatLog = await chatService.getChatLog(socket.roomId);
+      socket.join(socket.roomId);
+      socket.to(socket.roomId).emit('receive-chatLog', chatLog);
     });
 
     socket.on("create-chat", async (data) => {
