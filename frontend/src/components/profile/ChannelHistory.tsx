@@ -123,7 +123,6 @@ function ChannelHistory() {
         isShowMore={isShowMore}
         setIsShowMore={setIsShowMore}
         channelDetailInfo={channelDetailInfo}
-        onEnterDecideClickEvent={(s) => console.log(s)}
         selectedChannelId={selectedChannelId}
         onEnterdCancleClickEvent={handleChannelCancellation}
         channelStatus={index}
