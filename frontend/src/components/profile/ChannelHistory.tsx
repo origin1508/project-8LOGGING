@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { curUserState } from "@/recoil/atoms/authState";
-import { useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import GlobalTheme from "@/styles/theme";
 import ChannelHistoryCard from "./ChannelHistoryCard";
 import { BigTitle } from "@/styles/commonStyle";
@@ -11,12 +11,13 @@ import {
 } from "@/api/channelFetcher";
 import { ChannelDetailType } from "@/types/channel/channelTypes";
 import { ErrorType } from "@/types/error/errorType";
+import { getAuthInformationById } from "@/api/authFetcher";
 import ChannelHistoryDetail from "./ChannelHistoryDetail";
 import Modal from "../modal/Modal";
 import useModal from "@/hooks/useModal";
 
 function ChannelHistory() {
-  const curUser = useRecoilValue(curUserState);
+  const [curUser, setCurUser] = useRecoilState(curUserState);
   const [resMessage, setResMessage] = useState("");
   const channels = curUser.channels;
   const [tabIndex, setTabIndex] = useState(0);
@@ -34,6 +35,12 @@ function ChannelHistory() {
     handleModalCloseButtonClick,
   ] = useModal(false);
   const [index, setIndex] = useState(0);
+
+  const fetchProfileOwner = async (curUserId: string) => {
+    const res = await getAuthInformationById("/api/users/userinfo", curUserId);
+    setCurUser(res);
+  };
+
   const handleMoreClick = async (channelUuid: string, index?: number) => {
     const res = await currentChannelDetailRequest(
       `/api/channels/${channelUuid}`
@@ -53,11 +60,13 @@ function ChannelHistory() {
       );
       handleModalOpenButtonClick();
       setIsShowMore(false);
+      fetchProfileOwner(curUser._id);
       setResMessage("취소 완료");
     } catch (error) {
       const err = error as ErrorType;
-      setResMessage(err.response.data.message);
-      console.log(err.response.data.message);
+      const errorMessage = err.response.data.message;
+      setResMessage(errorMessage);
+      console.log(errorMessage);
     }
   };
 
@@ -99,7 +108,7 @@ function ChannelHistory() {
               img={ch.img}
               title={ch.title}
               channelUuid={ch._id}
-              curMemberNum={`${ch.curMemberNum} / ${ch.memberNum}`}
+              curMemberNum={`${ch.curMemberNum}/${ch.memberNum}`}
               locationDist={ch.locationDist}
               locationCity={ch.locationCity}
               onMoreClick={handleMoreClick}
@@ -114,7 +123,6 @@ function ChannelHistory() {
         isShowMore={isShowMore}
         setIsShowMore={setIsShowMore}
         channelDetailInfo={channelDetailInfo}
-        onEnterDecideClickEvent={(s) => console.log(s)}
         selectedChannelId={selectedChannelId}
         onEnterdCancleClickEvent={handleChannelCancellation}
         channelStatus={index}
@@ -145,6 +153,7 @@ const Tab = styled.div`
 
 const ChannelHistoryContainer = styled.div`
   overflow: hidden;
+  background-color: blue;
   min-width: 60rem;
   width: 45%;
   height: 80vh;
@@ -152,8 +161,9 @@ const ChannelHistoryContainer = styled.div`
   border-radius: 1rem;
   background-color: white;
   display: flex;
-  align-items: center;
   flex-direction: column;
+  align-items: center;
+
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 `;
 const TitleContainer = styled.div`
@@ -166,16 +176,14 @@ const TitleContainer = styled.div`
 
 const CardContainer = styled.div`
   display: flex;
-  justify-content: center;
+  padding: 4rem;
+  justify-content: start;
   align-items: center;
   flex-wrap: wrap;
-  gap: rem;
+  gap: 2rem;
   overflow-y: scroll;
   &::-webkit-scrollbar {
     display: none; /* Chrome, Safari, Opera*/
-  }
-  & > * {
-    margin-bottom: 2rem;
   }
 `;
 

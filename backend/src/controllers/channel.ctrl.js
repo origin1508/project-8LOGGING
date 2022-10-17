@@ -264,4 +264,21 @@ module.exports = {
       next(err);
     }
   },
+
+  async deleteChannel(req, res, next) {
+    const userId = req.userId;
+    const { channelId } = req.params;
+
+    try {
+      const channels = await channelService.deleteChannel(userId, channelId);
+
+      res.status(201).json({
+        success: true,
+        message: "channel delete success",
+        datas: channels
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
 };

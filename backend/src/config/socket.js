@@ -18,10 +18,6 @@ const socketConfig = (server, app) => {
       socket.leave(data.roomId);
     });
 
-    // socket.on("chat", (data) => {
-    //   socket.to(data.room).emit(data);
-    // })
-
   });
 };
 

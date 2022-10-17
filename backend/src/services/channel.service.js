@@ -90,7 +90,7 @@ module.exports = {
   // },
 
   async getChannelList(page, status) {
-    const perPage = 9; // 페이지당 9개씩 보여주기
+    const perPage = 12; // 페이지당 9개씩 보여주기
     const allChannelsCount = await Channel.find({}).count();
     let totalPages = null;
     if (allChannelsCount % perPage === 0) {
@@ -116,40 +116,49 @@ module.exports = {
 
   /**
    * 채널 검색하기
-   * 
-   * @param {Number} page 
-   * @param {Number} status 
-   * @param {String} keyword 
-   * @param {String} filter 
-   * @returns 
+   *
+   * @param {Number} page
+   * @param {Number} status
+   * @param {String} keyword
+   * @param {String} filter
+   * @returns
    */
   async searchChannel(page, status, keyword, filter) {
-    const perPage = 9; // 페이지당 9개씩 보여주기
+    const perPage = 12; // 페이지당 9개씩 보여주기
     const allChannels = await Channel.find({ status });
 
     // 필터 설정하기
-    const filterTitle = (channel, keyword)=>{
-      return channel.title.includes(keyword)
+    const filterTitle = (channel, keyword) => {
+      return channel.title.includes(keyword);
     };
-    const filterRegion = (channel, keyword)=>{
+    const filterRegion = (channel, keyword) => {
       const l1Incl = channel.locationDist.includes(keyword);
       const l2Incl = channel.locationCity.includes(keyword);
-      const lBothIncl = `${channel.locationDist} ${channel.locationCity}`.includes(keyword);
-      return l1Incl || l2Incl || lBothIncl
+      const lBothIncl =
+        `${channel.locationDist} ${channel.locationCity}`.includes(keyword);
+      return l1Incl || l2Incl || lBothIncl;
     };
 
-    const filteredChannels = allChannels.filter(channel => {
-      if (filter=="title") {
-        return filterTitle(channel, keyword)
-      } else if (filter=="region") {
-        return filterRegion(channel, keyword)
+    const filteredChannels = allChannels.filter((channel) => {
+      if (filter == "title") {
+        return filterTitle(channel, keyword);
+      } else if (filter == "region") {
+        return filterRegion(channel, keyword);
       } else {
-        return filterTitle(channel, keyword) || filterRegion(channel, keyword)
+        return filterTitle(channel, keyword) || filterRegion(channel, keyword);
       }
     });
 
-    const totalPages = Math.floor(filteredChannels.length / perPage + 1);
-    const channels = filteredChannels.slice((page-1)*perPage, page*perPage)
+    let totalPages = null;
+    if (filteredChannels.length % perPage === 0) {
+      totalPages = filteredChannels.length / perPage;
+    } else {
+      totalPages = Math.floor(filteredChannels.length / perPage + 1);
+    }
+    const channels = filteredChannels.slice(
+      (page - 1) * perPage,
+      page * perPage
+    );
     const channelItems = channels.map((channel) => {
       channel.createdAt = dateToString(channel.createdAt);
       return channel;
@@ -239,10 +248,10 @@ module.exports = {
 
   /**
    * 채널 입장 신청
-   * 
-   * @param {String} userId 
-   * @param {String} channelId 
-   * @returns 
+   *
+   * @param {String} userId
+   * @param {String} channelId
+   * @returns
    */
   async requestEnter(userId, channelId) {
     // 채널 소유권 확인
@@ -265,10 +274,14 @@ module.exports = {
 
     // user channels, waitReqList 수정
     const user = await User.findById(userId);
-    const updatedUser = await User.findByIdAndUpdate(userId, {
-      waitReqList: [...user.waitReqList, waitList._id],
-      channels: [...user.channels, channel._id]
-    }, { new: true });
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        waitReqList: [...user.waitReqList, waitList._id],
+        channels: [...user.channels, channel._id],
+      },
+      { new: true }
+    );
 
     // 이메일 전송
     const owner = await User.findById(channel.ownerId);
@@ -281,38 +294,50 @@ module.exports = {
     await sendEmail(from, to, subject, text, html);
 
     // 채널 정보 반환
-    const channels = await Promise.all(updatedUser.channels.map(async (channelId) => {
-      const channel = await Channel.findById(channelId);
-      return (({ _id, title, img })=>({ _id, title, img }))(channel)
-    }))
-    return channels
+    const channels = await Promise.all(
+      updatedUser.channels.map(async (channelId) => {
+        const channel = await Channel.findById(channelId);
+        return (({ _id, title, img }) => ({ _id, title, img }))(channel);
+      })
+    );
+    return channels;
   },
 
   /**
    * 채널 입장 신청 취소
-   * 
-   * @param {String} userId 
-   * @param {String} channelId 
+   *
+   * @param {String} userId
+   * @param {String} channelId
    * @returns
    */
   async cancelEnter(userId, channelId) {
     // waitList 수정
     const waitList = await WaitList.findOne({ channelId });
     if (!waitList.waiting.includes(userId)) {
-      throw ApiError.badRequest("가입 신청한 적이 없는 채널입니다.")
+      throw ApiError.badRequest("가입 신청한 적이 없는 채널입니다.");
     }
-    await WaitList.findOneAndUpdate( { channelId }, {
-      waiting: waitList.waiting.filter( id => id!=userId )
-    });
+    await WaitList.findOneAndUpdate(
+      { channelId },
+      {
+        waiting: waitList.waiting.filter((id) => String(id) != String(userId)),
+      }
+    );
 
     // user channels, waitReqList 수정
     const user = await User.findById(userId);
-    const newWaitReqList = user.waitReqList.filter( id => id.str!==waitList._id.str );
-    const newChannels = user.channels.filter( id => id!=channelId );
-    const updatedUser = await User.findByIdAndUpdate(userId, { 
-      waitReqList: newWaitReqList,
-      channels: newChannels
-    }, { new: true });
+    const newWaitReqList = user.waitReqList.filter(
+      (id) => String(id) !== String(waitList._id)
+    );
+    console.log("newWaitreqlist:",newWaitReqList);
+    const newChannels = user.channels.filter((id) => String(id) != String(channelId));
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        waitReqList: newWaitReqList,
+        channels: newChannels,
+      },
+      { new: true }
+    );
 
     // 이메일 전송
     const channel = await Channel.findById(channelId);
@@ -326,66 +351,75 @@ module.exports = {
     await sendEmail(from, to, subject, text, html);
 
     // 채널 정보 반환
-    const channels = await Promise.all(updatedUser.channels.map(async (channelId) => {
-      const channel = await Channel.findById(channelId);
-      return (({ _id, title, img })=>({ _id, title, img }))(channel)
-    }))
-    return channels
+    const channels = await Promise.all(
+      updatedUser.channels.map(async (channelId) => {
+        const channel = await Channel.findById(channelId);
+        return (({ _id, title, img }) => ({ _id, title, img }))(channel);
+      })
+    );
+    return channels;
   },
 
   /**
    * 채널 입장 신청 목록 확인
-   * 
-   * @param {String} userId 
-   * @param {String} channelId 
-   * @returns 
+   *
+   * @param {String} userId
+   * @param {String} channelId
+   * @returns
    */
   async getWaitList(userId, channelId) {
     // 권한 확인
     const channel = await Channel.findById(channelId);
-    if (channel.ownerId!==userId) {
-      throw ApiError.badRequest("조회 권한이 없습니다.")
+    if (channel.ownerId !== userId) {
+      throw ApiError.badRequest("조회 권한이 없습니다.");
     }
 
     // waitList 조회
     const rawWaitList = await WaitList.findOne({ channelId });
-    
-    // waitList에 있는 user 정보들 반환
-    const waitList = await Promise.all(rawWaitList.waiting.map( async (id) => {
-      const user = await User.findById(id);
-      return { userId: id, nickname: user.nickname, profPic: user.profPic }
-    }))
 
-    return waitList
+    // waitList에 있는 user 정보들 반환
+    const waitList = await Promise.all(
+      rawWaitList.waiting.map(async (id) => {
+        const user = await User.findById(id);
+        return { userId: id, nickname: user.nickname, profPic: user.profPic };
+      })
+    );
+
+    return waitList;
   },
 
   /**
    * 채널 입장 수락
-   * 
-   * @param {String} userId 
-   * @param {String} channelId 
-   * @param {String} waitingId 
+   *
+   * @param {String} userId
+   * @param {String} channelId
+   * @param {String} waitingId
    */
   async acceptEnter(userId, channelId, waitingId) {
     // 권한 확인
     const channel = await Channel.findById(channelId);
-    if (channel.ownerId!==userId) {
-      throw ApiError.badRequest("수락 권한이 없습니다.")
+    if (channel.ownerId !== userId) {
+      throw ApiError.badRequest("수락 권한이 없습니다.");
     }
 
     // waitList 수정
     const waitList = await WaitList.findOne({ channelId });
-    await WaitList.findOneAndUpdate( { channelId }, {
-      waiting: waitList.waiting.filter( id => id!=waitingId )
-    });
+    await WaitList.findOneAndUpdate(
+      { channelId },
+      {
+        waiting: waitList.waiting.filter((id) => id != waitingId),
+      }
+    );
 
     // channel member 수정하기
-    const newMembers = [ ...channel.members, waitingId ]
-    await Channel.findByIdAndUpdate(channelId, { members: newMembers })
+    const newMembers = [...channel.members, waitingId];
+    await Channel.findByIdAndUpdate(channelId, { members: newMembers });
 
     // waiting user waitReqList 수정
     const user = await User.findById(waitingId);
-    const newWaitReqList  = user.waitReqList.filter( id => id.str!==waitList._id.str );
+    const newWaitReqList = user.waitReqList.filter(
+      (id) => id.str !== waitList._id.str
+    );
     await User.findByIdAndUpdate(waitingId, { waitReqList: newWaitReqList });
 
     // 이메일 전송
@@ -400,32 +434,37 @@ module.exports = {
 
   /**
    * 채널 입장 거절
-   * 
-   * @param {String} userId 
-   * @param {String} channelId 
-   * @param {String} waitingId 
+   *
+   * @param {String} userId
+   * @param {String} channelId
+   * @param {String} waitingId
    */
   async rejectEnter(userId, channelId, waitingId) {
     // 권한 확인
     const channel = await Channel.findById(channelId);
-    if (channel.ownerId!==userId) {
-      throw ApiError.badRequest("거절 권한이 없습니다.")
+    if (channel.ownerId !== userId) {
+      throw ApiError.badRequest("거절 권한이 없습니다.");
     }
 
     // waitList 수정
     const waitList = await WaitList.findOne({ channelId });
-    await WaitList.findOneAndUpdate( { channelId }, {
-      waiting: waitList.waiting.filter( id => id!=waitingId )
-    });
+    await WaitList.findOneAndUpdate(
+      { channelId },
+      {
+        waiting: waitList.waiting.filter((id) => id != waitingId),
+      }
+    );
 
     // waiting user channels, waitReqList 수정
     const user = await User.findById(waitingId);
-    const newWaitReqList = user.waitReqList.filter( id => id.str!==waitList._id.str );
-    const newChannels = user.channels.filter( id => id!=channelId ); 
-    await User.findByIdAndUpdate(waitingId, { 
+    const newWaitReqList = user.waitReqList.filter(
+      (id) => id.str !== waitList._id.str
+    );
+    const newChannels = user.channels.filter((id) => id != channelId);
+    await User.findByIdAndUpdate(waitingId, {
       waitReqList: newWaitReqList,
-      channels: newChannels
-    });;
+      channels: newChannels,
+    });
 
     // 이메일 전송
     const owner = await User.findById(channel.ownerId);
@@ -439,10 +478,10 @@ module.exports = {
 
   /**
    * 유저와 채널의 관계
-   * 
-   * @param {String} userId 
-   * @param {String} channelId 
-   * @returns 
+   *
+   * @param {String} userId
+   * @param {String} channelId
+   * @returns
    */
   async checkUserChannelRelation(userId, channelId) {
     const channel = await Channel.findById(channelId);
@@ -459,36 +498,99 @@ module.exports = {
 
   /**
    * 채널 떠나기
-   * 
-   * @param {String} userId 
-   * @param {String} channelId 
+   *
+   * @param {String} userId
+   * @param {String} channelId
    * @returns
    */
   async quitChannel(userId, channelId) {
     const channel = await Channel.findById(channelId);
     // 채널 owner 여부 확인
     if (channel.ownerId == userId) {
-      throw ApiError.badRequest("채널 개설자는 채널에서 나갈 수 없습니다.")
+      throw ApiError.badRequest("채널 개설자는 채널에서 나갈 수 없습니다.");
     }
     // 채널 member 여부 확인
     if (!channel.members.includes(userId)) {
-      throw ApiError.badRequest("채널 소속 멤버만 채널을 나갈 수 있습니다.")
+      throw ApiError.badRequest("채널 소속 멤버만 채널을 나갈 수 있습니다.");
     }
 
     // user의 채널 정보, channel의 멤버 정보 수정
     const user = await User.findById(userId);
-    const updatedChannels = user.channels.filter(id => id!=channelId);
-    const updatedUser = await User.findByIdAndUpdate(userId, { channels: updatedChannels });
+    const updatedChannels = user.channels.filter((id) => id != channelId);
+    const updatedUser = await User.findByIdAndUpdate(userId, {
+      channels: updatedChannels,
+    });
 
-    const updatedMembers = channel.members.filter(id => id!=userId);
-    await Channel.findByIdAndUpdate(channelId, { members: updatedMembers })
+    const updatedMembers = channel.members.filter((id) => id != userId);
+    await Channel.findByIdAndUpdate(channelId, { members: updatedMembers });
 
     // 채널 정보 반환
-    const channels = await Promise.all(updatedUser.channels.map(async (channelId) => {
-      const channel = await Channel.findById(channelId);
-      return (({ _id, title, img })=>({ _id, title, img }))(channel)
-    }))
-    return channels
-  }
+    const channels = await Promise.all(
+      updatedUser.channels.map(async (channelId) => {
+        const channel = await Channel.findById(channelId);
+        return (({ _id, title, img }) => ({ _id, title, img }))(channel);
+      })
+    );
+    return channels;
+  },
 
+  /**
+   * 채널 삭제하기
+   *
+   * @param {String} userId
+   * @param {String} channelId
+   * @returns
+   */
+  async deleteChannel(userId, channelId) {
+    const channel = await Channel.findById(channelId);
+    // 채널 owner 여부 확인
+    if (channel.ownerId != userId) {
+      throw ApiError.badRequest("채널 개설자만 채널을 삭제할 수 있습니다.");
+    }
+
+    // 각 멤버의 채널 정보 수정
+    await Promise.all(
+      channel.members.map(async (memberId) => {
+        const user = await User.findById(memberId);
+        const updatedChannels = user.channels.filter((id) => id != channelId);
+        await User.findByIdAndUpdate(memberId, { channels: updatedChannels });
+      })
+    );
+
+    // waitResList 수정
+    const waitList = await WaitList.findOne({ channelId });
+    const owner = await User.findById(userId);
+    const updatedWaitResList = owner.waitResList.filter(
+      (waitListId) => waitListId != waitList._id
+    );
+    const updatedUser = await User.findByIdAndUpdate(userId, {
+      waitResList: updatedWaitResList,
+    });
+
+    // waitReqList 수정
+    await Promise.all(
+      waitList.waiting.map(async (userId) => {
+        const user = await User.findById(userId);
+        const updatedWaitReqList = user.waitReqList.filter(
+          (waitListId) => waitListId != waitList._id
+        );
+        await User.findByIdAndUpdate(userId, {
+          waitReqList: updatedWaitReqList,
+        });
+      })
+    );
+
+    // channel, waitList 삭제
+    await Channel.findByIdAndDelete(channelId);
+    await WaitList.findByIdAndDelete(waitList._id);
+
+    // 채널 정보 반환
+    const channels = await Promise.all(
+      updatedUser.channels.map(async (channelId) => {
+        const channel = await Channel.findById(channelId);
+        return (({ _id, title, img }) => ({ _id, title, img }))(channel);
+      })
+    );
+    return channels;
+  },
 };

@@ -17,5 +17,6 @@ router.put("/:channelId/waiting", jwtVerification, channelCtrl.acceptChannelEnte
 router.delete("/:channelId/waiting", jwtVerification, channelCtrl.rejectChannelEnter); // 채널 입장 신청 거절
 router.get("/:channelId/main", jwtVerification, channelCtrl.loadMainContent); // 채널 메인 페이지
 router.delete("/:channelId/leave", jwtVerification, channelCtrl.leaveChannel); // 채널 떠나기
+router.delete("/:channelId/delete", jwtVerification, channelCtrl.deleteChannel); // 채널 삭제하기
 
 module.exports = router

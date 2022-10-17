@@ -3,17 +3,14 @@ import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import ChannelInfo from "@/components/channelDetail/ChannelInfo";
 import { ChannelDetailType } from "@/types/channel/channelTypes";
-import { loginUserIdState } from "@/recoil/atoms/authState";
+import { loginUserIdState, curUserState } from "@/recoil/atoms/authState";
 import { useRecoilValue } from "recoil";
 
 interface Props {
   isShowMore: boolean;
   setIsShowMore: React.Dispatch<React.SetStateAction<boolean>>;
   channelDetailInfo: ChannelDetailType[];
-  onEnterDecideClickEvent: (
-    selectedChannelId: string,
-    channelTitle: string
-  ) => void;
+
   onEnterdCancleClickEvent?: (selectedChannelId: string) => void;
   selectedChannelId: string;
   channelStatus?: number;
@@ -23,16 +20,15 @@ const ChannelHistoryDetail = ({
   isShowMore,
   setIsShowMore,
   channelDetailInfo,
-  onEnterDecideClickEvent,
   onEnterdCancleClickEvent,
   selectedChannelId,
   channelStatus,
 }: Props) => {
   const loginUserId = useRecoilValue(loginUserIdState);
-  const ownerId = channelDetailInfo[0]?.ownerInfo.ownerId;
+  const curUser = useRecoilValue(curUserState);
+  const ownerId = curUser._id;
   const isLoginUserChannel = ownerId === loginUserId;
 
-  const curChannelTitle = channelDetailInfo[0]?.title;
   return (
     <ChannelDetailBackground isShowMore={isShowMore}>
       <ChannelDetailContainer>
@@ -52,16 +48,7 @@ const ChannelHistoryDetail = ({
         ))}
 
         <ChannelDetailButtonContainer>
-          {!isLoginUserChannel && channelStatus !== 2 && (
-            <Button
-              onClick={() => {
-                onEnterDecideClickEvent(selectedChannelId, curChannelTitle);
-              }}
-            >
-              참가신청
-            </Button>
-          )}
-          {channelStatus === 2 && (
+          {channelStatus === 2 && isLoginUserChannel ? (
             <Button
               onClick={() => {
                 if (onEnterdCancleClickEvent) {
@@ -71,6 +58,8 @@ const ChannelHistoryDetail = ({
             >
               신청취소
             </Button>
+          ) : (
+            ""
           )}
           <BackButton
             onClick={() => {

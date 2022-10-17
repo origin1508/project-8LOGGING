@@ -6,7 +6,6 @@ import GlobalTheme from "@/styles/theme";
 import { loginUserIdState } from "@/recoil/atoms/authState";
 import { sidebarChannelsState } from "@/recoil/atoms/channelState";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import socketIOClient from "socket.io-client";
 import {
   currentChannelDetailRequest,
   channelJoinAcceptRequet,
@@ -27,17 +26,13 @@ import ChannelSendButton from "@/components/channel/ChannelSendButton";
 import ContextMenu from "@/components/contextMenu/ContextMenu";
 import ChannelEdit from "@/components/channel/ChannelEdit";
 import { TextOne, TextTwo } from "@/styles/commonStyle";
+import { customSocket, customSocketConnectRequest } from "@/util/customSocket";
 import {
   channelMessageRequest,
   channelChatLogRequest,
   channelChatLogDeleteRequest,
   channelChatLogUpdateRequest,
 } from "@/api/channelFetcher";
-
-const socket = socketIOClient(`${process.env.REACT_APP_SERVER_BASE_URL}/chat`, {
-  path: "/chat-socket",
-  transports: ["websocket"],
-});
 
 const CONTEXT_MENU_ID = "CONTEXT_MENU_ID";
 
@@ -81,13 +76,11 @@ function Channel() {
     id: CONTEXT_MENU_ID,
   });
 
-  const menuItems = ["답장하기", "수정하기", "삭제하기"];
+  const menuItems = ["수정하기", "삭제하기"];
 
   useEffect(() => {
     prepareScroll();
-    socket.emit("enter", {
-      roomId: channelId,
-    });
+    channelId && customSocketConnectRequest("enter", channelId);
     (async () => {
       const res = await currentChannelDetailRequest(
         `/api/channels/${channelId}/main`
@@ -106,14 +99,23 @@ function Channel() {
       );
       setChatLogs(datas);
     })();
-    // 이게 맞나..?
-    // will unmount에서 이러한 작업을 수행해도 되는건가..?
-    return () => {
-      socket.on("chat", (data) => {
-        setChatLogs((prev) => {
-          return [...prev, data];
-        });
+    customSocket.on("create-chat", (data) => {
+      setChatLogs((prev) => {
+        return [...prev, data];
       });
+    });
+    customSocket.on("modify-chat", (data) => {
+      setChatLogs((prev) => {
+        return prev.map((chat) => (chat._id === data._id ? data : chat));
+      });
+    });
+    customSocket.on("remove-chat", (data) => {
+      setChatLogs((prev) => {
+        return prev.filter((chat) => chat._id !== data._id);
+      });
+    });
+    return () => {
+      customSocket.off("disconnect");
     };
   }, [channelId]);
 
@@ -175,7 +177,8 @@ function Channel() {
   };
 
   const handleShowContextMenuClick =
-    (channelId: string) => (e: React.MouseEvent) => {
+    (channelId: string, userId: string) => (e: React.MouseEvent) => {
+      if (userId !== loginUserId) return;
       setSelectedChat(channelId);
       show(e);
     };
@@ -195,10 +198,6 @@ function Channel() {
           selectedChat,
           chatMessage
         );
-        const { datas } = await channelChatLogRequest(
-          `/api/chat/log/${channelId}`
-        );
-        setChatLogs(datas);
         setIsChatLogEditMode(false);
       }
     }
@@ -210,10 +209,6 @@ function Channel() {
 
   const handleContextMenuuClick = (itemName: string) => async () => {
     switch (itemName) {
-      case "답장하기": {
-        break;
-      }
-
       case "수정하기": {
         setIsChatLogEditMode(true);
         break;
@@ -254,10 +249,17 @@ function Channel() {
                     {chatLogs.map((chat) => (
                       <UserContainer
                         key={chat._id}
-                        onContextMenu={handleShowContextMenuClick(chat._id)}
+                        onContextMenu={handleShowContextMenuClick(
+                          chat._id,
+                          chat.userId
+                        )}
                       >
                         <UserImg itemProp={chat.userInfo.profPic} />
-                        <UserInfo onContextMenu={show}>
+                        <UserInfo
+                          onContextMenu={
+                            loginUserId === chat.userId ? show : undefined
+                          }
+                        >
                           <ContentInfoContainer>
                             <TextOne>{chat.userInfo.nickname}</TextOne>
                             <TextTwo>{chat.createdAt}</TextTwo>
