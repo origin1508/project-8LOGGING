@@ -28,7 +28,7 @@ to {
 `;
 
 const LoadingBox = styled.div`
-  width: 110%;
+  width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   position: absolute;
