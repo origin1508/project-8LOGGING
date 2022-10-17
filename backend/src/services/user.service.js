@@ -154,13 +154,14 @@ module.exports = {
       const waitList = await WaitList.findById(waitListId);
       return waitList.channelId
     }))
+    console.log(waitingChannels);
     const channels = await Promise.all(user.channels.map(async (channelId) => {
       const channel = await Channel.findById(channelId);
       // 개설자/입장대기자/일반멤버 파악
       var position = 1;
       if ( userId == channel.ownerId )  {
         position = 0;
-      } else if ( waitingChannels.includes(channelId) ) {
+      } else if ( waitingChannels.includes(String(channelId)) ) {
         position = 2;
       }
 
