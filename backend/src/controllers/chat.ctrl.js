@@ -19,79 +19,68 @@ module.exports = {
     }
   },
 
-  // async createChatLog(req, res, next) {
-  //   const userId = req.userId;
-  //   const { roomId, chat } = req.body;
+  async createChatLog(req, res, next) {
+    const userId = req.userId;
+    const { roomId, chat } = req.body;
 
-  //   try {
-  //     const createdChat = await chatService.addChatLog(roomId, userId, chat);
-  //     const userChatInfo = await chatService.getUserChatLog(createdChat._id);
+    try {
+      const createdChat = await chatService.addChatLog(roomId, userId, chat);
+      const userChatInfo = await chatService.getUserChatLog(createdChat._id);
 
-  //     req.app
-  //       .get("chatIO")
-  //       .of("/create-chat")
-  //       .to(roomId)
-  //       .emit("create-chat", userChatInfo);
+      req.app.get("chatIO").of("/chat").to(roomId).emit("chat", userChatInfo);
 
-  //     res.status(201).json({
-  //       success: true,
-  //       status: 201,
-  //       message: "success creating new chat log",
-  //       datas: userChatInfo,
-  //     });
-  //   } catch (err) {
-  //     next(err);
-  //   }
-  // },
+      res.status(201).json({
+        success: true,
+        status: 201,
+        message: "success creating new chat log",
+        datas: userChatInfo,
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
 
-  // async modifyChatLog(req, res, next) {
-  //   const { chatId, chat, roomId } = req.body;
+  async modifyChatLog(req, res, next) {
+    const { chatId, chat, roomId } = req.body;
 
-  //   try {
-  //     await chatService.updateChatLog(chatId, chat);
+    try {
+      await chatService.updateChatLog(chatId, chat);
 
-  //     const userChatInfo = await chatService.getUserChatLog(chatId);
+      const userChatInfo = await chatService.getUserChatLog(chatId);
 
-  //     req.app
-  //       .get("chatIO")
-  //       .of("/modify-chat")
-  //       .to(roomId)
-  //       .emit("modify-chat", userChatInfo);
+      req.app.get("chatIO").of("/chat").to(roomId).emit("chat", userChatInfo);
 
-  //     res.status(201).json({
-  //       success: true,
-  //       status: 201,
-  //       message: "success modifying chat",
-  //       datas: userChatInfo,
-  //     });
-  //   } catch (err) {
-  //     next(err);
-  //   }
-  // },
+      res.status(201).json({
+        success: true,
+        status: 201,
+        message: "success modifying chat",
+        datas: userChatInfo,
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
 
-  // async removeChatLog(req, res, next) {
-  //   const { chatId, roomId } = req.body;
-  //   try {
-  //     const userChatInfo = await chatService.getUserChatLog(chatId);
+  async removeChatLog(req, res, next) {
+    const { chatId, roomId } = req.body;
+    try {
 
-  //     await chatService.deleteChatLog(chatId, roomId);
+      const userChatInfo = await chatService.getUserChatLog(chatId);
 
-  //     req.app
-  //       .get("chatIO")
-  //       .of("/chat")
-  //       .to(roomId)
-  //       .emit("remove-chat", userChatInfo);
+      await chatService.deleteChatLog(chatId, roomId);
 
-  //     res.status(201).json({
-  //       success: true,
-  //       status: 201,
-  //       message: "success removing chat",
-  //       datas: userChatInfo,
-  //     });
-  //   } catch (err) {
-  //     next(err);
-  //   }
-  // },
+      req.app.get("chatIO").of("/chat").to(roomId).emit("chat", userChatInfo);
+
+      res.status(201).json({
+        success: true,
+        status: 201,
+        message: "success removing chat",
+        datas: userChatInfo,
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
 
   async showChatLog(req, res, next) {
     const { roomId } = req.params;
