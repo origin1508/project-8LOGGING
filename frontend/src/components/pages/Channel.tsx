@@ -50,6 +50,7 @@ function Channel() {
   const [isShowWaitList, setIsShowWaitList] = useState(false);
   const [selectedChat, setSelectedChat] = useState("");
   const [isChatLogEditMode, setIsChatLogEditMode] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const loginUserId = useRecoilValue(loginUserIdState);
 
   const { channelId } = useParams();
@@ -131,28 +132,38 @@ function Channel() {
     scrollToBottom();
   };
 
-  const handleChannelJoinAcceptButtonClick = async (waitingId: string) => {
-    const res = await channelJoinAcceptRequet(
-      `/api/channels/${channelId}/waiting`,
-      waitingId
-    );
-    if (res) {
-      setWaitList((prev) =>
-        prev.filter((member) => member.userId !== waitingId)
-      );
+  const handleChannelJoinPermissionButtonClick = async (
+    e: React.MouseEvent<HTMLButtonElement>,
+    waitingId: string
+  ) => {
+    setIsLoading(true);
+    if (e.target instanceof HTMLButtonElement) {
+      if (e.target.name === "accept") {
+        const res = await channelJoinAcceptRequet(
+          `/api/channels/${channelId}/waiting`,
+          waitingId
+        );
+        if (res) {
+          setWaitList((prev) =>
+            prev.filter((member) => member.userId !== waitingId)
+          );
+          setIsLoading(false);
+        }
+      } else if (e.target.name === "reject") {
+        const res = await channelJoinRejectRequet(
+          `/api/channels/${channelId}/waiting`,
+          waitingId
+        );
+        if (res.success) {
+          setWaitList((prev) =>
+            prev.filter((member) => member.userId !== waitingId)
+          );
+          setIsLoading(false);
+        }
+      }
     }
   };
-  const handleChannelJoinRejectButtonClick = async (waitingId: string) => {
-    const res = await channelJoinRejectRequet(
-      `/api/channels/${channelId}/waiting`,
-      waitingId
-    );
-    if (res.success) {
-      setWaitList((prev) =>
-        prev.filter((member) => member.userId !== waitingId)
-      );
-    }
-  };
+
   const handleChannelLeaveButtonClick = async () => {
     const res = await channelLeaveRequest(`/api/channels/${channelId}/leave`);
     if (res.success) {
@@ -283,9 +294,11 @@ function Channel() {
                 isOwner={isOwner}
                 ownerId={data.ownerInfo.ownerId}
                 isShowWaitList={isShowWaitList}
+                isLoading={isLoading}
                 setIsShowWaitList={setIsShowWaitList}
-                onChannelJoinAcceptEvent={handleChannelJoinAcceptButtonClick}
-                onChannelJoinRejectEvent={handleChannelJoinRejectButtonClick}
+                onChannelJoinPermissionButtonClickEvent={
+                  handleChannelJoinPermissionButtonClick
+                }
                 onChannelLeaveEvent={handleChannelLeaveButtonClick}
               />
             </React.Fragment>
