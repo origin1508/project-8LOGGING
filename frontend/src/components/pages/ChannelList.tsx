@@ -37,6 +37,8 @@ const ChannelList = () => {
     ChannelDetailType[]
   >([]);
   const [page, setPage] = useState<number>(1);
+  const [keyword, setKeyword] = useState("");
+  const [filter, setFilter] = useState("none");
 
   const status = 0;
 
@@ -49,6 +51,22 @@ const ChannelList = () => {
   ] = useModal(false);
 
   const navigate = useNavigate();
+  const handleSearchButtonClick = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const { datas } = await getResultByKeyword(page, status, keyword, filter);
+    setChannels(datas);
+    console.log(datas);
+  };
+  const getResultByKeyword = async (
+    page: number,
+    status: number,
+    keyword: string,
+    filter: string
+  ) => {
+    return await currentChannelListRequest(
+      `/api/channels/search?page=${page}&status=${status}&keyword=${keyword}&filter=${filter}}`
+    );
+  };
 
   useEffect(() => {
     // api/channels?page=1&status=0
@@ -106,8 +124,16 @@ const ChannelList = () => {
             )}
           </TitleContainer>
           <Search>
-            <SearchInput type="text" placeholder="Search"></SearchInput>
-            <SearchButton>
+            <SearchInput
+              type="text"
+              placeholder="Search"
+              name="keyword"
+              value={keyword}
+              onChange={(e) => {
+                setKeyword(e.target.value);
+              }}
+            ></SearchInput>
+            <SearchButton onClick={handleSearchButtonClick}>
               <CustomIcon name="SeachIcon" size="20" color="black"></CustomIcon>
             </SearchButton>
             <Select>
