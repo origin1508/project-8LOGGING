@@ -4,10 +4,20 @@ import { useContextMenu } from "react-contexify";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import { loginUserIdState } from "@/recoil/atoms/authState";
-import { useRecoilValue } from "recoil";
+import { sidebarChannelsState } from "@/recoil/atoms/channelState";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import socketIOClient from "socket.io-client";
-import { currentChannelDetailRequest } from "@/api/channelFetcher";
-import { MainChannelType } from "@/types/channel/channelTypes";
+import {
+  currentChannelDetailRequest,
+  channelJoinAcceptRequet,
+  channelJoinRejectRequet,
+  channelLeaveRequest,
+} from "@/api/channelFetcher";
+import {
+  MainChannelType,
+  ChannelLogObjectType,
+  waitListType,
+} from "@/types/channel/channelTypes";
 import useModal from "@/hooks/useModal";
 import Modal from "@/components/modal/Modal";
 import BasePageComponent from "@/components/hoc/BasePageComponent";
@@ -23,7 +33,6 @@ import {
   channelChatLogDeleteRequest,
   channelChatLogUpdateRequest,
 } from "@/api/channelFetcher";
-import { ChannelLogObjectType } from "@/types/channel/channelTypes";
 
 const socket = socketIOClient(`${process.env.REACT_APP_SERVER_BASE_URL}/chat`, {
   path: "/chat-socket",
@@ -37,12 +46,14 @@ function Channel() {
   const [chatLogs, setChatLogs] = useState<Array<ChannelLogObjectType>>([]);
   const [channelData, setChannelData] = useState<MainChannelType[]>([]);
   const [entryFailureMessage, setEntryFailureMessage] = useState();
+  const [waitList, setWaitList] = useState<waitListType[]>([]);
   const [isShowWaitList, setIsShowWaitList] = useState(false);
   const [selectedChat, setSelectedChat] = useState("");
   const [isChatLogEditMode, setIsChatLogEditMode] = useState(false);
   const loginUserId = useRecoilValue(loginUserIdState);
 
   const { channelId } = useParams();
+  const setSidebarChannels = useSetRecoilState(sidebarChannelsState);
   const navigate = useNavigate();
   const [
     isOpenModal,
@@ -82,6 +93,7 @@ function Channel() {
       );
       if (res.success) {
         setChannelData([res.datas]);
+        if (res.datas.waitList) setWaitList(res.datas.waitList);
       } else {
         setChannelData([]);
         handleModalOpenButtonClick();
@@ -117,6 +129,37 @@ function Channel() {
       await channelMessageRequest("/api/chat/log", channelId, channelContent);
     if (inputRef.current) inputRef.current.value = "";
     scrollToBottom();
+  };
+
+  const handleChannelJoinAcceptButtonClick = async (waitingId: string) => {
+    const res = await channelJoinAcceptRequet(
+      `/api/channels/${channelId}/waiting`,
+      waitingId
+    );
+    if (res) {
+      setWaitList((prev) =>
+        prev.filter((member) => member.userId !== waitingId)
+      );
+    }
+  };
+  const handleChannelJoinRejectButtonClick = async (waitingId: string) => {
+    const res = await channelJoinRejectRequet(
+      `/api/channels/${channelId}/waiting`,
+      waitingId
+    );
+    if (res.success) {
+      setWaitList((prev) =>
+        prev.filter((member) => member.userId !== waitingId)
+      );
+    }
+  };
+  const handleChannelLeaveButtonClick = async () => {
+    const res = await channelLeaveRequest(`/api/channels/${channelId}/leave`);
+    if (res.success) {
+      setSidebarChannels((prev) =>
+        prev.filter((channel) => channel._id !== channelId)
+      );
+    }
   };
 
   const handleShowContextMenuClick =
@@ -235,10 +278,14 @@ function Channel() {
               </ChannelContainer>
               <MemberList
                 channelMemberList={data.membersInfo}
-                waitMemberList={data.waitList}
+                waitMemberList={waitList}
                 isOwner={isOwner}
+                ownerId={data.ownerInfo.ownerId}
                 isShowWaitList={isShowWaitList}
                 setIsShowWaitList={setIsShowWaitList}
+                onChannelJoinAcceptEvent={handleChannelJoinAcceptButtonClick}
+                onChannelJoinRejectEvent={handleChannelJoinRejectButtonClick}
+                onChannelLeaveEvent={handleChannelLeaveButtonClick}
               />
             </React.Fragment>
           );

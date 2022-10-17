@@ -79,24 +79,12 @@ const ChannelList = () => {
     navigate("/channels/create");
   };
 
-  const handleChannelEnterDecideClick = async (
-    selectedChannelId: string,
-    channelTitle: string
-  ) => {
+  const handleChannelEnterDecideClick = async (selectedChannelId: string) => {
     try {
       await channelEnterRequest(
         `/api/channels/${selectedChannelId}/enter`,
         "Change"
       );
-      setSidebarChannels((prev) => {
-        return [
-          ...prev,
-          {
-            _id: selectedChannelId,
-            title: channelTitle,
-          },
-        ];
-      });
       setResMessage("참가신청이 완료되었습니다.");
     } catch (error) {
       const err = error as ErrorType;

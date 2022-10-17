@@ -4,6 +4,7 @@ import { atom } from "recoil";
 interface ChannelsType {
   _id: string;
   title: string;
+  position: number;
 }
 
 export const sidebarChannelsState = atom<ChannelsType[]>({
@@ -12,6 +13,7 @@ export const sidebarChannelsState = atom<ChannelsType[]>({
     {
       _id: "",
       title: "",
+      position: 0,
     },
   ],
 });

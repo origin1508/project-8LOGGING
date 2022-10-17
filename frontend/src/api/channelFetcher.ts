@@ -152,3 +152,43 @@ export async function channelChatLogUpdateRequest(
   );
   return res.data;
 }
+
+export async function channelJoinAcceptRequet(
+  endPoint: string,
+  waitingId: string
+) {
+  const res = await customAxios.put(
+    endPoint,
+    {
+      waitingId: waitingId,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${Storage.getToken()}`,
+      },
+    }
+  );
+  return res.data;
+}
+
+export async function channelJoinRejectRequet(
+  endPoint: string,
+  waitingId: string
+) {
+  const res = await customAxios.delete(endPoint, {
+    data: { waitingId: waitingId },
+    headers: {
+      Authorization: `Bearer ${Storage.getToken()}`,
+    },
+  });
+  return res.data;
+}
+
+export async function channelLeaveRequest(endPoint: string) {
+  const res = await customAxios.delete(endPoint, {
+    headers: {
+      Authorization: `Bearer ${Storage.getToken()}`,
+    },
+  });
+  return res.data;
+}

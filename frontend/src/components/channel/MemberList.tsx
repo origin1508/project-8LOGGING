@@ -10,16 +10,24 @@ interface MemberListProps {
   channelMemberList: ChannelMemberType[];
   waitMemberList: waitListType[];
   isOwner: boolean;
+  ownerId: string;
   isShowWaitList: boolean;
   setIsShowWaitList: React.Dispatch<React.SetStateAction<boolean>>;
+  onChannelJoinAcceptEvent: (waitingId: string) => void;
+  onChannelJoinRejectEvent: (waitingId: string) => void;
+  onChannelLeaveEvent: () => void;
 }
 
 function MemberList({
   channelMemberList,
   waitMemberList,
   isOwner,
+  ownerId,
   isShowWaitList,
   setIsShowWaitList,
+  onChannelJoinAcceptEvent,
+  onChannelJoinRejectEvent,
+  onChannelLeaveEvent,
 }: MemberListProps) {
   const navigate = useNavigate();
 
@@ -49,13 +57,20 @@ function MemberList({
               <UserInfo onClick={() => navigate(`/profile/${data.memberId}`)}>
                 <UserImg itemProp={data.memberPic}></UserImg>
                 <TextOne>{data.memberNickname}</TextOne>
+                {ownerId === data.memberId && (
+                  <CustomIcon
+                    name="crown"
+                    size="30"
+                    color={GlobalTheme.colors.theme}
+                  ></CustomIcon>
+                )}
               </UserInfo>
             </UserContainer>
           );
         })}
       </MemberListContainer>
       <WaitListContainer isShowWaitList={isShowWaitList}>
-        <BigTitle>Waiting Member</BigTitle>
+        <BigTitle>Waiting List</BigTitle>
         {waitMemberList.map((data) => {
           return (
             <UserContainer key={data.userId}>
@@ -64,8 +79,20 @@ function MemberList({
                 <TextOne>{data.nickname}</TextOne>
               </UserInfo>
               <ButtonContainer>
-                <SmallButton>수락</SmallButton>
-                <SmallButton>거절</SmallButton>
+                <AcceptButton
+                  onClick={() => {
+                    onChannelJoinAcceptEvent(data.userId);
+                  }}
+                >
+                  수락
+                </AcceptButton>
+                <RejectButton
+                  onClick={() => {
+                    onChannelJoinRejectEvent(data.userId);
+                  }}
+                >
+                  거절
+                </RejectButton>
               </ButtonContainer>
             </UserContainer>
           );
@@ -75,7 +102,7 @@ function MemberList({
       {isOwner ? (
         <ChannelButton>채널 삭제</ChannelButton>
       ) : (
-        <ChannelButton>채널 나가기</ChannelButton>
+        <ChannelButton onClick={onChannelLeaveEvent}>채널 나가기</ChannelButton>
       )}
     </MemberListWrapper>
   );
@@ -90,6 +117,7 @@ const MemberListWrapper = styled.div`
   flex-direction: column;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   margin-left: 1rem;
+  margin-right: 1rem;
 `;
 
 const MemberListContainer = styled.div`
@@ -100,22 +128,25 @@ const MemberListContainer = styled.div`
 `;
 
 const WaitListContainer = styled.div<{ isShowWaitList: boolean }>`
-  display: ${(props) => (props.isShowWaitList ? "" : "none")};
   position: absolute;
   top: 8rem;
   padding: 3rem;
   width: 70%;
   height: 60%;
-  border-radius: 8px;
+  transform: scale(0);
+  transform-origin: 90% -4%;
+  border-radius: 2px;
+  transition: all 0.25s ease;
   background-color: ${GlobalTheme.colors.lightTwoGray};
   box-shadow: 1px 1px 5px ${GlobalTheme.colors.gray};
+  ${(props) => props.isShowWaitList && "transform: scale(1);"};
 `;
 
 const UserContainer = styled.div`
   margin-top: 2rem;
-  // display: flex;
+  display: flex;
   width: 100%;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   gap: 3rem;
   padding-bottom: 1rem;
@@ -188,6 +219,16 @@ const ChannelButton = styled.button`
   height: 5rem;
   width: 80%;
   margin-bottom: 2rem;
+`;
+
+const AcceptButton = styled(SmallButton)`
+  width: 5rem;
+`;
+const RejectButton = styled(SmallButton)`
+  width: 5rem;
+  color: ${GlobalTheme.colors.theme};
+  background-color: ${GlobalTheme.colors.white};
+  border: 1px solid ${GlobalTheme.colors.theme};
 `;
 
 export default MemberList;

@@ -119,6 +119,7 @@ const ChannelForm = () => {
           {
             _id: datas._id,
             title: title,
+            position: 0,
           },
         ];
       });
