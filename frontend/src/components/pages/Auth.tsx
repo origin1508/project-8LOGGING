@@ -228,6 +228,7 @@ const Auth = () => {
           verificationCode={verificationCode}
           setVerificationCode={setVerificationCode}
           errMessage={errMessage}
+          emailToSend={authFormState.email}
         />
       </Modal>
     </BasePageComponent>
