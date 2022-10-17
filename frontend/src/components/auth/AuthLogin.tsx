@@ -32,7 +32,7 @@ const AuthLogin = ({
         />
         {loginValue.email && !isValid.email && (
           <BaseValidateTextContainer>
-            Please check your email
+            올바른 이메일을 입력해주세요.
           </BaseValidateTextContainer>
         )}
       </BaseIntputContainer>
@@ -46,7 +46,7 @@ const AuthLogin = ({
         />
         {loginValue.password && !isValid.password && (
           <BaseValidateTextContainer>
-            Please check your password
+            올바른 비밀번호를 입력해주세요.
           </BaseValidateTextContainer>
         )}
       </BaseIntputContainer>
