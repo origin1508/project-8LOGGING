@@ -93,6 +93,10 @@ const AuthLoginButton = styled.button`
   background-color: ${GlobalTheme.colors.theme};
   text-align: center;
   cursor: pointer;
+  &:disabled {
+    color: ${GlobalTheme.colors.lightGray};
+    background-color: ${GlobalTheme.colors.gray};
+  }
 `;
 
 export default AuthLogin;
