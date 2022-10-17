@@ -20,7 +20,7 @@ import {
 } from "@/api/authFetcher";
 import { useSetRecoilState } from "recoil";
 import { loginUserIdState } from "@/recoil/atoms/authState";
-const TapMenu = ["Sign in", "Registration"];
+const TapMenu = ["로그인", "회원가입"];
 
 const Auth = () => {
   const [tabIndex, setTabIndex] = useState(0);

@@ -24,7 +24,7 @@ const AuthLogin = ({
     <AuthLoginFormContainer onSubmit={onLoginSubmitEvent}>
       <BaseIntputContainer>
         <AuthLoginInput
-          placeholder="Email"
+          placeholder="이메일"
           type="email"
           name="email"
           onChange={onLoginFormChangeEvent}
@@ -38,7 +38,7 @@ const AuthLogin = ({
       </BaseIntputContainer>
       <BaseIntputContainer>
         <AuthLoginInput
-          placeholder="Password"
+          placeholder="비밀번호"
           type="password"
           name="password"
           onChange={onLoginFormChangeEvent}
@@ -52,7 +52,7 @@ const AuthLogin = ({
       </BaseIntputContainer>
       <AuthLoginButtonContainer>
         <AuthLoginButton type="submit" disabled={!isValidAll && true}>
-          Sign in
+          로그인
         </AuthLoginButton>
       </AuthLoginButtonContainer>
     </AuthLoginFormContainer>

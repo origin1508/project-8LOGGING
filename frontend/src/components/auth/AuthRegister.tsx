@@ -89,7 +89,7 @@ const AuthReigster: React.FC<Props> = ({
             }}
             disabled={!isValidEmail && true}
           >
-            인증
+            인증요청
           </EmailVerificationButton>
         )}
       </BaseIntputContainer>
