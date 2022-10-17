@@ -37,6 +37,7 @@ const LoadingBox = styled.div`
   justify-content: center;
   align-items: center;
   gap: 1rem;
+  z-index: 1;
 `;
 
 const Circle = styled.div`
