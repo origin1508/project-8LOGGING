@@ -52,15 +52,6 @@ const ChannelHistoryDetail = ({
         ))}
 
         <ChannelDetailButtonContainer>
-          {!isLoginUserChannel && channelStatus !== 2 && (
-            <Button
-              onClick={() => {
-                onEnterDecideClickEvent(selectedChannelId, curChannelTitle);
-              }}
-            >
-              참가신청
-            </Button>
-          )}
           {channelStatus === 2 && (
             <Button
               onClick={() => {
