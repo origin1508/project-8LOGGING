@@ -25,6 +25,26 @@ const socketConfig = (server, app) => {
       socket.emit("chat", userChatInfo);
     });
 
+    socket.on("modify-chat", async (data) => {
+      console.log('수정 데이터');
+      console.log(data);
+
+      await chatService.updateChatLog(data.chatId, data.chat);
+      const userChatInfo = await chatService.getUserChatLog(data.chatId);
+
+      socket.emit("chat", userChatInfo);
+    })
+
+    socket.on("remove-chat", async (data) => {
+      console.log("삭제 데이터");
+      console.log(data);
+
+      const userChatInfo = await chatService.getUserChatLog(data.chatId);
+      await chatService.deleteChatLog(data.chatId, data.roomId);
+
+      socket.emit("chat", userChatInfo);
+    })
+
     socket.on("disconnect", (data) => {
       console.log(data.roomId + "에서 연결 해제");
       socket.leave(data.roomId);
