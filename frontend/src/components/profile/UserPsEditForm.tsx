@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import GlobalTheme from "@/styles/theme";
 import styled, { css } from "styled-components";
 import usePsEditForm from "@/hooks/usePsEditForm";
-import * as Api from "@/api/api";
 import BaseValidateTextContainer from "@/components/hoc/BaseValidateTextContainer";
 import {
   BigTitle,
@@ -14,6 +13,7 @@ import {
 } from "@/styles/commonStyle";
 import Storage from "@/storage/storage";
 import Modal from "../modal/Modal";
+import { authProfilePasswordUpdate } from "@/api/authFetcher";
 import ValidationUtil from "@/util/validationUtil";
 
 const EditInput = css`
@@ -61,16 +61,16 @@ function UserPsEditForm({ setIsEditing, setIsPsEditing }: UserInfoEditProps) {
   const handleSubmitClick = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await Api.put("/api/users/password", {
-        currentPassword: values.currentPassword,
-        newPassword: values.newPassword,
-      });
+      await authProfilePasswordUpdate(
+        "/api/users/password",
+        values.currentPassword,
+        values.newPassword
+      );
       Storage.clearToken();
       setIsEditing(false);
       navigate("/auth", { replace: true });
     } catch (e: any) {
       const erorrMessage = e.response.data.message;
-      console.log(erorrMessage);
       setErorrMessage(erorrMessage);
       setIsOpenModal(true);
     }
@@ -137,6 +137,7 @@ function UserPsEditForm({ setIsEditing, setIsPsEditing }: UserInfoEditProps) {
       <Modal
         isOpenModal={isOppenModal}
         isAlertModal={true}
+        isShowImage={true}
         onModalCancelButtonClickEvent={onModalCancelButtonClickEvent}
       >
         {erorrMessage}

@@ -5,13 +5,17 @@ import { BaseComponentType } from "@/types/common/baseComponentType";
 interface ModalProps extends BaseComponentType {
   isOpenModal: boolean;
   isAlertModal?: boolean;
-  onModalAcceptButtonClickEvent?: () => void;
+  isShowImage?: boolean;
+  onModalAcceptButtonClickEvent?:
+    | (() => void)
+    | ((e: React.MouseEvent<HTMLButtonElement>) => Promise<void>);
   onModalCancelButtonClickEvent: () => void;
 }
 
 const Modal = ({
   isOpenModal,
   isAlertModal,
+  isShowImage,
   onModalAcceptButtonClickEvent,
   onModalCancelButtonClickEvent,
   children,
@@ -25,9 +29,11 @@ const Modal = ({
               src={`${process.env.PUBLIC_URL}/images/popup-cancel.png`}
               onClick={onModalCancelButtonClickEvent}
             />
-            <ModalStyle.ModalMainImage
-              src={`${process.env.PUBLIC_URL}/images/popup-icon.png`}
-            />
+            {isShowImage && (
+              <ModalStyle.ModalMainImage
+                src={`${process.env.PUBLIC_URL}/images/popup-icon.png`}
+              />
+            )}
           </ModalStyle.ModalImageContainer>
         </ModalStyle.ModalHeader>
         <ModalStyle.ModalTextContainer>

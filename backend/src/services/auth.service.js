@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 
 const ApiError = require("../utils/ApiError");
 
-const { User } = require("../models");
+const { User, EmailAuth, Channel } = require("../models");
 
 module.exports = {
   /**
@@ -24,6 +24,12 @@ module.exports = {
     const exUserNickname = await User.findOne({ nickname });
     if (exUserNickname) {
       throw ApiError.badRequest("중복된 닉네임이 존재합니다.");
+    }
+
+    // 이메일 인증 여부 확인
+    const emailAuth = await EmailAuth.findOne({ email });
+    if (emailAuth) {
+      throw ApiError.badRequest("이메일 인증이 완료되지 않았습니다.")
     }
 
     // 비밀번호 암호화
@@ -57,10 +63,17 @@ module.exports = {
       throw ApiError.badRequest("비밀번호가 일치하지 않습니다.");
     }
 
+    // 채널 정보 포함시켜주기
+    const channels = await Promise.all(user.channels.map(async (channelId) => {
+      const channel = await Channel.findById(channelId);
+      return (({ _id, title, img })=>({ _id, title, img }))(channel)
+    }))
+
     return {
       userId: user._id,
       email: user.email,
       nickname: user.nickname,
+      channels
     };
   },
 
@@ -82,4 +95,11 @@ module.exports = {
 
     return token;
   },
+
+  async lockUserInfo(userId) {
+    await User.findOneAndUpdate({_id: userId}, {withdrawal: true});
+  },
+
+  
+
 };

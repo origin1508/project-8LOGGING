@@ -1,18 +1,25 @@
-import React from "react";
+import React, { useRef } from "react";
 import styled from "styled-components";
-import GlobalTheme from "@/styles/theme";
+import useScroll from "@/hooks/useScroll";
 import useChartData from "@/hooks/useChartData";
-import BarChart from "@/components/chart/BarChart";
-import MultiLineChart from "@/components/chart/MultiLineChart";
+import Dots from "@/styles/Dots";
+import BasePageComponent from "@/components/hoc/BasePageComponent";
+import AboutWrapperComponent from "@/components/about/AboutWrapperComponent";
+import AboutFirstContent from "@/components/about/AboutFirstContent";
+import AboutSecondContent from "@/components/about/AboutSecondContent";
+import AboutThirdContent from "@/components/about/AboutThirdContent";
+import AboutFourthContent from "@/components/about/AboutFourthContent";
+
+// const DIVIDER_HEIGHT = 5;
 
 const AboutPlogging = () => {
   const dataNames = ["korea_sea_monitor", "microplastic", "trash_rot"];
-
+  const outerDivRef = useRef<HTMLDivElement>(null);
+  const [scrollIndex] = useScroll(1, outerDivRef);
   const [barChartInfo] = useChartData(dataNames[0], {
     labels: [],
     data: [],
   });
-
   const [multiLineChartInfo] = useChartData(dataNames[1], {
     labels: [],
     data1: [],
@@ -21,48 +28,43 @@ const AboutPlogging = () => {
   });
 
   const { data1, data2, data3 } = multiLineChartInfo;
-  const multiDatas = [data1, data2, data3] as number[][];
 
   return (
-    <ChartContainer>
-      <AboutWrapper>
-        <AboutTitleContent>
-          플로깅Plogging이란 조깅을 하면서 길가의 쓰레기를 수거하는, 체육활동과
-          자연보호활동이 합쳐진 활동입니다. 2016년에 스웨덴에서 시작된 이
-          활동은, 2019년에 2백만 명의 사람들이 매일 플로깅에 참여하는 것으로
-          집계될 만큼 인기를 끌고 있습니다.
-        </AboutTitleContent>
-        <AboutImage src="/images/plogging-about-1.png" />
-      </AboutWrapper>
-      <BarChart
-        dataName="Korea Sea Monitor Bar"
-        labels={barChartInfo?.labels}
-        datas={barChartInfo?.data}
-      />
-      <MultiLineChart
-        dataName="Microplastic"
-        labels={multiLineChartInfo?.labels}
-        multiDatas={multiDatas}
-      />
-    </ChartContainer>
+    <BasePageComponent>
+      <Outer ref={outerDivRef}>
+        <Dots scrollIndex={scrollIndex} />
+        <AboutWrapperComponent>
+          <AboutFirstContent />
+        </AboutWrapperComponent>
+        <AboutWrapperComponent>
+          <AboutSecondContent
+            labels={barChartInfo.labels}
+            data={barChartInfo.data}
+          />
+        </AboutWrapperComponent>
+        <AboutWrapperComponent>
+          <AboutThirdContent
+            labels={multiLineChartInfo.labels}
+            data1={data1}
+            data2={data2}
+            data3={data3}
+          />
+        </AboutWrapperComponent>
+        <AboutWrapperComponent>
+          <AboutFourthContent />
+        </AboutWrapperComponent>
+      </Outer>
+    </BasePageComponent>
   );
 };
-
-const ChartContainer = styled.div`
-  margin-left: 26rem;
-`;
-
-const AboutWrapper = styled.div`
-  width: 100%;
-  display: flex;
-`;
-
-const AboutTitleContent = styled.div`
-  font-size: ${GlobalTheme.fontSize.hyperBig};
-`;
-
-const AboutImage = styled.img`
-  width: 50%;
+const Outer = styled.div`
+  height: 100vh;
+  overflow-y: auto;
+  overflow-y: hidden;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
 `;
 
 export default AboutPlogging;

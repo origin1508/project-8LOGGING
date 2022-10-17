@@ -12,11 +12,17 @@ interface Props {
     e: React.ChangeEvent<HTMLInputElement>
   ) => void;
   onRegisterSubmitEvent: (e: React.FormEvent) => void;
-  onCheckDuplicationEvent: (
-    e: React.MouseEvent<HTMLElement>,
-    endPoint: string,
-    checkData: string
+  onCheckDuplicationEvent: (endPoint: string, checkData: string) => void;
+  onSendVerficationCodeClickEvent: (
+    e: React.MouseEvent<HTMLButtonElement>,
+    email: string
   ) => void;
+  isDuplicated: {
+    email: boolean;
+    nickname: boolean;
+  };
+  isVerifiedEmail: boolean;
+  setIsVerifiedEmail: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const AuthReigster: React.FC<Props> = ({
@@ -24,6 +30,10 @@ const AuthReigster: React.FC<Props> = ({
   onRegisterFormValueChaneEvent,
   onRegisterSubmitEvent,
   onCheckDuplicationEvent,
+  onSendVerficationCodeClickEvent,
+  isDuplicated,
+  isVerifiedEmail,
+  setIsVerifiedEmail,
 }) => {
   const isValidEmail = ValidationUtil.checkEmailValidate(authFormState.email);
   const isValidNickname = ValidationUtil.checkNicknameValidate(
@@ -39,82 +49,92 @@ const AuthReigster: React.FC<Props> = ({
     isValidNickname,
     isValidPassword,
     isPasswordSame,
+    !isDuplicated.email,
+    !isDuplicated.nickname,
   ].every((v) => v === true);
-
   return (
     <RegistrationFormContainer>
       <BaseIntputContainer>
         <RegistrationInput
-          placeholder="Email"
+          placeholder="이메일"
           name="email"
           value={authFormState.email}
+          isDuplicated={isDuplicated.email}
           onChange={onRegisterFormValueChaneEvent}
-        />
-        <CheckDuplicationButton
-          onClick={(e) => {
-            onCheckDuplicationEvent(e, "email", authFormState.email);
+          onBlur={(e) => {
+            onCheckDuplicationEvent("email", e.target.value);
           }}
-          disabled={!isValidEmail && true}
-        >
-          check
-        </CheckDuplicationButton>
-
-        {!isValidEmail && (
+          disabled={isVerifiedEmail && true}
+        />
+        {authFormState.email && !isValidEmail && (
           <BaseValidateTextContainer>
-            Please check your email
+            올바른 이메일을 입력해주세요.
           </BaseValidateTextContainer>
+        )}
+        {isVerifiedEmail ? (
+          <VerifiedEmailButton
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              setIsVerifiedEmail(false);
+            }}
+          >
+            인증확인
+          </VerifiedEmailButton>
+        ) : (
+          <EmailVerificationButton
+            type="button"
+            onClick={(e) => {
+              onSendVerficationCodeClickEvent(e, authFormState.email);
+            }}
+            disabled={!isValidEmail && true}
+          >
+            인증요청
+          </EmailVerificationButton>
         )}
       </BaseIntputContainer>
       <BaseIntputContainer>
         <RegistrationInput
-          placeholder="Nickname"
+          placeholder="닉네임"
           name="nickname"
           value={authFormState.nickname}
+          isDuplicated={isDuplicated.nickname}
           onChange={onRegisterFormValueChaneEvent}
-        />
-        <CheckDuplicationButton
-          onClick={(e) => {
-            onCheckDuplicationEvent(
-              e,
-              "nickname",
-              authFormState.nickname || ""
-            );
+          onBlur={(e) => {
+            onCheckDuplicationEvent("nickname", e.target.value);
           }}
-          disabled={!isValidNickname && true}
-        >
-          check
-        </CheckDuplicationButton>
-        {!isValidNickname && (
+        />
+        {authFormState.nickname && !isValidNickname && (
           <BaseValidateTextContainer>
-            Please check your nickname
+            닉네임을 4글자 이상 사용해주세요.
           </BaseValidateTextContainer>
         )}
       </BaseIntputContainer>
       <BaseIntputContainer>
         <RegistrationInput
-          placeholder="Password"
+          placeholder="비밀번호"
           type="password"
           name="password"
           value={authFormState.password}
           onChange={onRegisterFormValueChaneEvent}
         />
-        {!isValidPassword && (
+        {authFormState.password && !isValidPassword && (
           <BaseValidateTextContainer>
-            Special characters and numbers from 8 to 15.
+            8~15자 영문 소문자, 숫자, 특수문자를 사용해주세요.
           </BaseValidateTextContainer>
         )}
       </BaseIntputContainer>
       <BaseIntputContainer>
         <RegistrationInput
-          placeholder="Confirm password"
+          placeholder="비밀번호 재확인"
           type="password"
           name="confirmPassword"
           value={authFormState.confirmPassword}
           onChange={onRegisterFormValueChaneEvent}
         />
-        {!isPasswordSame && (
+        {authFormState.confirmPassword && !isPasswordSame && (
           <BaseValidateTextContainer>
-            Please check your password and confirm password
+            비밀번호가 일치하지 않습니다.
           </BaseValidateTextContainer>
         )}
       </BaseIntputContainer>
@@ -124,7 +144,7 @@ const AuthReigster: React.FC<Props> = ({
           type="submit"
           onClick={onRegisterSubmitEvent}
         >
-          Register
+          가입하기
         </RegistrationButton>
       </RegistrationButtonContainer>
     </RegistrationFormContainer>
@@ -139,7 +159,7 @@ const RegistrationFormContainer = styled.form`
   margin-top: 5rem;
 `;
 
-const RegistrationInput = styled.input`
+const RegistrationInput = styled.input<{ isDuplicated?: boolean }>`
   width: 100%;
   outline: ${GlobalTheme.input.outline};
   font-size: ${GlobalTheme.fontSize.littleBig};
@@ -149,23 +169,9 @@ const RegistrationInput = styled.input`
   line-height: 3rem;
   border: ${GlobalTheme.input.border};
   box-shadow: 1px 1px 3px ${GlobalTheme.colors.gray};
+  border-color: ${(props) => props.isDuplicated && "red"};
 `;
 
-const CheckDuplicationButton = styled.button`
-  ${GlobalTheme.buttons}
-  position: absolute;
-  right: 6rem;
-  margin-top: 1rem;
-  width: 5rem;
-  color: ${GlobalTheme.colors.white};
-  background-color: ${GlobalTheme.colors.theme};
-  line-height: 3rem;
-  cursor: pointer;
-  &:disabled {
-    color: ${GlobalTheme.colors.gray};
-    background-color: ${GlobalTheme.colors.lightTwoGray};
-  }
-`;
 const RegistrationButtonContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -182,6 +188,33 @@ const RegistrationButton = styled.button`
   text-align: center;
   cursor: pointer;
   margin-bottom: 2rem;
+  &:disabled {
+    color: ${GlobalTheme.colors.lightGray};
+    background-color: ${GlobalTheme.colors.gray};
+  }
+`;
+
+const EmailVerificationButton = styled.button`
+  ${GlobalTheme.buttons}
+  border: 1px solid ${GlobalTheme.colors.theme};
+  position: absolute;
+  top: 18.5rem;
+  font-size: ${GlobalTheme.fontSize.littleBig};
+  color: ${GlobalTheme.colors.theme};
+  background-color: ${GlobalTheme.colors.white};
+  right: 6rem;
+  height: 3rem;
+  cursor: pointer;
+  &:disabled {
+    color: ${GlobalTheme.colors.gray};
+    border-color: ${GlobalTheme.colors.gray};
+  }
+`;
+
+const VerifiedEmailButton = styled(EmailVerificationButton)`
+  ${GlobalTheme.buttons}
+  border: 1px solid green;
+  color: green;
 `;
 
 export default AuthReigster;

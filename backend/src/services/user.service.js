@@ -2,21 +2,20 @@ const bcrypt = require("bcrypt");
 const ApiError = require("../utils/ApiError");
 
 // 모델 불러오기
-const { User, Channel } = require("../models");
+const { User, Channel, WaitList } = require("../models");
 
 module.exports = {
   async checkEmailDuplication(email) {
     const exUser = await User.findOne({ email });
-    console.log(exUser);
-    console.log(email);
     if (exUser) {
       throw ApiError.badRequest("이미 존재하는 이메일입니다.");
     }
   },
 
-  async checkNicknameDuplication(nickname) {
+  async checkNicknameDuplication(userId, nickname) {
     const exUser = await User.findOne({ nickname });
-    if (exUser) {
+    
+    if (exUser && exUser._id.toString() !== userId) {
       throw ApiError.badRequest("이미 존재하는 닉네임입니다.");
     }
   },
@@ -109,19 +108,19 @@ module.exports = {
     return result;
   },
 
-  /**
-   * 유저 팔로잉 리스트 조회
-   *
-   * @param {String} userId
-   * @returns
-   */
-  async findFollowingList(userId) {
-    const user = await User.findOne({ _id: userId });
+  // /**
+  //  * 유저 팔로잉 리스트 조회
+  //  *
+  //  * @param {String} userId
+  //  * @returns
+  //  */
+  // async findFollowingList(userId) {
+  //   const user = await User.findOne({ _id: userId });
 
-    return {
-      following: user.following,
-    };
-  },
+  //   return {
+  //     following: user.following,
+  //   };
+  // },
   /**
    * 자기소개 수정
    *
@@ -144,13 +143,41 @@ module.exports = {
   },
 
   /**
-   * 유저 모든 데이터 조회
+   * 유저 모든 데이터 조회 (소속 채널 상세 정보 포함)
    *
    * @param {String} userId
    * @returns
    */
   async findUserAllData(userId) {
     const user = await User.findOne({ _id: userId }).lean();
+    const waitingChannels = await Promise.all(user.waitReqList.map(async (waitListId) => {
+      const waitList = await WaitList.findById(waitListId);
+      return waitList.channelId
+    }))
+    console.log(waitingChannels);
+    const channels = await Promise.all(user.channels.map(async (channelId) => {
+      const channel = await Channel.findById(channelId);
+      // 개설자/입장대기자/일반멤버 파악
+      var position = 1;
+      if ( userId == channel.ownerId )  {
+        position = 0;
+      } else if ( waitingChannels.includes(String(channelId)) ) {
+        position = 2;
+      }
+
+      return {
+        _id: channel._id,
+        title: channel.title,
+        locationDist: channel.locationDist,
+        locationCity: channel.locationCity,
+        memberNum: channel.memberNum,
+        curMemberNum: channel.members.length,
+        img: channel.img,
+        position
+      }
+    }))
+    
+    user.channels = channels
     delete user.password;
 
     return user;
@@ -178,4 +205,11 @@ module.exports = {
 
     return results;
   },
+
+  async findLockedUser(email) {
+    const exUser = await User.findOne({email}, "withdrawal").lean();
+    if(exUser.withdrawal) {
+      throw ApiError.forbbiden('탈퇴한 회원입니다.');
+    }
+  }
 };

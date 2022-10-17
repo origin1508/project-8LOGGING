@@ -5,15 +5,20 @@ import { curUserState } from "@/recoil/atoms/authState";
 import { useRecoilValue } from "recoil";
 import BaseCardContainer from "@/components/hoc/BaseCardContainer";
 import { BigTitle, TitleContainer } from "@/styles/commonStyle";
+import Follow from "@/components/profile/Follow";
+import FollowList from "@/components/profile/FollowList";
+
 interface ImgProps {
   img?: string;
 }
 interface UserCardProps {
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
   onDeleteAccountModalOpenClickEvent: () => void;
+  isEditable?: boolean;
 }
 
 function UserCard({
+  isEditable,
   setIsEditing,
   onDeleteAccountModalOpenClickEvent,
 }: UserCardProps) {
@@ -22,20 +27,30 @@ function UserCard({
   const handlerEditClick = () => {
     setIsEditing(true);
   };
+
   return (
-    <BaseCardContainer width="40rem">
+    <BaseCardContainer width="50vh">
       <TitleContainer>
-        <BigTitle>MY PROFILE</BigTitle>
+        <BigTitle>
+          {isEditable ? `My` : `${curUser.nickname}'s`} Profile
+        </BigTitle>
       </TitleContainer>
-      <Img img={curUser?.profPic}></Img>
+      <Img img={curUser?.profPic} />
+      {isEditable && <FollowList />}
+
       <InforContainer>
         <UserNicname>{curUser?.nickname}</UserNicname>
         <UserEmail>{curUser?.email}</UserEmail>
         <UserDescription>{curUser?.description}</UserDescription>
-        <Button onClick={handlerEditClick}>Edit</Button>
-        <Button onClick={onDeleteAccountModalOpenClickEvent}>
-          Delete Account
-        </Button>
+        {!isEditable && <Follow></Follow>}
+        {isEditable && (
+          <>
+            <Button onClick={handlerEditClick}>Edit</Button>
+            <Button onClick={onDeleteAccountModalOpenClickEvent}>
+              Delete Account
+            </Button>
+          </>
+        )}
       </InforContainer>
     </BaseCardContainer>
   );
@@ -59,7 +74,7 @@ const InforContainer = styled.div`
   justify-content: space-around;
   flex-direction: column;
   padding: 1rem;
-  font-size: ${GlobalTheme.fontSize.littleBig};
+  font-size: ${GlobalTheme.fontSize.medium};
 `;
 
 const UserNicname = styled.h3``;
@@ -75,6 +90,7 @@ const Button = styled.button`
   width: 80%;
   font-size: 1.5rem;
   padding: 1rem 2rem;
+  cursor: pointer;
 
   &:hover {
     transform: translateY(-0.3rem);
@@ -87,4 +103,5 @@ const Button = styled.button`
     transform: translateY(-0.1rem);
   }
 `;
+
 export default UserCard;

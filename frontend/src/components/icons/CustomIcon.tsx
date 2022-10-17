@@ -1,6 +1,15 @@
 import React from "react";
-import { BsPeopleFill, BsMapFill, BsCalendarDateFill } from "react-icons/bs";
+import {
+  BsPeopleFill,
+  BsMapFill,
+  BsCalendarDateFill,
+  BsSearch,
+  BsFillBellFill,
+} from "react-icons/bs";
 import { VscTriangleDown, VscTriangleUp } from "react-icons/vsc";
+import { FaUserFriends, FaCrown } from "react-icons/fa";
+import { FiSend } from "react-icons/fi";
+
 interface CustomIconProps {
   name: string;
   size: string;
@@ -24,6 +33,18 @@ const CustomIcon = ({ name, size, color }: CustomIconProps) => {
 
       case "toggleUp":
         return <VscTriangleUp size={size} color={color}></VscTriangleUp>;
+
+      case "SeachIcon":
+        return <BsSearch size={size} color={color}></BsSearch>;
+
+      case "following":
+        return <FaUserFriends size={size} color={color}></FaUserFriends>;
+      case "bell":
+        return <BsFillBellFill size={size} color={color}></BsFillBellFill>;
+      case "send":
+        return <FiSend size={size} color={color}></FiSend>;
+      case "crown":
+        return <FaCrown size={size} color={color}></FaCrown>;
       default:
         console.log("Not implemented!");
         return;

@@ -2,7 +2,6 @@ import React from "react";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import { BaseComponentType } from "@/types/common/baseComponentType";
-import { isTemplateExpression } from "typescript";
 
 interface BaseCardContaineProps extends BaseComponentType {
   width: string;
@@ -17,7 +16,9 @@ const BaseCardContainer = ({ children, width }: BaseCardContaineProps) => {
 const BaseCardContainerStyle = styled.div`
   width: ${(props) => props.itemProp};
   overflow: hidden;
-  height: 65rem;
+  min-width: 40rem;
+  min-height: 75rem;
+  height: 80vh;
   border-radius: 1rem;
   background-color: ${GlobalTheme.colors.white};
   display: flex;

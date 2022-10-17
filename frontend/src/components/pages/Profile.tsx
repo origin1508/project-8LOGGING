@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { useNavigate, useParams } from "react-router-dom";
 import useModal from "@/hooks/useModal";
-import { curUserState, curUserIdState } from "@/recoil/atoms/authState";
+import { curUserState, loginUserIdState } from "@/recoil/atoms/authState";
 import User from "@/components/profile/User";
 import Modal from "@/components/modal/Modal";
 import DeleteAccountModal from "@/components/modal/Modal";
@@ -10,8 +10,11 @@ import UserImageUpdate from "@/components/profile/UserImageUpdate";
 import UserDeleteAccount from "@/components/profile/UserDeleteAccount";
 import ChannelHistory from "../profile/ChannelHistory";
 import BasePageComponent from "@/components/hoc/BasePageComponent";
-import { authProfileImageUpdate } from "@/api/authFetcher";
-import * as Api from "../../api/api";
+import {
+  authProfileImageUpdate,
+  deleteAccountRequest,
+} from "@/api/authFetcher";
+import { getAuthInformationById } from "@/api/authFetcher";
 import Storage from "@/storage/storage";
 import { imageResize } from "@/util/imageResizeUtil";
 
@@ -21,12 +24,11 @@ function Profile() {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [confirmCheck, setConfirmCheck] = useState("");
   const [curUser, setCurUser] = useRecoilState(curUserState);
-  const [isFetchCompleted, setIsFetchCompleted] = useState(false);
   const [image, setImage] = useState<Blob>();
   const [profileImagePreview, setProfileImagePreview] = useState<
     string | ArrayBuffer | null
   >();
-  const curUserId = useRecoilValue(curUserIdState);
+  const loginUserId = useRecoilValue(loginUserIdState);
 
   const [
     isOpenModal,
@@ -45,11 +47,8 @@ function Profile() {
   ] = useModal(false);
 
   const fetchProfileOwner = async (curUserId: string) => {
-    const res = await Api.get("/api/users/userinfo", curUserId);
-    const curUserData = res.data.datas;
-
-    setCurUser(curUserData);
-    setIsFetchCompleted(true);
+    const res = await getAuthInformationById("/api/users/userinfo", curUserId);
+    setCurUser(res);
   };
 
   const handleProfileImageUploadChange = async (
@@ -78,8 +77,10 @@ function Profile() {
 
   const handleDeleteAccountAcceptClick = async () => {
     if (curUser.email === confirmCheck) {
+      await deleteAccountRequest("/api/auth/withdrawal");
       handleAcceptDeleteClick();
       Storage.clearToken();
+      alert("Your account has been successfully deleted");
       navigate("/", { replace: true });
     } else alert("check your email");
     setConfirmCheck("");
@@ -99,7 +100,7 @@ function Profile() {
       const userId = params.userId;
       fetchProfileOwner(userId);
     } else {
-      const userId = curUserId;
+      const userId = loginUserId;
       fetchProfileOwner(userId);
     }
   }, [params, navigate]);
@@ -107,6 +108,7 @@ function Profile() {
   return (
     <BasePageComponent>
       <User
+        isEditable={curUser._id === loginUserId}
         isEditing={isEditing}
         setIsEditing={setIsEditing}
         onDeleteAccountModalOpenClickEvent={

@@ -1,9 +1,12 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import BasePageComponent from "@/components/hoc/BasePageComponent";
 
 function Main() {
+  const navigate = useNavigate();
+
   return (
     <BasePageComponent>
       <MainContent>
@@ -15,16 +18,18 @@ function Main() {
         </MainContentMinTitle>
         <ButtonContainer>
           <Button
+            onClick={() => navigate("/channels")}
             color={GlobalTheme.colors.white}
             itemProp={GlobalTheme.colors.theme}
           >
             Explore our service
           </Button>
           <Button
+            onClick={() => navigate("/about")}
             color={GlobalTheme.colors.theme}
             itemProp={GlobalTheme.colors.white}
           >
-            Explore our service
+            About Plogging
           </Button>
         </ButtonContainer>
         <ImgContainer>

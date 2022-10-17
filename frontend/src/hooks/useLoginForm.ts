@@ -8,7 +8,8 @@ const useLoginForm = (
 ): [
   AuthFormInitialType,
   (e: React.ChangeEvent<HTMLInputElement>) => void,
-  ValidationType
+  ValidationType,
+  React.Dispatch<React.SetStateAction<AuthFormInitialType>>
 ] => {
   const [loginValue, setLoginValue] = useState(initialState);
   const [isValid, setIsValid] = useState({ email: false, password: false });
@@ -27,7 +28,7 @@ const useLoginForm = (
     setLoginValue({ ...loginValue, [name]: value });
   };
 
-  return [loginValue, handleLoginFormChange, isValid];
+  return [loginValue, handleLoginFormChange, isValid, setLoginValue];
 };
 
 export default useLoginForm;

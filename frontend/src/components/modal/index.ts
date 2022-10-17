@@ -23,7 +23,7 @@ export const ModalBackDrop = styled.div`
   bottom: 0;
   right: 0;
   font-family: ${GlobalTheme.fontStyle.bold};
-  z-index: 0;
+  z-index: 9;
   background-color: rgba(0, 0, 0, 0.1);
   ${isVisibleModal};
 `;
@@ -39,6 +39,7 @@ export const ModalContainer = styled.div`
   border-radius: 8px;
   background-color: ${GlobalTheme.colors.white};
   padding: 1.25rem;
+  box-shadow: 1px 1px 3px ${GlobalTheme.colors.gray};
   ${isVisibleModal};
 `;
 export const ModalHeader = styled.div`
@@ -63,6 +64,10 @@ export const ModalImage = styled.img`
 `;
 export const ModalTextContainer = styled.div`
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  justify-content: center;
   margin: 3rem 0 3rem 0;
   font-size: ${GlobalTheme.fontSize.moreBig};
 `;
@@ -71,6 +76,7 @@ export const ModalButtonContainer = styled.div`
   display: flex;
   justify-content: center;
   margin-bottom: 3rem;
+  gap: 2rem;
 `;
 
 export const ModalAcceptButton = styled.button`
@@ -82,7 +88,6 @@ export const ModalAcceptButton = styled.button`
   color: ${GlobalTheme.colors.white};
   background-color: ${GlobalTheme.colors.theme};
   font-size: ${GlobalTheme.fontSize.littleBig};
-  margin-right: 1rem;
 `;
 
 export const ModalButton = styled.button`

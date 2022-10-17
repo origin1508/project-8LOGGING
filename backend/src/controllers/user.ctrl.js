@@ -20,9 +20,10 @@ module.exports = {
 
   // 닉네임 중복 체크
   async getNicknameDuplValidationResult(req, res, next) {
+    const userId = req.userId;
     const { nickname } = req.params;
     try {
-      await userService.checkNicknameDuplication(nickname);
+      await userService.checkNicknameDuplication(userId, nickname);
 
       res.status(200).json({
         success: true,
@@ -40,7 +41,7 @@ module.exports = {
     const { newNickname } = req.body;
     try {
       // 중복 체크
-      await userService.checkNicknameDuplication(newNickname);
+      await userService.checkNicknameDuplication(userId, newNickname);
 
       const user = await userService.updateUserNickname(userId, newNickname);
 
@@ -100,23 +101,23 @@ module.exports = {
     }
   },
 
-  // 유저의 친구 목록 조회
-  async getFollowingList(req, res, next) {
-    const userId = req.userId;
+  // // 유저의 친구 목록 조회
+  // async getFollowingList(req, res, next) {
+  //   const userId = req.userId;
 
-    try {
-      const followingList = await userService.findFollowingList(userId);
+  //   try {
+  //     const followingList = await userService.findFollowingList(userId);
 
-      res.status(200).json({
-        success: true,
-        status: 200,
-        message: "success getting following list",
-        datas: followingList,
-      });
-    } catch (err) {
-      next(err);
-    }
-  },
+  //     res.status(200).json({
+  //       success: true,
+  //       status: 200,
+  //       message: "success getting following list",
+  //       datas: followingList,
+  //     });
+  //   } catch (err) {
+  //     next(err);
+  //   }
+  // },
 
   // 유저 자기소개 수정
   async modifyDescription(req, res, next) {

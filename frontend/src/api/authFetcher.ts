@@ -68,6 +68,138 @@ export async function authProfileImageUpdate(
   return datas;
 }
 
-export async function get(endpoint: string, params = "") {
-  return customAxios.get(endpoint + "/" + params);
+export async function authProfileNickUpdate(
+  endPoint: string,
+  nickname: string
+) {
+  const res = await customAxios.put(
+    endPoint,
+    {
+      newNickname: nickname,
+    },
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${Storage.getToken()}`,
+      },
+    }
+  );
+  return res.data.datas;
+}
+
+export async function authProfileDescriptionUpdate(
+  endPoint: string,
+  description: string
+) {
+  const res = await customAxios.put(
+    endPoint,
+    {
+      newDescription: description,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${Storage.getToken()}`,
+      },
+    }
+  );
+  return res.data.datas;
+}
+
+export async function authProfilePasswordUpdate(
+  endPoint: string,
+  currentPassword: string,
+  newPassword: string
+) {
+  const res = await customAxios.put(
+    endPoint,
+    {
+      currentPassword: currentPassword,
+      newPassword: newPassword,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${Storage.getToken()}`,
+      },
+    }
+  );
+  return res.data;
+}
+
+export async function getAuthInformationById(endPoint: string, id: string) {
+  const res = await customAxios.get(`${endPoint}/${id}`, {
+    headers: {
+      Authorization: `Bearer ${Storage.getToken()}`,
+    },
+  });
+  const { datas } = res.data;
+  return datas;
+}
+
+export async function authVerificationCodeSend(
+  endPoint: string,
+  email: string
+) {
+  const res = await customAxios.post(endPoint, {
+    email: email,
+  });
+  return res.data;
+}
+
+export async function authVerificationCodeCheck(
+  endPoint: string,
+  email: string,
+  authCode: string
+) {
+  const res = await customAxios.delete(endPoint, {
+    data: {
+      email: email,
+      authCode: authCode,
+    },
+  });
+  return res.data;
+}
+
+export async function deleteAccountRequest(endPoint: string) {
+  const res = await customAxios.delete(endPoint, {
+    headers: {
+      Authorization: `Bearer ${Storage.getToken()}`,
+    },
+  });
+  return res.data;
+}
+
+export async function authFollowingRequest(endPoint: string, targetId: string) {
+  const res = await customAxios.get(`${endPoint}/${targetId}`, {
+    headers: {
+      Authorization: `Bearer ${Storage.getToken()}`,
+    },
+  });
+  return res.data;
+}
+
+export async function authFollowRequest(endPoint: string, targetId: string) {
+  const res = await customAxios.post(
+    endPoint,
+    {
+      targetId: targetId,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${Storage.getToken()}`,
+      },
+    }
+  );
+  return res;
+}
+
+export async function authUnFollowRequest(endPoint: string, targetId: string) {
+  const bodyData = JSON.stringify({ targetId });
+  const res = await customAxios.delete(endPoint, {
+    data: bodyData,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${Storage.getToken()}`,
+    },
+  });
+  return res;
 }

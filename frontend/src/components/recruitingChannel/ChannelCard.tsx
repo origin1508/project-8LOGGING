@@ -4,48 +4,52 @@ import GlobalTheme from "@/styles/theme";
 import CustomIcon from "@/components/icons/CustomIcon";
 
 interface ChannelCardPropsType {
-  imgUrl: string;
+  img: string;
   title: string;
-  curMemberNum: number;
+  channelUuid: string;
+  curMemberNum: string;
   locationDist: string;
+  locationCity: string;
+  onMoreClick: (channelUuid: string) => void;
 }
 
 function ChannelCard({
-  imgUrl,
+  img,
   title,
+  channelUuid,
   curMemberNum,
   locationDist,
+  locationCity,
+  onMoreClick,
 }: ChannelCardPropsType) {
   return (
     <CardContainer>
-      <CardImg src={imgUrl} />
+      <CardImg src={img} />
       <CardContent>
         <CardTitle>{title}</CardTitle>
         <CardInfoList>
           <List>
             <CustomIcon
               name="people"
-              size="20"
+              size="15"
               color={GlobalTheme.colors.theme}
             />
             <PeopleCount>{curMemberNum}</PeopleCount>
           </List>
           <List>
-            <CustomIcon name="map" size="20" color={GlobalTheme.colors.theme} />
+            <CustomIcon name="map" size="15" color={GlobalTheme.colors.theme} />
             <Location>{locationDist}</Location>
-          </List>
-          <List>
-            <CustomIcon
-              name="date"
-              size="20"
-              color={GlobalTheme.colors.theme}
-            />
-            <Date>22/10/22</Date>
+            <Location>{locationCity}</Location>
           </List>
         </CardInfoList>
         <ButtonContainer>
-          <Button>참가하기</Button>
-          <Button>More</Button>
+          <Button
+            onClick={() => {
+              onMoreClick(channelUuid);
+            }}
+          >
+            More
+          </Button>
         </ButtonContainer>
       </CardContent>
     </CardContainer>
@@ -53,8 +57,9 @@ function ChannelCard({
 }
 
 const CardContainer = styled.div`
-  width: 30rem;
-  height: 30rem;
+  width: 27rem;
+  height: 27rem;
+
   border-radius: 0.7rem;
   display: flex;
   flex-direction: column;
@@ -74,6 +79,7 @@ const CardContent = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  font-size: ${GlobalTheme.fontSize.medium};
 `;
 
 const CardTitle = styled.h1`
@@ -82,25 +88,19 @@ const CardTitle = styled.h1`
 `;
 const CardInfoList = styled.ul`
   display: flex;
-  justify-content: space-between;
+  justify-content: left;
 `;
 const List = styled.li`
   display: flex;
-  margin-right: 1rem;
+  margin-right: 2rem;
   span {
     margin-left: 1rem;
   }
 `;
 
-const PeopleCount = styled.span`
-  font-size: ${GlobalTheme.fontSize.littleBig};
-`;
-const Location = styled.span`
-  font-size: ${GlobalTheme.fontSize.littleBig};
-`;
-const Date = styled.span`
-  font-size: ${GlobalTheme.fontSize.littleBig};
-`;
+const PeopleCount = styled.span``;
+const Location = styled.span``;
+
 const ButtonContainer = styled.div`
   display: flex;
   gap: 2rem;
@@ -113,7 +113,7 @@ const Button = styled.button`
   font-size: ${GlobalTheme.fontSize.littleBig};
   padding: 0.7rem 1.2rem;
   border: 0.1rem solid ${GlobalTheme.colors.theme};
-
+  cursor: pointer;
   &:hover {
     transform: translateY(-0.3rem);
   }

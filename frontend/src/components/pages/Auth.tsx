@@ -1,52 +1,99 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import GlobalTheme from "@/styles/theme";
 import useRegisterForm from "@/hooks/useRegisterForm";
 import useLoginForm from "@/hooks/useLoginForm";
+import useCheckDuplication from "@/hooks/useCheckDuplication";
 import AuthLogin from "@/components/auth/AuthLogin";
 import AuthReigster from "../auth/AuthRegister";
+import AuthEmailVerification from "@/components/auth/AuthEmailVerification";
 import BasePageComponent from "@/components/hoc/BasePageComponent";
 import Modal from "@/components/modal/Modal";
 import useModal from "@/hooks/useModal";
+import { ErrorType } from "@/types/error/errorType";
 import {
   authRegisterRequest,
   authLoginRequest,
-  checkDuplicationRequest,
+  authVerificationCodeSend,
+  authVerificationCodeCheck,
 } from "@/api/authFetcher";
 import { useSetRecoilState } from "recoil";
-import { curUserIdState } from "@/recoil/atoms/authState";
-const TapMenu = ["Sign in", "Registration"];
+import { loginUserIdState } from "@/recoil/atoms/authState";
+const TapMenu = ["로그인", "회원가입"];
 
 const Auth = () => {
   const [tabIndex, setTabIndex] = useState(0);
   const [errMessage, setErrMessage] = useState("");
+  const [isVerifiedEmail, setIsVerifiedEmail] = useState(false);
+  const [verificationCode, setVerificationCode] = useState("");
   const [
     isOpenModal,
     ,
     handleModalOpenButtonClick,
+    ,
     handleModalCloseButtonClick,
   ] = useModal(false);
+  const [
+    isOpenVerifyEmailModal,
+    ,
+    handleEmailVerificationModalOpenButtonClick,
+    handleEmailVerificationAcceptButtonClick,
+    handleEmailVerificationModalCloseButtonClick,
+  ] = useModal(false);
 
-  const { authFormState, handleAuthFormValueChange } = useRegisterForm({
-    email: "",
-    nickname: "",
-    password: "",
-    confirmPassword: "",
-  });
+  useEffect(() => {
+    setAuthForm({
+      email: "",
+      nickname: "",
+      password: "",
+      confirmPassword: "",
+    });
+    setErrMessage("");
+    setIsVerifiedEmail(false);
+    setLoginValue({
+      email: "",
+      password: "",
+    });
+    setVerificationCode("");
+    setIsDuplicated({
+      email: false,
+      nickname: false,
+    });
+  }, [tabIndex]);
 
-  const [loginValue, handleLoginFormChange, isValid] = useLoginForm({
-    email: "",
-    password: "",
-  });
-  const setCurUserId = useSetRecoilState(curUserIdState);
+  const { authFormState, handleAuthFormValueChange, setAuthForm } =
+    useRegisterForm({
+      email: "",
+      nickname: "",
+      password: "",
+      confirmPassword: "",
+    });
+
+  const [loginValue, handleLoginFormChange, isValid, setLoginValue] =
+    useLoginForm({
+      email: "",
+      password: "",
+    });
+
+  const { isDuplicated, setIsDuplicated, handleCheckDuplication } =
+    useCheckDuplication({
+      setErrMessage,
+      handleModalOpenButtonClick,
+    });
+
+  const setLoginUserId = useSetRecoilState(loginUserIdState);
 
   const navigate = useNavigate();
 
   const handleRegisterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const { email, nickname, password } = authFormState;
-
+    if (!isVerifiedEmail) {
+      setErrMessage("이메일 인증이 필요합니다.");
+      handleModalOpenButtonClick();
+      return;
+    }
     const res = await authRegisterRequest("/api/auth/register", {
       email,
       nickname,
@@ -63,30 +110,50 @@ const Auth = () => {
         email,
         password,
       });
-      setCurUserId(res.userId);
+      setLoginUserId(res.userId);
       navigate("/", { replace: true });
     } catch (error) {
-      setErrMessage("Incorret email or password");
+      const err = error as ErrorType;
+      const status = err.response.data.status;
+      if (status === 400)
+        setErrMessage("이메일 혹은 비밀번호가 올바르지 않습니다.");
+      if (status === 403) setErrMessage("탈퇴된 회원입니다.");
       handleModalOpenButtonClick();
     }
   };
 
-  const handleCheckDuplication = async (
-    e: React.MouseEvent<HTMLElement>,
-    endPoint: string,
-    checkData: string
+  const handleSendVerificationCode = async (
+    e: React.MouseEvent<HTMLButtonElement>,
+    email: string
   ) => {
     e.preventDefault();
-    try {
-      const res = await checkDuplicationRequest(
-        "api/users/validation/duplication/" + endPoint,
-        checkData
-      );
-      setErrMessage(res);
-    } catch (error) {
-      setErrMessage("Already Exist");
+    if (isDuplicated.email) {
+      return handleModalOpenButtonClick();
     }
-    handleModalOpenButtonClick();
+    setErrMessage("");
+    handleEmailVerificationModalOpenButtonClick();
+    const res = await authVerificationCodeSend("/api/auth/email", email);
+  };
+
+  const handleEmailVerificationCheck = async (
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    e.preventDefault();
+    const { email } = authFormState;
+    if (verificationCode) {
+      const res = await authVerificationCodeCheck(
+        "api/auth/email",
+        email,
+        verificationCode
+      );
+      if (res.success) {
+        setIsVerifiedEmail(true);
+        setVerificationCode("");
+        handleEmailVerificationAcceptButtonClick();
+      } else {
+        setErrMessage("이메일 인증번호가 일치하지 않습니다.");
+      }
+    }
   };
 
   return (
@@ -100,7 +167,6 @@ const Auth = () => {
                 <Tab
                   onClick={() => {
                     setTabIndex(index);
-                    setErrMessage("");
                   }}
                   key={index}
                   style={{
@@ -134,6 +200,10 @@ const Auth = () => {
               onRegisterFormValueChaneEvent={handleAuthFormValueChange}
               onRegisterSubmitEvent={handleRegisterSubmit}
               onCheckDuplicationEvent={handleCheckDuplication}
+              onSendVerficationCodeClickEvent={handleSendVerificationCode}
+              isDuplicated={isDuplicated}
+              isVerifiedEmail={isVerifiedEmail}
+              setIsVerifiedEmail={setIsVerifiedEmail}
             />
           )}
         </FormContainer>
@@ -141,9 +211,25 @@ const Auth = () => {
       <Modal
         isOpenModal={isOpenModal}
         isAlertModal={true}
+        isShowImage={true}
         onModalCancelButtonClickEvent={handleModalCloseButtonClick}
       >
         {errMessage}
+      </Modal>
+      <Modal
+        isOpenModal={isOpenVerifyEmailModal}
+        onModalAcceptButtonClickEvent={handleEmailVerificationCheck}
+        onModalCancelButtonClickEvent={() => {
+          setVerificationCode("");
+          handleEmailVerificationModalCloseButtonClick();
+        }}
+      >
+        <AuthEmailVerification
+          verificationCode={verificationCode}
+          setVerificationCode={setVerificationCode}
+          errMessage={errMessage}
+          emailToSend={authFormState.email}
+        />
       </Modal>
     </BasePageComponent>
   );

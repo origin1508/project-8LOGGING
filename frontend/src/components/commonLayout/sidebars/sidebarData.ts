@@ -12,16 +12,11 @@ export const SidebarData = [
   {
     title: "Recruiting channel",
     path: "/channels",
-    loginRequired: true,
+    loginRequired: false,
   },
   {
     title: "Create channel",
     path: "/channels/create",
-    loginRequired: true,
-  },
-  {
-    title: "Region",
-    path: "/locations",
     loginRequired: true,
   },
 ];
