@@ -55,8 +55,16 @@ const ChannelList = () => {
     e.preventDefault();
     const { datas } = await getResultByKeyword(page, status, keyword, filter);
     setChannels(datas);
-    console.log(datas);
+    console.log(filter);
   };
+
+  const handleSelectFilterChange = (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const { value } = e.target;
+    setFilter(value);
+  };
+
   const getResultByKeyword = async (
     page: number,
     status: number,
@@ -136,10 +144,10 @@ const ChannelList = () => {
             <SearchButton onClick={handleSearchButtonClick}>
               <CustomIcon name="SeachIcon" size="20" color="black"></CustomIcon>
             </SearchButton>
-            <Select>
-              <option value="All">All</option>
-              <option value="Title">Title</option>
-              <option value="Regin">Region</option>
+            <Select name="filterSelect" onChange={handleSelectFilterChange}>
+              <option value="none">All</option>
+              <option value="title">Title</option>
+              <option value="region">Region</option>
             </Select>
           </Search>
 
