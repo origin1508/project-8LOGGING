@@ -2,6 +2,13 @@ const { Follow, User } = require("../models");
 const ApiError = require("../utils/ApiError");
 
 module.exports = {
+
+  /**
+   * 팔로우 리스트 불러오기
+   * 
+   * @param {String} userId 유저 아이디
+   * @returns 팔로우 중인 친구 리스트
+   */
   async getFollowList(userId) {
     const followingInfo = await Follow.find(
       { follower: userId },
@@ -20,6 +27,13 @@ module.exports = {
     return followList.filter(el => el !== null);
   },
 
+  /**
+   * 팔로우 유무 체크
+   * 
+   * @param {String} userId 유저 아이디
+   * @param {String} targetId 상대방 유저 아이디
+   * @returns 팔로우 유무
+   */
   async confirmFollow(userId, targetId) {
     let isFollowed = true;
     
@@ -34,6 +48,12 @@ module.exports = {
     return isFollowed;
   },
 
+  /**
+   * 팔로우 추가
+   * 
+   * @param {String} userId 유저 아이디 
+   * @param {String} targetId 상대방 유저 아이디
+   */
   async createFollow(userId, targetId) {
     // 자기 자신을 친구 추가하면 에러 발생
     if (userId === targetId) {
@@ -59,6 +79,12 @@ module.exports = {
     await Follow.create({ follower: userId, following: targetId });
   },
 
+  /**
+   * 팔로우 삭제
+   * 
+   * @param {String} userId 유저 아이디
+   * @param {String} targetId 상대방 유저 아이디
+   */
   async deleteFollow(userId, targetId) {
     await Follow.deleteOne({ follower: userId, following: targetId });
   },

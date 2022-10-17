@@ -8,10 +8,10 @@ const { User, EmailAuth, Channel } = require("../models");
 module.exports = {
   /**
    * 유저 데이터 생성
-   * @param {String} email
-   * @param {String} password
-   * @param {String} nickname
-   * @returns
+   * @param {String} email 이메일
+   * @param {String} password 패스워드
+   * @param {String} nickname 닉네임
+   * @returns 유저 정보
    */
   async createUser(email, password, nickname) {
     // 중복된 이메일 확인
@@ -46,9 +46,9 @@ module.exports = {
   /**
    * 로그인 시 일치 불일치 체크
    *
-   * @param {String} email
-   * @param {String} password
-   * @returns
+   * @param {String} email 이메일
+   * @param {String} password 패스워드
+   * @returns 유저 및 채널 정보
    */
   async checkUser(email, password) {
     // 가입된 이메일인지 확인
@@ -80,8 +80,8 @@ module.exports = {
   /**
    * JWT 토큰 생성
    *
-   * @param {String} userId
-   * @returns {String}
+   * @param {String} userId 유저 아이디
+   * @returns access 토큰
    */
   async generateAccessToken(userId) {
     const token = jwt.sign(
@@ -96,10 +96,12 @@ module.exports = {
     return token;
   },
 
+  /**
+   * 유저 탈퇴 (유저 정보 잠금)
+   * 
+   * @param {String} userId 유저 아이디
+   */
   async lockUserInfo(userId) {
     await User.findOneAndUpdate({_id: userId}, {withdrawal: true});
   },
-
-  
-
 };
