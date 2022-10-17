@@ -202,10 +202,11 @@ const CardsContainer = styled.div`
   overflow-y: scroll;
   display: flex;
   height: 80%;
+  width: 90%;
   align-itmes: center;
   justify-content: start;
   flex-wrap: wrap;
-  gap: 3rem;
+  gap: 2.5rem;
 `;
 const TitleContainer = styled.div`
   padding: 3rem 0rem;
