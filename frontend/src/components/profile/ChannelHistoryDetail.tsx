@@ -5,12 +5,13 @@ import ChannelInfo from "@/components/channelDetail/ChannelInfo";
 import { ChannelDetailType } from "@/types/channel/channelTypes";
 import { loginUserIdState, curUserState } from "@/recoil/atoms/authState";
 import { useRecoilValue } from "recoil";
+import LoadingCycle from "@/components/loading/LoadingCycle";
 
 interface Props {
   isShowMore: boolean;
   setIsShowMore: React.Dispatch<React.SetStateAction<boolean>>;
   channelDetailInfo: ChannelDetailType[];
-
+  isLoading: boolean;
   onEnterdCancleClickEvent?: (selectedChannelId: string) => void;
   selectedChannelId: string;
   channelStatus?: number;
@@ -20,6 +21,7 @@ const ChannelHistoryDetail = ({
   isShowMore,
   setIsShowMore,
   channelDetailInfo,
+  isLoading,
   onEnterdCancleClickEvent,
   selectedChannelId,
   channelStatus,
@@ -32,6 +34,7 @@ const ChannelHistoryDetail = ({
   return (
     <ChannelDetailBackground isShowMore={isShowMore}>
       <ChannelDetailContainer>
+        {isLoading && <LoadingCycle />}
         {channelDetailInfo.map((info) => (
           <ChannelInfo
             key={info._id}
