@@ -13,7 +13,6 @@ const socketConfig = (server) => {
       console.log(data.roomId + "에 접속");
       socket.roomId = data.roomId;
       const chatLog = await chatService.getChatLog(socket.roomId);
-      console.log(chatLog);
       socket.join(socket.roomId);
       chat.to(socket.roomId).emit('receive-chatLog', chatLog);
     });
@@ -42,12 +41,7 @@ const socketConfig = (server) => {
 
       chat.to(socket.roomId).emit("receive-remove-chat", userChatInfo);
     }); // data = {chatId, roomId}
-
-    socket.on("exit-room", async () => {
-      console.log(`${socket.roomId} 에서 나옴`);
-      socket.leave(socket.roomId);
-    })
-
+    
     socket.on("disconnect", () => {
       console.log(socket.id + "에서 연결 해제"); 
       socket.leave(socket.roomId);
