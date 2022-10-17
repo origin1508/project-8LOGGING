@@ -80,7 +80,6 @@ function Channel() {
 
   useEffect(() => {
     prepareScroll();
-    channelId && customSocketConnectRequest("enter-chat", channelId);
     (async () => {
       const res = await currentChannelDetailRequest(
         `/api/channels/${channelId}/main`
@@ -94,9 +93,10 @@ function Channel() {
         setEntryFailureMessage(res.message);
       }
     })();
+    channelId && customSocketConnectRequest("enter-chat", channelId);
+    customSocket.on("msg", (data) => console.log(data));
     customSocket.on("receive-chatLog", (data) => {
-      console.log(data);
-      setChannelData(data);
+      setChatLogs(data);
     });
     customSocket.on("receive-create-chat", (data) => {
       setChatLogs((prev) => {
@@ -113,9 +113,6 @@ function Channel() {
         return prev.filter((chat) => chat._id !== data._id);
       });
     });
-    return () => {
-      customSocket.off("disconnect");
-    };
   }, [channelId]);
 
   const handleChannelContentChange = useCallback(
