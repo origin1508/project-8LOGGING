@@ -114,7 +114,7 @@ function Channel() {
       });
     });
     return () => {
-      customSocket.off("disconnect");
+      customSocket.disconnect();
     };
   }, [channelId]);
 
