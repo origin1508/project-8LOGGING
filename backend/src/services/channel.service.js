@@ -260,6 +260,11 @@ module.exports = {
       throw ApiError.badRequest("본인이 개설한 채널에 가입할 수 없습니다.");
     }
 
+    // 채널 가입 여부 확인
+    if (channel.members.includes(userId)) {
+      throw ApiError.badRequest("이미 채널에 가입 돼있습니다.")
+    }
+
     // waitList 수정
     const waitList = await WaitList.findOne({ channelId });
     if (waitList.waiting.includes(userId)) {
