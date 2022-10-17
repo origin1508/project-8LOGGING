@@ -140,6 +140,7 @@ module.exports = {
 
       res.status(201).json({
         success: true,
+        status: 201,
         message: "Channel enter request success",
         datas: channels
       });
@@ -157,6 +158,7 @@ module.exports = {
 
       res.status(201).json({
         success: true,
+        status: 201,
         message: "Channel enter cancel success",
         datas: channels
       });
@@ -174,6 +176,7 @@ module.exports = {
 
       res.status(200).json({
         success: true,
+        status: 200,
         message: "Wait list get success",
         datas: waitList
       });
@@ -192,6 +195,7 @@ module.exports = {
 
       res.status(201).json({
         success: true,
+        status: 201,
         message: "channel enter accept success",
       });
     } catch (err) {
@@ -209,6 +213,7 @@ module.exports = {
 
       res.status(201).json({
         success: true,
+        status: 201,
         message: "channel enter reject success",
       });
     } catch (err) {
@@ -257,6 +262,7 @@ module.exports = {
 
       res.status(201).json({
         success: true,
+        status: 201,
         message: "channel leave success",
         datas: channels
       });
@@ -274,6 +280,7 @@ module.exports = {
 
       res.status(201).json({
         success: true,
+        status: 201,
         message: "channel delete success",
         datas: channels
       });

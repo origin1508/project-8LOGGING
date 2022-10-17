@@ -8,9 +8,9 @@ module.exports = {
     try {
       const data = await dataService.readData(dataName);
 
-      res.status(201).json({
+      res.status(200).json({
         success: true,
-        status: 201,
+        status: 200,
         message: "data load success.",
         datas: data,
       });
