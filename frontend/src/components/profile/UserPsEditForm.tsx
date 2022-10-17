@@ -15,6 +15,7 @@ import Storage from "@/storage/storage";
 import Modal from "../modal/Modal";
 import { authProfilePasswordUpdate } from "@/api/authFetcher";
 import ValidationUtil from "@/util/validationUtil";
+import { ErrorType } from "@/types/error/errorType";
 
 const EditInput = css`
   background-color: ${GlobalTheme.colors.lightGray};
@@ -69,8 +70,9 @@ function UserPsEditForm({ setIsEditing, setIsPsEditing }: UserInfoEditProps) {
       Storage.clearToken();
       setIsEditing(false);
       navigate("/auth", { replace: true });
-    } catch (e: any) {
-      const erorrMessage = e.response.data.message;
+    } catch (e) {
+      const error = e as ErrorType;
+      const erorrMessage = error.response.data.message;
       setErorrMessage(erorrMessage);
       setIsOpenModal(true);
     }
