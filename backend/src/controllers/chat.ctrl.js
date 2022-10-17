@@ -27,7 +27,7 @@ module.exports = {
       const createdChat = await chatService.addChatLog(roomId, userId, chat);
       const userChatInfo = await chatService.getUserChatLog(createdChat._id);
 
-      req.app.get("chatIO").of("/chat").to(roomId).emit("chat", userChatInfo);
+      req.app.get("chatIO").of("/chat").to(roomId).emit("create-chat", userChatInfo);
 
       res.status(201).json({
         success: true,
@@ -48,7 +48,7 @@ module.exports = {
 
       const userChatInfo = await chatService.getUserChatLog(chatId);
 
-      req.app.get("chatIO").of("/chat").to(roomId).emit("chat", userChatInfo);
+      req.app.get("chatIO").of("/chat").to(roomId).emit("modify-chat", userChatInfo);
 
       res.status(201).json({
         success: true,
@@ -69,7 +69,7 @@ module.exports = {
 
       await chatService.deleteChatLog(chatId, roomId);
 
-      req.app.get("chatIO").of("/chat").to(roomId).emit("chat", userChatInfo);
+      req.app.get("chatIO").of("/chat").to(roomId).emit("remove-chat", userChatInfo);
 
       res.status(201).json({
         success: true,
