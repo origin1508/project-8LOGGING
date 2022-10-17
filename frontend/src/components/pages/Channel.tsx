@@ -94,7 +94,6 @@ function Channel() {
       }
     })();
     channelId && customSocketConnectRequest("enter-chat", channelId);
-    customSocket.on("msg", (data) => console.log(data));
     customSocket.on("receive-chatLog", (data) => {
       setChatLogs(data);
     });
@@ -114,7 +113,10 @@ function Channel() {
       });
     });
     return () => {
-      customSocket.off("disconnect");
+      customSocket.off("receive-chatLog");
+      customSocket.off("receive-create-chat");
+      customSocket.off("receive-modify-chat");
+      customSocket.off("receive-remove-chat");
     };
   }, [channelId]);
 
