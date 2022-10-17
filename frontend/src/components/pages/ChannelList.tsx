@@ -55,7 +55,6 @@ const ChannelList = () => {
     e.preventDefault();
     const { datas } = await getResultByKeyword(page, status, keyword, filter);
     setChannels(datas);
-    console.log(filter);
   };
 
   const handleSelectFilterChange = (
@@ -72,7 +71,7 @@ const ChannelList = () => {
     filter: string
   ) => {
     return await currentChannelListRequest(
-      `/api/channels/search?page=${page}&status=${status}&keyword=${keyword}&filter=${filter}}`
+      `/api/channels/search?page=${page}&status=${status}&keyword=${keyword}&filter=${filter}`
     );
   };
 

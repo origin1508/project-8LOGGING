@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
@@ -30,11 +30,35 @@ function MemberList({
   onChannelLeaveEvent,
 }: MemberListProps) {
   const navigate = useNavigate();
+  const [members, setMembers] =
+    useState<ChannelMemberType[]>(channelMemberList);
+  const [memberName, setMemberName] = useState("");
+
+  const memberSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    const searchMember = channelMemberList.filter((member) =>
+      member.memberNickname.includes(value)
+    );
+    setMemberName(value);
+    setMembers(searchMember);
+  };
 
   return (
     <MemberListWrapper>
       <MemberListContainer>
         <BigTitle>Members</BigTitle>
+        <Search>
+          <SearchInput
+            type="text"
+            placeholder="맴버 검색"
+            name="keyword"
+            value={memberName}
+            onChange={memberSearch}
+          ></SearchInput>
+          <SearchButton>
+            <CustomIcon name="SeachIcon" size="20" color="black"></CustomIcon>
+          </SearchButton>
+        </Search>
         {isOwner && (
           <NewPeopleContainer
             onClick={() => {
@@ -51,7 +75,7 @@ function MemberList({
             </IconBox>
           </NewPeopleContainer>
         )}
-        {channelMemberList.map((data) => {
+        {members.map((data) => {
           return (
             <UserContainer key={data.memberId}>
               <UserInfo onClick={() => navigate(`/profile/${data.memberId}`)}>
@@ -230,5 +254,37 @@ const RejectButton = styled(SmallButton)`
   background-color: ${GlobalTheme.colors.white};
   border: 1px solid ${GlobalTheme.colors.theme};
 `;
+const Search = styled.form`
+  margin-top: 2rem;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+const SearchInput = styled.input`
+  font-family: inherit;
+  font-size: ${GlobalTheme.fontSize.littleBig};
+  color: inherit;
+  background-color: ${GlobalTheme.colors.white};
+  border: none;
+  border-radius: 1rem;
+  padding: 0.7rem 2rem;
+  width: 50%;
+  transition: all 0.2s;
+  margin-right: -3.25rem; // 서치아이콘 인풋위에 올라감
+  box-shadow: 0px 5px 6px -3px rgb(145 158 171 / 20%),
+    0px 9px 12px 1px rgb(145 158 171 / 14%),
+    0px 3px 16px 2px rgb(145 158 171 / 12%);
+`;
+const SearchButton = styled.button`
+  border: none;
+  background: none;
 
+  &:focus {
+    outline: none;
+  }
+  &:active {
+    transform: translateY(2px);
+  }
+`;
 export default MemberList;
