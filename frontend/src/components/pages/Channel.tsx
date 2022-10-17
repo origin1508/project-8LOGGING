@@ -94,7 +94,6 @@ function Channel() {
       }
     })();
     channelId && customSocketConnectRequest("enter-chat", channelId);
-    customSocket.on("msg", (data) => console.log(data));
     customSocket.on("receive-chatLog", (data) => {
       setChatLogs(data);
     });
@@ -113,9 +112,9 @@ function Channel() {
         return prev.filter((chat) => chat._id !== data._id);
       });
     });
-    return () => {
-      customSocket.disconnect();
-    };
+    // return () => {
+    //   customSocket.disconnect();
+    // };
   }, [channelId]);
 
   const handleChannelContentChange = useCallback(
