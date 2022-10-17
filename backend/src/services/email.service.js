@@ -8,8 +8,8 @@ module.exports = {
   /**
    * 이메일 인증 번호 생성
    * 
-   * @param {String} email 
-   * @returns 
+   * @param {String} email 이메일
+   * 
    */
   async createAuthCode(email) {
     // 인증 번호 생성
@@ -41,8 +41,8 @@ module.exports = {
   /**
    * 이메일 인증 번호 확인
    * 
-   * @param {String} email 
-   * @param {String} authCode 
+   * @param {String} email 이메일
+   * @param {String} authCode 인증 코드
    */
   async checkAuthCode(email, authCode) {
     try {
@@ -57,7 +57,4 @@ module.exports = {
       throw ApiError.badRequest("이메일 인증 번호 확인 실패했습니다.")
     }
   }
-
-
-
 };

@@ -4,8 +4,8 @@ module.exports = {
   /**
    * 데이터 불러오기
    * 
-   * @param {String} dataName 
-   * @returns 
+   * @param {String} dataName 데이터 타이틀
+   * @returns 데이터
    */
   async readData(dataName) {
     try {

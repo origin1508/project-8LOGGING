@@ -5,6 +5,11 @@ const ApiError = require("../utils/ApiError");
 const { User, Channel, WaitList } = require("../models");
 
 module.exports = {
+  /**
+   * 이메일 중복 체크
+   * 
+   * @param {String} email 이메일 
+   */
   async checkEmailDuplication(email) {
     const exUser = await User.findOne({ email });
     if (exUser) {
@@ -12,6 +17,12 @@ module.exports = {
     }
   },
 
+  /**
+   * 닉네임 중복 체크
+   * 
+   * @param {String} userId 유저 아이디 
+   * @param {String} nickname 유저 닉네임
+   */
   async checkNicknameDuplication(userId, nickname) {
     const exUser = await User.findOne({ nickname });
     
@@ -23,9 +34,9 @@ module.exports = {
   /**
    * 유저 닉네임 수정
    *
-   * @param {String} userId
-   * @param {String} newNickname
-   * @returns
+   * @param {String} userId 유저 아이디
+   * @param {String} newNickname 새로운 닉네임
+   * @returns 바뀐 유저 닉네임
    */
   async updateUserNickname(userId, newNickname) {
     const user = await User.findByIdAndUpdate(
@@ -44,9 +55,8 @@ module.exports = {
   /**
    * 기존 비밀번호와 currentPassword 비교
    * 
-   * @param {String} userId
-   * @param {String} currentPassword
-   * @returns
+   * @param {String} userId 유저 아이디
+   * @param {String} currentPassword 현재 비밀번호
    */
   async checkPasswordCoincidence(userId, currentPassword) {
     const user = await User.findById(userId);
@@ -64,8 +74,8 @@ module.exports = {
   /**
    * 기존 비밀번호와 newPassword 비교
    * 
-   * @param {String} userId 
-   * @param {String} newPassword 
+   * @param {String} userId 유저 아이디
+   * @param {String} newPassword 새로운 비밀번호
    */
   async checkPasswordDuplication(userId, newPassword) {
     const user = await User.findById(userId);
@@ -81,8 +91,8 @@ module.exports = {
   /**
    * 유저 비밀번호 수정
    *
-   * @param {String} userId
-   * @param {String} newPassword
+   * @param {String} userId 유저 아이디
+   * @param {String} newPassword 새로운 비밀번호
    * @returns
    */
   async updateUserPassword(userId, newPassword) {
@@ -99,34 +109,21 @@ module.exports = {
   /**
    * 유저 프로필 사진 URL 수정
    *
-   * @param {String} userId
-   * @param {String} location
-   * @returns
+   * @param {String} userId 유저 아이디
+   * @param {String} location 프로필 이미지 URL
+   * @returns 유저 정보
    */
   async updateUserProfPic(userId, location) {
     const result = await User.findByIdAndUpdate(userId, { profPic: location });
     return result;
   },
 
-  // /**
-  //  * 유저 팔로잉 리스트 조회
-  //  *
-  //  * @param {String} userId
-  //  * @returns
-  //  */
-  // async findFollowingList(userId) {
-  //   const user = await User.findOne({ _id: userId });
-
-  //   return {
-  //     following: user.following,
-  //   };
-  // },
   /**
    * 자기소개 수정
    *
-   * @param {String} userId
-   * @param {String} newDescription
-   * @returns
+   * @param {String} userId 유저 아이디
+   * @param {String} newDescription 새로운 자기소개
+   * @returns 수정된 자기소개
    */
   async updateUserDescription(userId, newDescription) {
     const user = await User.findByIdAndUpdate(
@@ -145,8 +142,8 @@ module.exports = {
   /**
    * 유저 모든 데이터 조회 (소속 채널 상세 정보 포함)
    *
-   * @param {String} userId
-   * @returns
+   * @param {String} userId 유저 아이디
+   * @returns 유저 데이터
    */
   async findUserAllData(userId) {
     const user = await User.findOne({ _id: userId }).lean();
@@ -186,8 +183,8 @@ module.exports = {
   /**
    * 유저가 참여했던(활동이 끝난) 채널 정보 조회
    *
-   * @param {String} userId
-   * @returns
+   * @param {String} userId 유저 아이디
+   * @returns 채널 리스트
    */
   async findChannelHistory(userId) {
     const channelsOfUser = await User.findById(userId, "channels");
@@ -206,6 +203,11 @@ module.exports = {
     return results;
   },
 
+  /**
+   * 탈퇴한 회원 체크
+   * 
+   * @param {String} email 이메일 
+   */
   async findLockedUser(email) {
     const exUser = await User.findOne({email}, "withdrawal").lean();
     if(exUser.withdrawal) {
