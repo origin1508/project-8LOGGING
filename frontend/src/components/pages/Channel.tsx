@@ -159,6 +159,7 @@ function Channel() {
       setSidebarChannels((prev) =>
         prev.filter((channel) => channel._id !== channelId)
       );
+      navigate("/profile", { replace: true });
     }
   };
 
