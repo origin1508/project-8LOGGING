@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { curUserState } from "@/recoil/atoms/authState";
-import { useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import GlobalTheme from "@/styles/theme";
 import ChannelHistoryCard from "./ChannelHistoryCard";
 import { BigTitle } from "@/styles/commonStyle";
@@ -11,12 +11,13 @@ import {
 } from "@/api/channelFetcher";
 import { ChannelDetailType } from "@/types/channel/channelTypes";
 import { ErrorType } from "@/types/error/errorType";
+import { getAuthInformationById } from "@/api/authFetcher";
 import ChannelHistoryDetail from "./ChannelHistoryDetail";
 import Modal from "../modal/Modal";
 import useModal from "@/hooks/useModal";
 
 function ChannelHistory() {
-  const curUser = useRecoilValue(curUserState);
+  const [curUser, setCurUser] = useRecoilState(curUserState);
   const [resMessage, setResMessage] = useState("");
   const channels = curUser.channels;
   const [tabIndex, setTabIndex] = useState(0);
@@ -34,6 +35,12 @@ function ChannelHistory() {
     handleModalCloseButtonClick,
   ] = useModal(false);
   const [index, setIndex] = useState(0);
+
+  const fetchProfileOwner = async (curUserId: string) => {
+    const res = await getAuthInformationById("/api/users/userinfo", curUserId);
+    setCurUser(res);
+  };
+
   const handleMoreClick = async (channelUuid: string, index?: number) => {
     const res = await currentChannelDetailRequest(
       `/api/channels/${channelUuid}`
@@ -53,11 +60,13 @@ function ChannelHistory() {
       );
       handleModalOpenButtonClick();
       setIsShowMore(false);
+      fetchProfileOwner(curUser._id);
       setResMessage("취소 완료");
     } catch (error) {
       const err = error as ErrorType;
-      setResMessage(err.response.data.message);
-      console.log(err.response.data.message);
+      const errorMessage = err.response.data.message;
+      setResMessage(errorMessage);
+      console.log(errorMessage);
     }
   };
 

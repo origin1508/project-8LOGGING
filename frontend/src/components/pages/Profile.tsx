@@ -46,11 +46,8 @@ function Profile() {
     handleDeleteAccountModalCloseButtonClick,
   ] = useModal(false);
 
-  const fetchProfileOwner = async (loginUserId: string) => {
-    const res = await getAuthInformationById(
-      "/api/users/userinfo",
-      loginUserId
-    );
+  const fetchProfileOwner = async (curUserId: string) => {
+    const res = await getAuthInformationById("/api/users/userinfo", curUserId);
     setCurUser(res);
   };
 
