@@ -31,7 +31,7 @@ module.exports = {
         .get("chatIO")
         .of("/create-chat")
         .to(roomId)
-        .emit("chat", userChatInfo);
+        .emit("create-chat", userChatInfo);
 
       res.status(201).json({
         success: true,
@@ -56,7 +56,7 @@ module.exports = {
         .get("chatIO")
         .of("/modify-chat")
         .to(roomId)
-        .emit("chat", userChatInfo);
+        .emit("modify-chat", userChatInfo);
 
       res.status(201).json({
         success: true,
@@ -78,9 +78,9 @@ module.exports = {
 
       req.app
         .get("chatIO")
-        .of("/remove-chat")
+        .of("/chat")
         .to(roomId)
-        .emit("chat", { chatId });
+        .emit("remove-chat", userChatInfo);
 
       res.status(201).json({
         success: true,
