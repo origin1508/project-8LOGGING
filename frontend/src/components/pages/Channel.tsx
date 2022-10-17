@@ -113,6 +113,9 @@ function Channel() {
         return prev.filter((chat) => chat._id !== data._id);
       });
     });
+    return () => {
+      customSocket.off("disconnect");
+    };
   }, [channelId]);
 
   const handleChannelContentChange = useCallback(
@@ -124,9 +127,8 @@ function Channel() {
 
   const handleChannelSendButtonClick = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (channelId) {
+    if (channelId)
       customSocketCreateRequest("create-chat", loginUserId, channelContent);
-    }
     if (inputRef.current) inputRef.current.value = "";
     scrollToBottom();
   };
