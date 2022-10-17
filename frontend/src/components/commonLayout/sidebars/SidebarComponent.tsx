@@ -58,7 +58,7 @@ const SidebarContainer = styled.div`
   flex-direction: column;
   position: fixed;
   height: 100%;
-  width: 10%;
+  width: 21rem;
   padding: 3rem;
   background-color: ${GlobalTheme.colors.white};
   font-size: ${GlobalTheme.fontSize.big};
