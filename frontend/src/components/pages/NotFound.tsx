@@ -23,7 +23,9 @@ const NotFound = () => {
             요청하신 페이지가 삭제되었거나 잘못된 주소를 입력하셨습니다.
           </NotFoundText>
         </NotFoundTextContainer>
-        <BackButton onClick={() => navigate(-1)}>이전 페이지</BackButton>
+        <BackButton onClick={() => window.location.replace("/")}>
+          이전 페이지
+        </BackButton>
       </NotFoundContainer>
     </BaseErrorBoundaryContanier>
   );
