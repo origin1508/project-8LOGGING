@@ -3,7 +3,7 @@ tags:
   description: 채널 정보 API
 
 paths:
-  /channel:
+  /channels:
     post:
       summary: 채널 이미지 변경
       tags: [CHANNEL]
@@ -85,7 +85,7 @@ paths:
                   datas:
                     type: object
     
-  /channel/search:
+  /channels/search:
     get:
       summary: 채널 검색
       tags: [CHANNEL]
@@ -133,7 +133,7 @@ paths:
                   datas:
                     type: object
 
-  /channel/{channelId}:
+  /channels/{channelId}:
     get:
       summary: 채널 정보 조회
       tags: [CHANNEL]
@@ -215,7 +215,7 @@ paths:
                 newLocationCity:
                   type: string
                     
-  /channel/{channelId}/enter:
+  /channels/{channelId}/enter:
     put:
       summary: 채널 입장 신청
       tags: [CHANNEL]
@@ -291,7 +291,7 @@ paths:
                   datas:
                     type: object  
 
-  /channel/{channelId}/waiting:
+  /channels/{channelId}/waiting:
     get:
       summary: 채널 입장 신청 조회
       tags: [CHANNEL]
@@ -405,7 +405,7 @@ paths:
                   type: string
  
   
-  /channel/{channelId}/main:
+  /channels/{channelId}/main:
     get:
       summary: 채널 메인페이지 조회
       tags: [CHANNEL]
@@ -431,7 +431,7 @@ paths:
                   response:
                     type: object
 
-  /channel/{channelId}/leave:
+  /channels/{channelId}/leave:
     delete:
       summary: 채널 떠나기
       tags: [CHANNEL]
@@ -466,7 +466,7 @@ paths:
                   datas:
                     type: object
 
-  /channel/{channelId}/delete:
+  /channels/{channelId}/delete:
     delete:
       summary: 채널 삭제
       tags: [CHANNEL]
