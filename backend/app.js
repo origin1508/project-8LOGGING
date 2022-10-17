@@ -45,9 +45,8 @@ app.use("/docs", swaggerUI.serve, swaggerUI.setup(specs));
 app.use(errorMiddleware);
 
 // 서버 시작
-socket(
-  app.listen(process.env.PORT || 3001, () => {
-    console.log(`http://localhost:${process.env.PORT || 3001}`);
-  }),
-  app
-);
+const server = app.listen(process.env.PORT || 3001, () => {
+  console.log(`${process.env.BASE_URL}${process.env.PORT || 3001}`);
+});
+
+socket(server);
