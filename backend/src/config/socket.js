@@ -43,10 +43,15 @@ const socketConfig = (server) => {
       chat.to(socket.roomId).emit("receive-remove-chat", userChatInfo);
     }); // data = {chatId, roomId}
 
+    socket.on("exit-room", async () => {
+      console.log(`${socket.roomId} 에서 나옴`);
+      socket.leave(socket.roomId);
+    })
+
     socket.on("disconnect", () => {
       console.log(socket.id + "에서 연결 해제"); 
       socket.leave(socket.roomId);
-    });
+    });  
   });
 };
 
