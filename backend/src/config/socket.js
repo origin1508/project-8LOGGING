@@ -15,8 +15,7 @@ const socketConfig = (server) => {
       const chatLog = await chatService.getChatLog(socket.roomId);
       console.log(chatLog);
       socket.join(socket.roomId);
-      chat.to(socket.roomId).emit('receive-chatLog', chatLog);
-      
+      socket.to(socket.roomId).emit('receive-chatLog', chatLog);
     });
 
     socket.on("create-chat", async (data) => {
