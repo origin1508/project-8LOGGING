@@ -99,7 +99,7 @@ function ChannelHistory() {
               img={ch.img}
               title={ch.title}
               channelUuid={ch._id}
-              curMemberNum={`${ch.memberNum}/${ch.curMemberNum}`}
+              curMemberNum={`${ch.curMemberNum} / ${ch.memberNum}`}
               locationDist={ch.locationDist}
               locationCity={ch.locationCity}
               onMoreClick={handleMoreClick}
