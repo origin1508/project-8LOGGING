@@ -32,7 +32,7 @@ const ChannelHistoryDetail = ({
   const ownerId = curUser._id;
   const isLoginUserChannel = ownerId === loginUserId;
   const navigate = useNavigate();
-  console.log("detail", channelDetailInfo);
+
   return (
     <ChannelDetailBackground isShowMore={isShowMore}>
       <ChannelDetailContainer>
