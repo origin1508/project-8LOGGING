@@ -150,7 +150,6 @@ function Channel() {
           setWaitList((prev) =>
             prev.filter((member) => member.userId !== waitingId)
           );
-          setIsLoading(false);
         }
       } else if (e.target.name === "reject") {
         const res = await channelJoinRejectRequet(
@@ -161,9 +160,9 @@ function Channel() {
           setWaitList((prev) =>
             prev.filter((member) => member.userId !== waitingId)
           );
-          setIsLoading(false);
         }
       }
+      setIsLoading(false);
     }
   };
 
