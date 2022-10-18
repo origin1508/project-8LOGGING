@@ -150,9 +150,11 @@ const ChannelForm = () => {
         <Modal
           isOpenModal={isOpenModal}
           isAlertModal={true}
+          isShowImage={true}
           onModalCancelButtonClickEvent={handleModalCloseButtonClick}
         >
-          Please check your channel information
+          작성하신 내용이 올바른지 <br />
+          확인해주세요.
         </Modal>
       </ChannelContainer>
     </BaseChannelComponent>
