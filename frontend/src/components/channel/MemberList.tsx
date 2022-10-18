@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
@@ -45,14 +45,17 @@ function MemberList({
   const [members, setMembers] =
     useState<ChannelMemberType[]>(channelMemberList);
   const [memberName, setMemberName] = useState("");
-  const memberSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-    const searchMember = channelMemberList.filter((member) =>
-      member.memberNickname.includes(value)
-    );
-    setMemberName(value);
-    setMembers(searchMember);
-  };
+  const memberSearch = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const { value } = e.target;
+      const searchMember = channelMemberList.filter((member) =>
+        member.memberNickname.includes(value)
+      );
+      setMemberName(value);
+      setMembers(searchMember);
+    },
+    [members, members]
+  );
 
   return (
     <MemberListWrapper>
