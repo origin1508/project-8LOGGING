@@ -20,13 +20,13 @@ interface MemberListProps {
   ownerId: string;
   isShowWaitList: boolean;
   isLoading: boolean;
+  setModalMessage: React.Dispatch<React.SetStateAction<string>>;
   setIsShowWaitList: React.Dispatch<React.SetStateAction<boolean>>;
+  onAcceptModalOpenButtonClickEvent: () => void;
   onChannelJoinPermissionButtonClickEvent: (
     e: React.MouseEvent<HTMLButtonElement>,
     waitingId: string
   ) => void;
-  onChannelLeaveEvent: () => void;
-  onChannelDeleteEvent: () => void;
 }
 
 function MemberList({
@@ -36,10 +36,10 @@ function MemberList({
   ownerId,
   isShowWaitList,
   isLoading,
+  setModalMessage,
   setIsShowWaitList,
+  onAcceptModalOpenButtonClickEvent,
   onChannelJoinPermissionButtonClickEvent,
-  onChannelLeaveEvent,
-  onChannelDeleteEvent,
 }: MemberListProps) {
   const navigate = useNavigate();
   const [members, setMembers] =
@@ -143,9 +143,23 @@ function MemberList({
       </WaitListContainer>
 
       {isOwner ? (
-        <DeleteButton onClick={onChannelDeleteEvent}>채널 삭제</DeleteButton>
+        <DeleteButton
+          onClick={() => {
+            setModalMessage("정말 채널을 삭제하시겠습니까?");
+            onAcceptModalOpenButtonClickEvent();
+          }}
+        >
+          채널 삭제
+        </DeleteButton>
       ) : (
-        <LeaveButton onClick={onChannelLeaveEvent}>채널 나가기</LeaveButton>
+        <LeaveButton
+          onClick={() => {
+            setModalMessage("정말 채널을 나가시겠습니까?");
+            onAcceptModalOpenButtonClickEvent();
+          }}
+        >
+          채널 나가기
+        </LeaveButton>
       )}
     </MemberListWrapper>
   );

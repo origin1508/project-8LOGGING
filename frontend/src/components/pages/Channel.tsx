@@ -43,6 +43,7 @@ function Channel() {
   const [chatLogs, setChatLogs] = useState<Array<ChannelLogObjectType>>([]);
   const [channelData, setChannelData] = useState<MainChannelType[]>([]);
   const [modalMessage, setModalMessage] = useState("");
+  const [isOwner, setIsOwner] = useState(false);
   const [waitList, setWaitList] = useState<waitListType[]>([]);
   const [memberList, setMemberList] = useState<ChannelMemberType[]>([]);
   const [isShowWaitList, setIsShowWaitList] = useState(false);
@@ -63,7 +64,7 @@ function Channel() {
   ] = useModal(false);
   const [
     isOpenAcceptModal,
-    isAccepted,
+    ,
     handleAcceptModalOpenButtonClick,
     handleAcceptButtonClick,
     handleAcceptModalCloseButtonClick,
@@ -96,6 +97,7 @@ function Channel() {
       );
       if (res.success) {
         setChannelData([res.datas]);
+        setIsOwner(res.datas.ownerInfo.ownerId === loginUserId);
         if (res.datas.waitList) setWaitList(res.datas.waitList);
         if (res.datas.membersInfo) setMemberList(res.datas.membersInfo);
       } else {
@@ -191,34 +193,22 @@ function Channel() {
   };
 
   const handleChannelLeaveButtonClick = async () => {
-    setModalMessage("정말 채널을 나가시겠습니까?");
-    handleAcceptModalOpenButtonClick();
-
-    if (isAccepted) {
-      const res = await channelLeaveRequest(`/api/channels/${channelId}/leave`);
-      if (res.success) {
-        setSidebarChannels((prev) =>
-          prev.filter((channel) => channel._id !== channelId)
-        );
-        navigate("/channels", { replace: true });
-      }
+    const res = await channelLeaveRequest(`/api/channels/${channelId}/leave`);
+    if (res.success) {
+      setSidebarChannels((prev) =>
+        prev.filter((channel) => channel._id !== channelId)
+      );
+      navigate("/channels", { replace: true });
     }
   };
 
   const handleChannelDeleteButtonClick = async () => {
-    setModalMessage("정말 채널을 삭제하시겠습니까?");
-    handleAcceptModalOpenButtonClick();
-
-    if (isAccepted) {
-      const res = await channelDeleteRequest(
-        `/api/channels/${channelId}/delete`
+    const res = await channelDeleteRequest(`/api/channels/${channelId}/delete`);
+    if (res.success) {
+      setSidebarChannels((prev) =>
+        prev.filter((channel) => channel._id !== channelId)
       );
-      if (res.success) {
-        setSidebarChannels((prev) =>
-          prev.filter((channel) => channel._id !== channelId)
-        );
-        navigate("/channels", { replace: true });
-      }
+      navigate("/channels", { replace: true });
     }
   };
 
@@ -267,7 +257,6 @@ function Channel() {
     <BasePageComponent>
       {channelData &&
         channelData.map((data) => {
-          const isOwner = data.ownerInfo.ownerId === loginUserId ? true : false;
           return (
             <React.Fragment key={data._id}>
               <ChannelContainer>
@@ -329,11 +318,13 @@ function Channel() {
                 isShowWaitList={isShowWaitList}
                 isLoading={isLoading}
                 setIsShowWaitList={setIsShowWaitList}
+                setModalMessage={setModalMessage}
+                onAcceptModalOpenButtonClickEvent={
+                  handleAcceptModalOpenButtonClick
+                }
                 onChannelJoinPermissionButtonClickEvent={
                   handleChannelJoinPermissionButtonClick
                 }
-                onChannelLeaveEvent={handleChannelLeaveButtonClick}
-                onChannelDeleteEvent={handleChannelDeleteButtonClick}
               />
             </React.Fragment>
           );
@@ -353,7 +344,12 @@ function Channel() {
         isOpenModal={isOpenAcceptModal}
         isShowImage={true}
         onModalCancelButtonClickEvent={handleAcceptModalCloseButtonClick}
-        onModalAcceptButtonClickEvent={handleAcceptButtonClick}
+        onModalAcceptButtonClickEvent={() => {
+          isOwner
+            ? handleChannelDeleteButtonClick()
+            : handleChannelLeaveButtonClick();
+          handleAcceptButtonClick();
+        }}
       >
         {modalMessage}
       </Modal>
