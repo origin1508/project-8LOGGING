@@ -41,6 +41,13 @@ const Auth = () => {
     handleEmailVerificationAcceptButtonClick,
     handleEmailVerificationModalCloseButtonClick,
   ] = useModal(false);
+  const [
+    isOpenWelcomeModal,
+    ,
+    handleWelcomeModalOpenButtonClick,
+    ,
+    handleWelcomeModalCloseButtonClick,
+  ] = useModal(false);
 
   useEffect(() => {
     setAuthForm({
@@ -99,7 +106,7 @@ const Auth = () => {
       nickname,
       password,
     });
-    if (res) setTabIndex(0);
+    if (res) handleWelcomeModalOpenButtonClick();
   };
 
   const handleLoginSubmit = async (e: React.FormEvent) => {
@@ -231,6 +238,17 @@ const Auth = () => {
           emailToSend={authFormState.email}
         />
       </Modal>
+      <Modal
+        isOpenModal={isOpenWelcomeModal}
+        isAlertModal={true}
+        onModalCancelButtonClickEvent={() => {
+          handleWelcomeModalCloseButtonClick();
+          setTabIndex(0);
+        }}
+      >
+        <WelComeImg src={`${process.env.PUBLIC_URL}/images/welcome-img.png`} />
+        회원가입이 완료되었습니다.
+      </Modal>
     </BasePageComponent>
   );
 };
@@ -278,4 +296,5 @@ const FormContainer = styled.div`
   justify-content: center;
 `;
 
+const WelComeImg = styled.img``;
 export default Auth;
