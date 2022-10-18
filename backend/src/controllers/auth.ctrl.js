@@ -8,10 +8,13 @@ module.exports = {
 
       await userService.findLockedUser(email);
 
-      const token = await authService.generateAccessToken(user.userId);
+      const accessToken = await authService.generateAccessToken(user.userId);
+      const refreshToken = await authService.generateRefreshToken();
+      await authService.insertRefreshToken(user.userId, refreshToken);
 
       const userData = {
-        token,
+        accessToken,
+        refreshToken,
         ...user,
       };
 

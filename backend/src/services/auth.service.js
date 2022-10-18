@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 
 const ApiError = require("../utils/ApiError");
 
-const { User, EmailAuth, Channel } = require("../models");
+const { User, EmailAuth, Channel, RefreshToken } = require("../models");
 
 module.exports = {
   /**
@@ -29,7 +29,7 @@ module.exports = {
     // 이메일 인증 여부 확인
     const emailAuth = await EmailAuth.findOne({ email });
     if (emailAuth) {
-      throw ApiError.badRequest("이메일 인증이 완료되지 않았습니다.")
+      throw ApiError.badRequest("이메일 인증이 완료되지 않았습니다.");
     }
 
     // 비밀번호 암호화
@@ -64,21 +64,23 @@ module.exports = {
     }
 
     // 채널 정보 포함시켜주기
-    const channels = await Promise.all(user.channels.map(async (channelId) => {
-      const channel = await Channel.findById(channelId);
-      return (({ _id, title, img })=>({ _id, title, img }))(channel)
-    }))
+    const channels = await Promise.all(
+      user.channels.map(async (channelId) => {
+        const channel = await Channel.findById(channelId);
+        return (({ _id, title, img }) => ({ _id, title, img }))(channel);
+      })
+    );
 
     return {
       userId: user._id,
       email: user.email,
       nickname: user.nickname,
-      channels
+      channels,
     };
   },
 
   /**
-   * JWT 토큰 생성
+   * JWT access 토큰 생성
    *
    * @param {String} userId 유저 아이디
    * @returns access 토큰
@@ -97,11 +99,29 @@ module.exports = {
   },
 
   /**
-   * 유저 탈퇴 (유저 정보 잠금)
-   * 
-   * @param {String} userId 유저 아이디
+   * JWT refresh 토큰 생성
    */
+  async generateRefreshToken() {
+    const token = jwt.sign({}, process.env.JWT_SECRET_KEY || "q23gh3214fg", {
+      expiresIn: "14d",
+      issuer: "HHS",
+    });
+
+    return token;
+  },
+
+  /**
+   * 리프레시 토큰 DB에 저장
+   * 
+   * @param {String} userId 
+   * @param {String} refreshToken 
+   */
+  async insertRefreshToken(userId, refreshToken) {
+    await RefreshToken.create({userId, refreshToken});
+  },
+
+  
   async lockUserInfo(userId) {
-    await User.findOneAndUpdate({_id: userId}, {withdrawal: true});
+    await User.findOneAndUpdate({ _id: userId }, { withdrawal: true });
   },
 };
