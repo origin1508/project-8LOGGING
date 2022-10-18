@@ -42,7 +42,7 @@ function Channel() {
   const [channelContent, setChannelContent] = useState<string>("");
   const [chatLogs, setChatLogs] = useState<Array<ChannelLogObjectType>>([]);
   const [channelData, setChannelData] = useState<MainChannelType[]>([]);
-  const [entryFailureMessage, setEntryFailureMessage] = useState();
+  const [modalMessage, setModalMessage] = useState("");
   const [waitList, setWaitList] = useState<waitListType[]>([]);
   const [memberList, setMemberList] = useState<ChannelMemberType[]>([]);
   const [isShowWaitList, setIsShowWaitList] = useState(false);
@@ -60,6 +60,13 @@ function Channel() {
     handleModalOpenButtonClick,
     ,
     handleModalCloseButtonClick,
+  ] = useModal(false);
+  const [
+    isOpenAcceptModal,
+    isAccepted,
+    handleAcceptModalOpenButtonClick,
+    handleAcceptButtonClick,
+    handleAcceptModalCloseButtonClick,
   ] = useModal(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -94,7 +101,7 @@ function Channel() {
       } else {
         setChannelData([]);
         handleModalOpenButtonClick();
-        setEntryFailureMessage(res.message);
+        setModalMessage(res.message);
       }
     })();
     channelId && customSocketConnectRequest("enter-chat", channelId);
@@ -184,22 +191,34 @@ function Channel() {
   };
 
   const handleChannelLeaveButtonClick = async () => {
-    const res = await channelLeaveRequest(`/api/channels/${channelId}/leave`);
-    if (res.success) {
-      setSidebarChannels((prev) =>
-        prev.filter((channel) => channel._id !== channelId)
-      );
-      navigate("/profile", { replace: true });
+    setModalMessage("정말 채널을 나가시겠습니까?");
+    handleAcceptModalOpenButtonClick();
+
+    if (isAccepted) {
+      const res = await channelLeaveRequest(`/api/channels/${channelId}/leave`);
+      if (res.success) {
+        setSidebarChannels((prev) =>
+          prev.filter((channel) => channel._id !== channelId)
+        );
+        navigate("/channels", { replace: true });
+      }
     }
   };
 
   const handleChannelDeleteButtonClick = async () => {
-    const res = await channelDeleteRequest(`/api/channels/${channelId}/delete`);
-    if (res.success) {
-      setSidebarChannels((prev) =>
-        prev.filter((channel) => channel._id !== channelId)
+    setModalMessage("정말 채널을 삭제하시겠습니까?");
+    handleAcceptModalOpenButtonClick();
+
+    if (isAccepted) {
+      const res = await channelDeleteRequest(
+        `/api/channels/${channelId}/delete`
       );
-      navigate("/channels", { replace: true });
+      if (res.success) {
+        setSidebarChannels((prev) =>
+          prev.filter((channel) => channel._id !== channelId)
+        );
+        navigate("/channels", { replace: true });
+      }
     }
   };
 
@@ -328,7 +347,15 @@ function Channel() {
           navigate("/profile", { replace: true });
         }}
       >
-        {entryFailureMessage}
+        {modalMessage}
+      </Modal>
+      <Modal
+        isOpenModal={isOpenAcceptModal}
+        isShowImage={true}
+        onModalCancelButtonClickEvent={handleAcceptModalCloseButtonClick}
+        onModalAcceptButtonClickEvent={handleAcceptButtonClick}
+      >
+        {modalMessage}
       </Modal>
       <ContextMenu
         items={menuItems}
