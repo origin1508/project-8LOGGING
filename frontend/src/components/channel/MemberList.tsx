@@ -3,7 +3,12 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import CustomIcon from "@/components/icons/CustomIcon";
-import { TextOne, SmallButton, BigTitle } from "@/styles/commonStyle";
+import {
+  TextOne,
+  MoreSmallButton,
+  BigTitle,
+  ModalTitle,
+} from "@/styles/commonStyle";
 import { ChannelMemberType, waitListType } from "@/types/channel/channelTypes";
 import LoadingCycle from "@/components/loading/LoadingCycle";
 
@@ -99,7 +104,8 @@ function MemberList({
         })}
       </MemberListContainer>
       <WaitListContainer isShowWaitList={isShowWaitList}>
-        <BigTitle>Waiting List</BigTitle>
+        {isLoading && <LoadingCycle />}
+        <ModalTitle>Waiting List</ModalTitle>
         {waitMemberList.map((data) => {
           return (
             <UserContainer key={data.userId}>
@@ -125,7 +131,6 @@ function MemberList({
                   거절
                 </RejectButton>
               </ButtonContainer>
-              {isLoading && <LoadingCycle />}
             </UserContainer>
           );
         })}
@@ -162,9 +167,11 @@ const MemberListContainer = styled.div`
 const WaitListContainer = styled.div<{ isShowWaitList: boolean }>`
   position: absolute;
   top: 8rem;
-  padding: 3rem;
-  width: 70%;
+  width: 95%;
   height: 60%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
   transform: scale(0);
   transform-origin: 90% -4%;
   border-radius: 2px;
@@ -178,31 +185,31 @@ const UserContainer = styled.div`
   margin-top: 2rem;
   display: flex;
   width: 100%;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
   gap: 3rem;
   padding-bottom: 1rem;
   position: relative;
 `;
 
-const UserImg = styled.div`
-  width: 3.5rem;
-  height: 3.5rem;
-  background-image: url(${(props) => props.itemProp});
-  background-size: cover;
-  border-radius: 100%;
-`;
-
 const UserInfo = styled.div`
+  margin-left: 2rem;
   display: flex;
-  flex-direction: row;
   align-items: center;
   gap: 2rem;
   cursor: pointer;
 `;
 
+const UserImg = styled.div`
+  min-width: 3.2rem;
+  height: 3.2rem;
+  background-image: url(${(props) => props.itemProp});
+  background-size: cover;
+  border-radius: 100%;
+`;
+
 const ButtonContainer = styled.div`
-  width: 100%;
+  width: 30%;
   display: flex;
   gap: 1rem;
 `;
@@ -255,11 +262,8 @@ const ChannelButton = styled.button`
   margin-bottom: 2rem;
 `;
 
-const AcceptButton = styled(SmallButton)`
-  width: 4.5rem;
-`;
-const RejectButton = styled(SmallButton)`
-  width: 4.5rem;
+const AcceptButton = styled(MoreSmallButton)``;
+const RejectButton = styled(MoreSmallButton)`
   color: ${GlobalTheme.colors.theme};
   background-color: ${GlobalTheme.colors.white};
   border: 1px solid ${GlobalTheme.colors.theme};

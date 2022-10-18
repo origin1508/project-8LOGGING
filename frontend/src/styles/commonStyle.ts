@@ -9,6 +9,11 @@ export const BigTitle = styled.h1`
 
   font-size: ${GlobalTheme.fontSize.moreBig};
 `;
+export const ModalTitle = styled.h1`
+  margin-top: 2rem;
+
+  font-size: ${GlobalTheme.fontSize.big};
+`;
 
 export const MediumTitle = styled.div`
   margin-left: 3.5rem;
@@ -27,6 +32,7 @@ export const MediumSubTitle = styled.div`
 
 export const TextOne = styled.p`
   font-weight: bold;
+  overflow: hidden;
   font-size: ${GlobalTheme.fontSize.medium};
   line-height: 1.4;
   margin: 0;
@@ -101,6 +107,27 @@ export const SmallButton = styled.button`
   font-size: ${GlobalTheme.fontSize.medium};
   cursor: pointer;
   padding: 1rem 1rem;
+
+  &:hover {
+    transform: translateY(-0.3rem);
+  }
+  &::after {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+  &:active {
+    transform: translateY(-0.1rem);
+  }
+`;
+
+export const MoreSmallButton = styled.button`
+  ${GlobalTheme.buttons}
+  background-color: ${GlobalTheme.colors.theme};
+  color: ${GlobalTheme.colors.white};
+  width: ${(props) => props.itemProp};
+  font-size: ${GlobalTheme.fontSize.default};
+  cursor: pointer;
+  padding: 0.5rem 0.5rem;
 
   &:hover {
     transform: translateY(-0.3rem);
