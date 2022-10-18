@@ -7,11 +7,11 @@ import { Line } from "react-chartjs-2";
 chartRegistry();
 
 const MultiLineChart = ({ dataName, labels, multiDatas }: ChartProps) => {
-  const options = lineChartOptions("해양 미세플라스틱");
+  const options = lineChartOptions("해양 미세 플라스틱");
   const datasetLabel = [
-    " 배출 속도 2050까지 증가",
-    " 배출 속도 2020수준 유지",
-    " 배출 2020년에 중지",
+    "속도 2050년까지 증가",
+    "속도 2020년 수준 유지",
+    "2020년에 중지",
   ];
   const borderColor = ["#FA7070", "#2192FF", "#7DCE13"];
 
