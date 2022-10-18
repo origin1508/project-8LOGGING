@@ -142,55 +142,57 @@ function Channel() {
 
   const handleChannelSendButtonClick = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (channelId)
+    if (channelId && channelContent) {
       customSocketCreateRequest("create-chat", loginUserId, channelContent);
+      setChannelContent("");
+    }
     if (inputRef.current) inputRef.current.value = "";
     prepareScroll(200);
   };
 
-  const handleChannelJoinPermissionButtonClick = async (
-    e: React.MouseEvent<HTMLButtonElement>,
-    waitingId: string
-  ) => {
-    setIsLoading(true);
-    if (e.target instanceof HTMLButtonElement) {
-      if (e.target.name === "accept") {
-        const res = await channelJoinAcceptRequet(
-          `/api/channels/${channelId}/waiting`,
-          waitingId
-        );
-        if (res.success) {
-          const newMember = waitList.find(
-            (member) => member.userId === waitingId
+  const handleChannelJoinPermissionButtonClick = useCallback(
+    async (e: React.MouseEvent<HTMLButtonElement>, waitingId: string) => {
+      setIsLoading(true);
+      if (e.target instanceof HTMLButtonElement) {
+        if (e.target.name === "accept") {
+          const res = await channelJoinAcceptRequet(
+            `/api/channels/${channelId}/waiting`,
+            waitingId
           );
-          if (newMember) {
-            setMemberList((prev) => [
-              ...prev,
-              {
-                memberId: newMember.userId,
-                memberNickname: newMember.nickname,
-                memberPic: newMember.profPic,
-              },
-            ]);
+          if (res.success) {
+            const newMember = waitList.find(
+              (member) => member.userId === waitingId
+            );
+            if (newMember) {
+              setMemberList((prev) => [
+                ...prev,
+                {
+                  memberId: newMember.userId,
+                  memberNickname: newMember.nickname,
+                  memberPic: newMember.profPic,
+                },
+              ]);
+            }
+            setWaitList((prev) =>
+              prev.filter((member) => member.userId !== waitingId)
+            );
           }
-          setWaitList((prev) =>
-            prev.filter((member) => member.userId !== waitingId)
+        } else if (e.target.name === "reject") {
+          const res = await channelJoinRejectRequet(
+            `/api/channels/${channelId}/waiting`,
+            waitingId
           );
+          if (res.success) {
+            setWaitList((prev) =>
+              prev.filter((member) => member.userId !== waitingId)
+            );
+          }
         }
-      } else if (e.target.name === "reject") {
-        const res = await channelJoinRejectRequet(
-          `/api/channels/${channelId}/waiting`,
-          waitingId
-        );
-        if (res.success) {
-          setWaitList((prev) =>
-            prev.filter((member) => member.userId !== waitingId)
-          );
-        }
+        setIsLoading(false);
       }
-      setIsLoading(false);
-    }
-  };
+    },
+    [memberList, setMemberList, waitList, setWaitList]
+  );
 
   const handleChannelLeaveButtonClick = async () => {
     const res = await channelLeaveRequest(`/api/channels/${channelId}/leave`);
