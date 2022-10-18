@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
@@ -50,14 +50,17 @@ function MemberList({
     setMembers(channelMemberList);
   }, [channelMemberList]);
 
-  const memberSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-    const searchMember = channelMemberList.filter((member) =>
-      member.memberNickname.includes(value)
-    );
-    setMemberName(value);
-    setMembers(searchMember);
-  };
+  const memberSearch = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const { value } = e.target;
+      const searchMember = channelMemberList.filter((member) =>
+        member.memberNickname.includes(value)
+      );
+      setMemberName(value);
+      setMembers(searchMember);
+    },
+    [members, members]
+  );
 
   return (
     <MemberListWrapper>
