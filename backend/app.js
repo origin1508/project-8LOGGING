@@ -17,6 +17,7 @@ const {
   dataRouter,
   followRouter,
   chatRouter,
+  errorRouter,
 } = require("./src/routes");
 
 const app = express();
@@ -37,6 +38,7 @@ app.use("/api/channels", channelRouter);
 app.use("/api/data", dataRouter);
 app.use("/api/follow", followRouter);
 app.use("/api/chat", chatRouter);
+app.use("/api/error", errorRouter);
 
 // swagger
 app.use("/docs", swaggerUI.serve, swaggerUI.setup(specs));
