@@ -120,7 +120,14 @@ module.exports = {
         },
       });
     } catch (err) {
-      next(err);
+      res.status(401).json({
+        success: false,
+        status: 401,
+        mesasge: err.message,
+        data: {
+          neededBothToken: true,
+        },
+      });
     }
   },
 };
