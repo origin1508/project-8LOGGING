@@ -199,7 +199,6 @@ const ChannelListContiner = styled.div`
 const CardsContainer = styled.div`
   margin-top: 2rem;
   width: 90%;
-  border: 1px solid red;
   padding: 4rem;
   overflow-y: scroll;
   display: flex;
