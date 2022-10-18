@@ -154,7 +154,7 @@ module.exports = {
         message: "success getting user all datas",
         datas: user,
       });
-    } catch {
+    } catch (err){
       next(err);
     }
   },
