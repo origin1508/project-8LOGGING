@@ -124,9 +124,7 @@ module.exports = {
         success: false,
         status: 401,
         mesasge: err.message,
-        data: {
-          neededBothToken: true,
-        },
+        neededBothToken: true,
       });
     }
   },
