@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
-import styled from "styled-components";
 import { FallbackProps } from "react-error-boundary";
-import GlobalTheme from "@/styles/theme";
+import { AxiosError } from "axios";
+import ErrorPage from "@/components/pages/ErrorPage";
+import NotFound from "@/components/pages/NotFound";
 import BaseErrorBoundaryContanier from "@/components/hoc/BaseErrorBoundaryContainer";
 
 const IS_DEV_MODE = true;
@@ -13,59 +14,9 @@ const CustomErrorComponent = ({ error }: FallbackProps) => {
 
   return (
     <BaseErrorBoundaryContanier>
-      <CustomErrorContainer>
-        <CustomErrorImage
-          src={`${process.env.PUBLIC_URL}/images/preview-form-img.png`}
-        />
-      </CustomErrorContainer>
-      <CustomErrorContainer>
-        <CustomTitleText>8LOGGING SERVICE</CustomTitleText>
-        <CustomSubTitleText>OOPS!</CustomSubTitleText>
-        <CustomContentText>
-          예상치 못한 <strong>오류</strong>가 발생했습니다!
-        </CustomContentText>
-      </CustomErrorContainer>
-      <CustomAnchor href="/">GO BACK</CustomAnchor>
+      {error instanceof AxiosError ? <ErrorPage /> : <NotFound />}
     </BaseErrorBoundaryContanier>
   );
 };
-
-const CustomErrorContainer = styled.div`
-  width: 100%:
-`;
-
-const CustomErrorImage = styled.img`
-  width: 60%;
-  height: 60%;
-  border-radius: 100%;
-  margin-top: 1.875rem;
-`;
-
-const CustomTitleText = styled.p`
-  font-size: ${GlobalTheme.fontSize.hyperBig};
-  font-family: eBold;
-  line-height: 1rem;
-`;
-
-const CustomSubTitleText = styled.p`
-  font-size: ${GlobalTheme.fontSize.realBig};
-  font-family: eBold;
-`;
-
-const CustomContentText = styled.p`
-  font-size: ${GlobalTheme.fontSize.big2};
-`;
-
-const CustomAnchor = styled.a`
-  color: ${GlobalTheme.colors.theme};
-  font-size: ${GlobalTheme.fontSize.moreBig};
-  text-decoration: none;
-  transition: 0.5s;
-  border-bottom: 1px solid ${GlobalTheme.colors.theme};
-  &:hover {
-    color: ${GlobalTheme.colors.lightRed};
-    border-bottom: 1px solid ${GlobalTheme.colors.lightRed};
-  }
-`;
 
 export default CustomErrorComponent;

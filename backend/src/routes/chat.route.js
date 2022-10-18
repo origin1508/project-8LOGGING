@@ -4,10 +4,6 @@ const jwtVerification = require("../middlewares/jwtVerification");
 
 const router = express.Router();
 
-router.post("/room", jwtVerification, chatCtrl.createChatRoom);
-router.get("/log/:roomId", jwtVerification, chatCtrl.showChatLog);
-router.post("/log", jwtVerification, chatCtrl.createChatLog);
-router.put("/log", jwtVerification, chatCtrl.modifyChatLog);
-router.delete("/log", jwtVerification, chatCtrl.removeChatLog);
+router.get("/log/:roomId", jwtVerification, chatCtrl.showChatLog); // 모든 채팅 로그 조회
 
-module.exports = router;
+module.exports = router; 

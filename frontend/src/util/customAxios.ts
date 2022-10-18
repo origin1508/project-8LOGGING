@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
@@ -25,14 +25,9 @@ customAxios.interceptors.response.use(
   },
   (error) => {
     if (error.response.status >= 400 && error.response.status < 500) {
-      console.log(error);
-      return Promise.reject(error);
-      // throw new Error(error);
-    }
-    if (error.response.status >= 500) {
-      // status 500번대 서버 에러의 경우 Server에서 에러가 났다는 UI를 사용자에게 알려줌
-      console.log(error);
-      throw new Error("This is server error!");
+      throw new Error(error);
+    } else if (error.response.status >= 500) {
+      return AxiosError;
     }
   }
 );

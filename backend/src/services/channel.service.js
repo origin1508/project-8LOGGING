@@ -9,14 +9,14 @@ module.exports = {
   /**
    * 새로운 채널 생성
    *
-   * @param {String} title
-   * @param {String} userId
-   * @param {String} locationDist
-   * @param {String} locationCity
-   * @param {Number} memberNum
-   * @param {String} spec
-   * @param {String} location
-   * @returns
+   * @param {String} title 채널 타이틀
+   * @param {String} userId 유저 아이디
+   * @param {String} locationDist 지역(시, 도)
+   * @param {String} locationCity 지역(구, 읍)
+   * @param {Number} memberNum 최대 인원 수
+   * @param {String} spec 채널 세부 내용
+   * @param {String} location 프로필 사진 URL
+   * @returns 채널 ID
    */
   async createChannel(
     title,
@@ -63,32 +63,11 @@ module.exports = {
   },
 
   /**
-   * 모집 중인 채널 목록 반환
-   *
-   * @returns
+   * 채널 리스트 페이지네이션
+   * @param {Number} page 현재 페이지 번호
+   * @param {Number} status 채널 상태 코드
+   * @returns 채널 및 총 페이지 수
    */
-  // async getRecruitChannels() {
-  //   const channels = await Channel.find({status: 0});
-
-  //   const recruitChannels = await Promise.all(channels.map( async (channel) => {
-  //     // ownerId에 해당되는 nickname 찾기용
-  //     const user = await User.findById(channel.ownerId)
-
-  //     return {
-  //       _id: channel._id,
-  //       title: channel.title,
-  //       imgUrl: channel.img,
-  //       locationDist: channel.locationDist,
-  //       locationCity: channel.locationCity,
-  //       memberNum: channel.memberNum,
-  //       curMemberNum: channel.members.length,
-  //       ownerNickname: user.nickname
-  //     }
-  //   }));
-
-  //   return recruitChannels
-  // },
-
   async getChannelList(page, status) {
     const perPage = 12; // 페이지당 9개씩 보여주기
     const allChannelsCount = await Channel.find({}).count();
@@ -117,11 +96,11 @@ module.exports = {
   /**
    * 채널 검색하기
    *
-   * @param {Number} page
-   * @param {Number} status
-   * @param {String} keyword
-   * @param {String} filter
-   * @returns
+   * @param {Number} page 현재 페이지
+   * @param {Number} status 채널 상태 코드
+   * @param {String} keyword 키워드
+   * @param {String} filter 필터
+   * @returns 채널 및 총 페이지 수
    */
   async searchChannel(page, status, keyword, filter) {
     const perPage = 12; // 페이지당 9개씩 보여주기
@@ -173,7 +152,8 @@ module.exports = {
   /**
    * 채널 정보 확인
    *
-   * @param {String} channelId
+   * @param {String} channelId 채널 아이디
+   * @returns 채널 정보
    */
   async getChannelInfo(channelId) {
     const channel = await Channel.findById(channelId);
@@ -214,10 +194,10 @@ module.exports = {
   /**
    * 채널 상태 변경
    *
-   * @param {String} userId
-   * @param {String} channelId
-   * @param {Number} newStatus
-   * @returns
+   * @param {String} userId 유저 아이디
+   * @param {String} channelId 채널 아이디
+   * @param {Number} newStatus 새로운 채널 상태
+   * @returns 채널 아이디
    */
   async updateChannelInfo(userId, channelId, toUpdate) {
     // 채널 소유권 확인
@@ -249,9 +229,9 @@ module.exports = {
   /**
    * 채널 입장 신청
    *
-   * @param {String} userId
-   * @param {String} channelId
-   * @returns
+   * @param {String} userId 유저 아이디
+   * @param {String} channelId 채널 아이디
+   * @returns 채널 리스트
    */
   async requestEnter(userId, channelId) {
     // 채널 소유권 확인
@@ -311,9 +291,9 @@ module.exports = {
   /**
    * 채널 입장 신청 취소
    *
-   * @param {String} userId
-   * @param {String} channelId
-   * @returns
+   * @param {String} userId 유저 아이디
+   * @param {String} channelId 채널 아이디
+   * @returns 채널 리스트
    */
   async cancelEnter(userId, channelId) {
     // waitList 수정
@@ -368,9 +348,9 @@ module.exports = {
   /**
    * 채널 입장 신청 목록 확인
    *
-   * @param {String} userId
-   * @param {String} channelId
-   * @returns
+   * @param {String} userId 유저 아이디
+   * @param {String} channelId 채널 아이디
+   * @returns 채널 입장 신청 리스트
    */
   async getWaitList(userId, channelId) {
     // 권한 확인
@@ -396,9 +376,9 @@ module.exports = {
   /**
    * 채널 입장 수락
    *
-   * @param {String} userId
-   * @param {String} channelId
-   * @param {String} waitingId
+   * @param {String} userId 유저 아이디
+   * @param {String} channelId 채널 아이디
+   * @param {String} waitingId 참가 신청 중인 채널 아이디
    */
   async acceptEnter(userId, channelId, waitingId) {
     // 권한 확인
@@ -440,9 +420,9 @@ module.exports = {
   /**
    * 채널 입장 거절
    *
-   * @param {String} userId
-   * @param {String} channelId
-   * @param {String} waitingId
+   * @param {String} userId 유저 아이디
+   * @param {String} channelId 채널 아이디
+   * @param {String} waitingId 참가 신청 중인 채널 아이디
    */
   async rejectEnter(userId, channelId, waitingId) {
     // 권한 확인
@@ -484,8 +464,8 @@ module.exports = {
   /**
    * 유저와 채널의 관계
    *
-   * @param {String} userId
-   * @param {String} channelId
+   * @param {String} userId 유저 아이디
+   * @param {String} channelId 채널 아이디
    * @returns
    */
   async checkUserChannelRelation(userId, channelId) {
@@ -504,9 +484,9 @@ module.exports = {
   /**
    * 채널 떠나기
    *
-   * @param {String} userId
-   * @param {String} channelId
-   * @returns
+   * @param {String} userId 유저 아이디
+   * @param {String} channelId 채널 아이디
+   * @returns 채널 리스트
    */
   async quitChannel(userId, channelId) {
     const channel = await Channel.findById(channelId);
@@ -542,9 +522,9 @@ module.exports = {
   /**
    * 채널 삭제하기
    *
-   * @param {String} userId
-   * @param {String} channelId
-   * @returns
+   * @param {String} userId 유저 아이디
+   * @param {String} channelId 채널 아이디
+   * @returns 채널 리스트
    */
   async deleteChannel(userId, channelId) {
     const channel = await Channel.findById(channelId);

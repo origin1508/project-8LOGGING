@@ -26,13 +26,13 @@ import ChannelSendButton from "@/components/channel/ChannelSendButton";
 import ContextMenu from "@/components/contextMenu/ContextMenu";
 import ChannelEdit from "@/components/channel/ChannelEdit";
 import { TextOne, TextTwo } from "@/styles/commonStyle";
-import { customSocket, customSocketConnectRequest } from "@/util/customSocket";
 import {
-  channelMessageRequest,
-  channelChatLogRequest,
-  channelChatLogDeleteRequest,
-  channelChatLogUpdateRequest,
-} from "@/api/channelFetcher";
+  customSocket,
+  customSocketConnectRequest,
+  customSocketCreateRequest,
+  customSocketUpdateRequest,
+  customSocketDeleteRequest,
+} from "@/util/customSocket";
 
 const CONTEXT_MENU_ID = "CONTEXT_MENU_ID";
 
@@ -80,7 +80,6 @@ function Channel() {
 
   useEffect(() => {
     prepareScroll();
-    channelId && customSocketConnectRequest("enter", channelId);
     (async () => {
       const res = await currentChannelDetailRequest(
         `/api/channels/${channelId}/main`
@@ -93,29 +92,31 @@ function Channel() {
         handleModalOpenButtonClick();
         setEntryFailureMessage(res.message);
       }
-
-      const { datas } = await channelChatLogRequest(
-        `/api/chat/log/${channelId}`
-      );
-      setChatLogs(datas);
     })();
-    customSocket.on("create-chat", (data) => {
+    channelId && customSocketConnectRequest("enter-chat", channelId);
+    customSocket.on("receive-chatLog", (data) => {
+      setChatLogs(data);
+    });
+    customSocket.on("receive-create-chat", (data) => {
       setChatLogs((prev) => {
         return [...prev, data];
       });
     });
-    customSocket.on("modify-chat", (data) => {
+    customSocket.on("receive-modify-chat", (data) => {
       setChatLogs((prev) => {
         return prev.map((chat) => (chat._id === data._id ? data : chat));
       });
     });
-    customSocket.on("remove-chat", (data) => {
+    customSocket.on("receive-remove-chat", (data) => {
       setChatLogs((prev) => {
         return prev.filter((chat) => chat._id !== data._id);
       });
     });
     return () => {
-      customSocket.off("disconnect");
+      customSocket.off("receive-chatLog");
+      customSocket.off("receive-create-chat");
+      customSocket.off("receive-modify-chat");
+      customSocket.off("receive-remove-chat");
     };
   }, [channelId]);
 
@@ -129,7 +130,7 @@ function Channel() {
   const handleChannelSendButtonClick = async (e: React.FormEvent) => {
     e.preventDefault();
     if (channelId)
-      await channelMessageRequest("/api/chat/log", channelId, channelContent);
+      customSocketCreateRequest("create-chat", loginUserId, channelContent);
     if (inputRef.current) inputRef.current.value = "";
     scrollToBottom();
   };
@@ -192,12 +193,7 @@ function Channel() {
         return;
       }
       if (channelId) {
-        await channelChatLogUpdateRequest(
-          "/api/chat/log",
-          channelId,
-          selectedChat,
-          chatMessage
-        );
+        customSocketUpdateRequest("modify-chat", selectedChat, chatMessage);
         setIsChatLogEditMode(false);
       }
     }
@@ -209,22 +205,12 @@ function Channel() {
 
   const handleContextMenuuClick = (itemName: string) => async () => {
     switch (itemName) {
-      case "수정하기": {
+      case "수정하기":
         setIsChatLogEditMode(true);
         break;
-      }
 
       case "삭제하기":
-        {
-          if (channelId) {
-            await channelChatLogDeleteRequest(
-              "/api/chat/log",
-              channelId,
-              selectedChat
-            );
-            setSelectedChat("");
-          }
-        }
+        if (channelId) customSocketDeleteRequest("remove-chat", selectedChat);
         break;
 
       default:
