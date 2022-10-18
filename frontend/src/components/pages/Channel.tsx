@@ -73,8 +73,8 @@ function Channel() {
   const editInputRef = useRef<HTMLInputElement>(null);
   const chatRef = useRef<HTMLDivElement>(null);
 
-  const prepareScroll = () => {
-    setTimeout(scrollToBottom, 500);
+  const prepareScroll = (waitTime: number) => {
+    setTimeout(scrollToBottom, waitTime);
   };
   const scrollToBottom = () => {
     if (chatRef.current) {
@@ -89,7 +89,7 @@ function Channel() {
   const menuItems = ["수정하기", "삭제하기"];
 
   useEffect(() => {
-    prepareScroll();
+    prepareScroll(500);
     (async () => {
       const res = await currentChannelDetailRequest(
         `/api/channels/${channelId}/main`
@@ -143,7 +143,7 @@ function Channel() {
     if (channelId)
       customSocketCreateRequest("create-chat", loginUserId, channelContent);
     if (inputRef.current) inputRef.current.value = "";
-    scrollToBottom();
+    prepareScroll(200);
   };
 
   const handleChannelJoinPermissionButtonClick = async (
