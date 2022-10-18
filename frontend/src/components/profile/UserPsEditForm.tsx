@@ -80,11 +80,11 @@ function UserPsEditForm({ setIsEditing, setIsPsEditing }: UserInfoEditProps) {
   return (
     <BaseCardContainer width="40rem">
       <TitleContainer>
-        <BigTitle>Change Password</BigTitle>
+        <BigTitle>비밀번호 변경</BigTitle>
       </TitleContainer>
       <InpurForm onSubmit={handleSubmitClick}>
         <InputContainer>
-          Password
+          현재 비밀번호
           <UserNickNameIntput
             type="password"
             placeholder="Password..."
@@ -94,7 +94,7 @@ function UserPsEditForm({ setIsEditing, setIsPsEditing }: UserInfoEditProps) {
           />
         </InputContainer>
         <InputContainer>
-          New password
+          새로운 비밀번호
           <UserNickNameIntput
             type="password"
             placeholder="New password..."
@@ -104,13 +104,13 @@ function UserPsEditForm({ setIsEditing, setIsPsEditing }: UserInfoEditProps) {
           />
           {values.newPassword && !isValidNewPassword && (
             <BaseValidateTextContainer>
-              Special characters and numbers from 8 to 15.
+              8~15자 영문 소문자, 숫자, 특수문자를 사용해주세요.
             </BaseValidateTextContainer>
           )}
         </InputContainer>
 
         <InputContainer>
-          Check new password
+          새로운 비밀번호 확인
           <UserDescriptionInput
             type="password"
             placeholder="Check new password..."
