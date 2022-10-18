@@ -27,7 +27,7 @@ const Channel: React.FC = () => {
       );
       setSidebarChannels(res.channels);
     })();
-  }, []);
+  }, [isToggle]);
 
   return (
     <ChannelsContainer>
