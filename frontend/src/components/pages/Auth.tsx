@@ -19,10 +19,7 @@ import {
   authVerificationCodeCheck,
 } from "@/api/authFetcher";
 import { useSetRecoilState } from "recoil";
-import {
-  loginUserIdState,
-  authRefreshTokenState,
-} from "@/recoil/atoms/authState";
+import { loginUserIdState } from "@/recoil/atoms/authState";
 const TapMenu = ["로그인", "회원가입"];
 
 const Auth = () => {
@@ -93,7 +90,6 @@ const Auth = () => {
     });
 
   const setLoginUserId = useSetRecoilState(loginUserIdState);
-  const setAuthRefreshTokenState = useSetRecoilState(authRefreshTokenState);
 
   const navigate = useNavigate();
 
@@ -121,9 +117,7 @@ const Auth = () => {
         email,
         password,
       });
-      console.log(res);
       setLoginUserId(res.userId);
-      // setAuthRefreshTokenState(res.refreshToken);
       navigate("/", { replace: true });
     } catch (error) {
       const err = error as ErrorType;
