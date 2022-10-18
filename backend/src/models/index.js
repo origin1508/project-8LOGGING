@@ -7,6 +7,7 @@ const EmailAuthSchema = require("./emailAuth.model");
 const FollowSchema = require("./follow.model");
 const ChatRoomSchema = require("./chatRoom.model");
 const ChatLogSchema = require("./chatLog.model");
+const refreshSchema = require("./refreshToken.model");
 
 module.exports = {
   User: mongoose.model("User", UserSchema),
@@ -16,4 +17,5 @@ module.exports = {
   Follow: mongoose.model("Follow", FollowSchema),
   ChatRoom: mongoose.model("ChatRoom", ChatRoomSchema),
   ChatLog: mongoose.model("ChatLog", ChatLogSchema),
+  RefreshToken: mongoose.model("RefreshToken", refreshSchema),
 };
