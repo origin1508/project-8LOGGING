@@ -8,6 +8,7 @@ import {
   MoreSmallButton,
   BigTitle,
   ModalTitle,
+  BigButton,
 } from "@/styles/commonStyle";
 import { ChannelMemberType, waitListType } from "@/types/channel/channelTypes";
 import LoadingCycle from "@/components/loading/LoadingCycle";
@@ -137,9 +138,9 @@ function MemberList({
       </WaitListContainer>
 
       {isOwner ? (
-        <ChannelButton onClick={onChannelDeleteEvent}>채널 삭제</ChannelButton>
+        <DeleteButton onClick={onChannelDeleteEvent}>채널 삭제</DeleteButton>
       ) : (
-        <ChannelButton onClick={onChannelLeaveEvent}>채널 나가기</ChannelButton>
+        <LeaveButton onClick={onChannelLeaveEvent}>채널 나가기</LeaveButton>
       )}
     </MemberListWrapper>
   );
@@ -255,9 +256,11 @@ const Notification = styled.span`
   align-items: center;
 `;
 
-const ChannelButton = styled.button`
-  ${GlobalTheme.buttons}
-  height: 5rem;
+const LeaveButton = styled(BigButton)`
+  width: 80%;
+  margin-bottom: 2rem;
+`;
+const DeleteButton = styled(BigButton)`
   width: 80%;
   margin-bottom: 2rem;
 `;
