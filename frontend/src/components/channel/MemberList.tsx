@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
@@ -45,6 +45,11 @@ function MemberList({
   const [members, setMembers] =
     useState<ChannelMemberType[]>(channelMemberList);
   const [memberName, setMemberName] = useState("");
+
+  useEffect(() => {
+    setMembers(channelMemberList);
+  }, [channelMemberList]);
+
   const memberSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     const searchMember = channelMemberList.filter((member) =>
