@@ -167,9 +167,7 @@ module.exports = {
         const newAccessToken = this.generateAccessToken(refresh.userId);
         return newAccessToken;
       } else {
-        throw ApiError.expiredToken(
-          "accessToken과 refreshToken 모두 만료되었습니다. 다시 로그인하세요."
-        );
+        throw new Error("accessToken과 refreshToken 모두 만료되었습니다. 다시 로그인하세요.");
       }
     }
   },
