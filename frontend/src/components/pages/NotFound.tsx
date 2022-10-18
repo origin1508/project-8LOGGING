@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import BaseErrorBoundaryContanier from "../hoc/BaseErrorBoundaryContainer";
+import BasePageComponent from "../hoc/BasePageComponent";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 
@@ -8,7 +8,7 @@ const NotFound = () => {
   const navigate = useNavigate();
 
   return (
-    <BaseErrorBoundaryContanier>
+    <BasePageComponent>
       <NotFoundContainer>
         <NotFoundTitleContainer>
           <Title1>4</Title1>
@@ -23,11 +23,14 @@ const NotFound = () => {
             요청하신 페이지가 삭제되었거나 잘못된 주소를 입력하셨습니다.
           </NotFoundText>
         </NotFoundTextContainer>
-        <BackButton onClick={() => window.location.replace("/")}>
-          이전 페이지
-        </BackButton>
+        <ButtonContainer>
+          <BackButton onClick={() => navigate(-1)}>이전 페이지</BackButton>
+          <BackButton onClick={() => window.location.replace("/")}>
+            홈으로
+          </BackButton>
+        </ButtonContainer>
       </NotFoundContainer>
-    </BaseErrorBoundaryContanier>
+    </BasePageComponent>
   );
 };
 
@@ -73,7 +76,10 @@ const NotFoundTextContainer = styled.div`
   line-height: 5rem;
   text-align: center;
 `;
-
+const ButtonContainer = styled.div`
+  display: flex;
+  gap: 5rem;
+`;
 const BackButton = styled.button`
   ${GlobalTheme.buttons}
   margin-top: 5rem;

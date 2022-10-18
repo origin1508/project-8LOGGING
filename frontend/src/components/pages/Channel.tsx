@@ -11,11 +11,13 @@ import {
   channelJoinAcceptRequet,
   channelJoinRejectRequet,
   channelLeaveRequest,
+  channelDeleteRequest,
 } from "@/api/channelFetcher";
 import {
   MainChannelType,
   ChannelLogObjectType,
   waitListType,
+  ChannelMemberType,
 } from "@/types/channel/channelTypes";
 import useModal from "@/hooks/useModal";
 import Modal from "@/components/modal/Modal";
@@ -40,8 +42,9 @@ function Channel() {
   const [channelContent, setChannelContent] = useState<string>("");
   const [chatLogs, setChatLogs] = useState<Array<ChannelLogObjectType>>([]);
   const [channelData, setChannelData] = useState<MainChannelType[]>([]);
-  const [entryFailureMessage, setEntryFailureMessage] = useState();
+  const [modalMessage, setModalMessage] = useState("");
   const [waitList, setWaitList] = useState<waitListType[]>([]);
+  const [memberList, setMemberList] = useState<ChannelMemberType[]>([]);
   const [isShowWaitList, setIsShowWaitList] = useState(false);
   const [selectedChat, setSelectedChat] = useState("");
   const [isChatLogEditMode, setIsChatLogEditMode] = useState(false);
@@ -57,6 +60,13 @@ function Channel() {
     handleModalOpenButtonClick,
     ,
     handleModalCloseButtonClick,
+  ] = useModal(false);
+  const [
+    isOpenAcceptModal,
+    isAccepted,
+    handleAcceptModalOpenButtonClick,
+    handleAcceptButtonClick,
+    handleAcceptModalCloseButtonClick,
   ] = useModal(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -87,10 +97,11 @@ function Channel() {
       if (res.success) {
         setChannelData([res.datas]);
         if (res.datas.waitList) setWaitList(res.datas.waitList);
+        if (res.datas.membersInfo) setMemberList(res.datas.membersInfo);
       } else {
         setChannelData([]);
         handleModalOpenButtonClick();
-        setEntryFailureMessage(res.message);
+        setModalMessage(res.message);
       }
     })();
     channelId && customSocketConnectRequest("enter-chat", channelId);
@@ -146,11 +157,23 @@ function Channel() {
           `/api/channels/${channelId}/waiting`,
           waitingId
         );
-        if (res) {
+        if (res.success) {
+          const newMember = waitList.find(
+            (member) => member.userId === waitingId
+          );
+          if (newMember) {
+            setMemberList((prev) => [
+              ...prev,
+              {
+                memberId: newMember.userId,
+                memberNickname: newMember.nickname,
+                memberPic: newMember.profPic,
+              },
+            ]);
+          }
           setWaitList((prev) =>
             prev.filter((member) => member.userId !== waitingId)
           );
-          setIsLoading(false);
         }
       } else if (e.target.name === "reject") {
         const res = await channelJoinRejectRequet(
@@ -161,19 +184,41 @@ function Channel() {
           setWaitList((prev) =>
             prev.filter((member) => member.userId !== waitingId)
           );
-          setIsLoading(false);
         }
       }
+      setIsLoading(false);
     }
   };
 
   const handleChannelLeaveButtonClick = async () => {
-    const res = await channelLeaveRequest(`/api/channels/${channelId}/leave`);
-    if (res.success) {
-      setSidebarChannels((prev) =>
-        prev.filter((channel) => channel._id !== channelId)
+    setModalMessage("정말 채널을 나가시겠습니까?");
+    handleAcceptModalOpenButtonClick();
+
+    if (isAccepted) {
+      const res = await channelLeaveRequest(`/api/channels/${channelId}/leave`);
+      if (res.success) {
+        setSidebarChannels((prev) =>
+          prev.filter((channel) => channel._id !== channelId)
+        );
+        navigate("/channels", { replace: true });
+      }
+    }
+  };
+
+  const handleChannelDeleteButtonClick = async () => {
+    setModalMessage("정말 채널을 삭제하시겠습니까?");
+    handleAcceptModalOpenButtonClick();
+
+    if (isAccepted) {
+      const res = await channelDeleteRequest(
+        `/api/channels/${channelId}/delete`
       );
-      navigate("/profile", { replace: true });
+      if (res.success) {
+        setSidebarChannels((prev) =>
+          prev.filter((channel) => channel._id !== channelId)
+        );
+        navigate("/channels", { replace: true });
+      }
     }
   };
 
@@ -277,7 +322,7 @@ function Channel() {
                 </ChatForm>
               </ChannelContainer>
               <MemberList
-                channelMemberList={data.membersInfo}
+                channelMemberList={memberList}
                 waitMemberList={waitList}
                 isOwner={isOwner}
                 ownerId={data.ownerInfo.ownerId}
@@ -288,6 +333,7 @@ function Channel() {
                   handleChannelJoinPermissionButtonClick
                 }
                 onChannelLeaveEvent={handleChannelLeaveButtonClick}
+                onChannelDeleteEvent={handleChannelDeleteButtonClick}
               />
             </React.Fragment>
           );
@@ -301,7 +347,15 @@ function Channel() {
           navigate("/profile", { replace: true });
         }}
       >
-        {entryFailureMessage}
+        {modalMessage}
+      </Modal>
+      <Modal
+        isOpenModal={isOpenAcceptModal}
+        isShowImage={true}
+        onModalCancelButtonClickEvent={handleAcceptModalCloseButtonClick}
+        onModalAcceptButtonClickEvent={handleAcceptButtonClick}
+      >
+        {modalMessage}
       </Modal>
       <ContextMenu
         items={menuItems}
