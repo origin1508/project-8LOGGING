@@ -399,6 +399,17 @@ const ContentContainer = styled.div`
   height: 88%;
   padding: 1rem 0rem 0rem 3rem;
   overflow-y: auto;
+  &::-webkit-scrollbar {
+    display: block;
+    width: 5px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: ${GlobalTheme.colors.theme};
+    border-radius: 4px;
+  }
+  &::-webkit-scrollbar-track {
+    background: ${GlobalTheme.colors.lightTwoGray};
+  }
 `;
 
 const UserContainer = styled.div`
