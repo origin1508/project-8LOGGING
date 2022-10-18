@@ -90,7 +90,7 @@ module.exports = {
       { userId },
       process.env.JWT_SECRET_KEY || "q23gh3214fg",
       {
-        expiresIn: "1m",
+        expiresIn: "1h",
         issuer: "HHS",
       }
     );
@@ -106,7 +106,7 @@ module.exports = {
       { userId },
       process.env.JWT_SECRET_KEY || "q23gh3214fg",
       {
-        expiresIn: "3m",
+        expiresIn: "30d",
         issuer: "HHS",
       }
     );
