@@ -8,29 +8,27 @@ const NotFound = () => {
   const navigate = useNavigate();
 
   return (
-    <BasePageComponent>
-      <NotFoundContainer>
-        <NotFoundTitleContainer>
-          <Title1>4</Title1>
-          <NotFoundImg
-            src={`${process.env.PUBLIC_URL}/images/notfound-img.png`}
-          />
-          <Title2>4</Title2>
-        </NotFoundTitleContainer>
-        <NotFoundTextContainer>
-          <NotFoundText>죄송합니다. 페이지를 찾을 수 없습니다.</NotFoundText>
-          <NotFoundText>
-            요청하신 페이지가 삭제되었거나 잘못된 주소를 입력하셨습니다.
-          </NotFoundText>
-        </NotFoundTextContainer>
-        <ButtonContainer>
-          <BackButton onClick={() => navigate(-1)}>이전 페이지</BackButton>
-          <BackButton onClick={() => window.location.replace("/")}>
-            홈으로
-          </BackButton>
-        </ButtonContainer>
-      </NotFoundContainer>
-    </BasePageComponent>
+    <NotFoundContainer>
+      <NotFoundTitleContainer>
+        <Title1>4</Title1>
+        <NotFoundImg
+          src={`${process.env.PUBLIC_URL}/images/notfound-img.png`}
+        />
+        <Title2>4</Title2>
+      </NotFoundTitleContainer>
+      <NotFoundTextContainer>
+        <NotFoundText>죄송합니다. 페이지를 찾을 수 없습니다.</NotFoundText>
+        <NotFoundText>
+          요청하신 페이지가 삭제되었거나 잘못된 주소를 입력하셨습니다.
+        </NotFoundText>
+      </NotFoundTextContainer>
+      <ButtonContainer>
+        <BackButton onClick={() => navigate(-1)}>이전 페이지</BackButton>
+        <BackButton onClick={() => window.location.replace("/")}>
+          홈으로
+        </BackButton>
+      </ButtonContainer>
+    </NotFoundContainer>
   );
 };
 
@@ -43,6 +41,8 @@ const NotFoundContainer = styled.div`
   justify-content: center;
   height: 100%;
   width: 100%;
+  position: fixed;
+  background-color: ${GlobalTheme.colors.lightTwoGray};
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
