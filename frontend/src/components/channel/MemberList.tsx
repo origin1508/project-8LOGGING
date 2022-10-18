@@ -39,7 +39,6 @@ function MemberList({
   const [members, setMembers] =
     useState<ChannelMemberType[]>(channelMemberList);
   const [memberName, setMemberName] = useState("");
-
   const memberSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     const searchMember = channelMemberList.filter((member) =>

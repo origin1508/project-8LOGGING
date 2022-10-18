@@ -17,6 +17,7 @@ import {
   MainChannelType,
   ChannelLogObjectType,
   waitListType,
+  ChannelMemberType,
 } from "@/types/channel/channelTypes";
 import useModal from "@/hooks/useModal";
 import Modal from "@/components/modal/Modal";
@@ -43,6 +44,7 @@ function Channel() {
   const [channelData, setChannelData] = useState<MainChannelType[]>([]);
   const [entryFailureMessage, setEntryFailureMessage] = useState();
   const [waitList, setWaitList] = useState<waitListType[]>([]);
+  const [memberList, setMemberList] = useState<ChannelMemberType[]>([]);
   const [isShowWaitList, setIsShowWaitList] = useState(false);
   const [selectedChat, setSelectedChat] = useState("");
   const [isChatLogEditMode, setIsChatLogEditMode] = useState(false);
@@ -88,6 +90,7 @@ function Channel() {
       if (res.success) {
         setChannelData([res.datas]);
         if (res.datas.waitList) setWaitList(res.datas.waitList);
+        if (res.datas.membersInfo) setMemberList(res.datas.membersInfo);
       } else {
         setChannelData([]);
         handleModalOpenButtonClick();
@@ -147,7 +150,20 @@ function Channel() {
           `/api/channels/${channelId}/waiting`,
           waitingId
         );
-        if (res) {
+        if (res.success) {
+          const newMember = waitList.find(
+            (member) => member.userId === waitingId
+          );
+          if (newMember) {
+            setMemberList((prev) => [
+              ...prev,
+              {
+                memberId: newMember.userId,
+                memberNickname: newMember.nickname,
+                memberPic: newMember.profPic,
+              },
+            ]);
+          }
           setWaitList((prev) =>
             prev.filter((member) => member.userId !== waitingId)
           );
@@ -287,7 +303,7 @@ function Channel() {
                 </ChatForm>
               </ChannelContainer>
               <MemberList
-                channelMemberList={data.membersInfo}
+                channelMemberList={memberList}
                 waitMemberList={waitList}
                 isOwner={isOwner}
                 ownerId={data.ownerInfo.ownerId}
