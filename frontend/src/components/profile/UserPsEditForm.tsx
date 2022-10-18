@@ -80,14 +80,14 @@ function UserPsEditForm({ setIsEditing, setIsPsEditing }: UserInfoEditProps) {
   return (
     <BaseCardContainer width="40rem">
       <TitleContainer>
-        <BigTitle>비밀번호 변경</BigTitle>
+        <BigTitle>Change password</BigTitle>
       </TitleContainer>
       <InpurForm onSubmit={handleSubmitClick}>
         <InputContainer>
           현재 비밀번호
           <UserNickNameIntput
             type="password"
-            placeholder="Password..."
+            placeholder="비밀번호"
             value={values.currentPassword}
             name="currentPassword"
             onChange={handleEditFormChange}
@@ -97,7 +97,7 @@ function UserPsEditForm({ setIsEditing, setIsPsEditing }: UserInfoEditProps) {
           새로운 비밀번호
           <UserNickNameIntput
             type="password"
-            placeholder="New password..."
+            placeholder="새로운 비밀번호"
             value={values.newPassword}
             name="newPassword"
             onChange={handleEditFormChange}
@@ -110,10 +110,10 @@ function UserPsEditForm({ setIsEditing, setIsPsEditing }: UserInfoEditProps) {
         </InputContainer>
 
         <InputContainer>
-          새로운 비밀번호 확인
+          새로운 비밀번호
           <UserDescriptionInput
             type="password"
-            placeholder="Check new password..."
+            placeholder="새로운 비밀번호 확인"
             value={values.confirmPassword}
             name="confirmPassword"
             onChange={handleEditFormChange}
