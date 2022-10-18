@@ -198,15 +198,16 @@ const ChannelListContiner = styled.div`
 `;
 const CardsContainer = styled.div`
   margin-top: 2rem;
-  width: 90%;
+  width: 100%;
   padding: 4rem;
+  box-sizing: border-box;
   overflow-y: scroll;
   display: flex;
   height: 80%;
   align-itmes: center;
-  justify-content: space-between;
+  justify-content: start;
   flex-wrap: wrap;
-  gap: 3rem;
+  gap: 4rem;
 `;
 const TitleContainer = styled.div`
   padding: 3rem 0rem;
