@@ -17,11 +17,11 @@ module.exports = class ApiError extends Error {
     return new ApiError(msg, 401);
   }
 
-  static unavailableToken(msg) {
-    return new ApiError(msg, 401);
-  }
+  // static unavailableToken(msg) {
+  //   return new ApiError(msg, 401);
+  // }
 
-  static forbbiden(msg) {
+  static forbidden(msg) {
     return new ApiError(msg, 403);
   }
 };
