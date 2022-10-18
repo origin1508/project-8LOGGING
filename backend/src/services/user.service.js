@@ -151,7 +151,6 @@ module.exports = {
       const waitList = await WaitList.findById(waitListId);
       return waitList.channelId
     }))
-    console.log(waitingChannels);
     const channels = await Promise.all(user.channels.map(async (channelId) => {
       const channel = await Channel.findById(channelId);
       // 개설자/입장대기자/일반멤버 파악

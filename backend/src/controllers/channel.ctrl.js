@@ -133,7 +133,6 @@ module.exports = {
     const userId = req.userId;
     const { channelId } = req.params;
     const { message } = req.body;
-    console.log(message);
 
     try {
       const channels = await channelService.requestEnter(userId, channelId);
