@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useModal from "@/hooks/useModal";
 import useChannelForm from "@/hooks/useChannelForm";
@@ -13,6 +13,7 @@ import { imageResize } from "@/util/imageResizeUtil";
 import { channelListData } from "@/components/recruitingChannel/channelListData";
 import { sidebarChannelsState } from "@/recoil/atoms/channelState";
 import { useSetRecoilState } from "recoil";
+import Storage from "@/storage/storage";
 
 const ChannelForm = () => {
   const [image, setImage] = useState<Blob>();
@@ -38,7 +39,9 @@ const ChannelForm = () => {
   });
 
   const navigate = useNavigate();
-
+  useEffect(() => {
+    if (!Storage.getToken()) navigate("/", { replace: true });
+  });
   const distOptions = Object.keys(channelListData).sort(
     (a: string, b: string) => (a < b ? -1 : 1)
   );
@@ -147,9 +150,11 @@ const ChannelForm = () => {
         <Modal
           isOpenModal={isOpenModal}
           isAlertModal={true}
+          isShowImage={true}
           onModalCancelButtonClickEvent={handleModalCloseButtonClick}
         >
-          Please check your channel information
+          작성하신 내용이 올바른지 <br />
+          확인해주세요.
         </Modal>
       </ChannelContainer>
     </BaseChannelComponent>
