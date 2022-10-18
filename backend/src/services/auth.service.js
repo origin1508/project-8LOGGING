@@ -90,7 +90,7 @@ module.exports = {
       { userId },
       process.env.JWT_SECRET_KEY || "q23gh3214fg",
       {
-        expiresIn: "7d",
+        expiresIn: "1m",
         issuer: "HHS",
       }
     );
@@ -101,26 +101,79 @@ module.exports = {
   /**
    * JWT refresh 토큰 생성
    */
-  async generateRefreshToken() {
-    const token = jwt.sign({}, process.env.JWT_SECRET_KEY || "q23gh3214fg", {
-      expiresIn: "14d",
-      issuer: "HHS",
-    });
+  async generateRefreshToken(userId) {
+    const token = jwt.sign(
+      { userId },
+      process.env.JWT_SECRET_KEY || "q23gh3214fg",
+      {
+        expiresIn: "3m",
+        issuer: "HHS",
+      }
+    );
 
     return token;
   },
 
   /**
    * 리프레시 토큰 DB에 저장
-   * 
-   * @param {String} userId 
-   * @param {String} refreshToken 
+   *
+   * @param {String} userId
+   * @param {String} refreshToken
    */
   async insertRefreshToken(userId, refreshToken) {
-    await RefreshToken.create({userId, refreshToken});
+    const exToken = await RefreshToken.findOne({ userId });
+
+    if (exToken) {
+      await RefreshToken.findOneAndUpdate({ userId }, { refreshToken });
+    } else {
+      await RefreshToken.create({ userId, refreshToken });
+    }
   },
 
-  
+  async verifyAccessToken(token) {
+    const secret = process.env.JWT_SECRET_KEY;
+    try {
+      console.log(token, secret);
+      const decodedToken = jwt.verify(token, secret);
+
+      return decodedToken.userId;
+    } catch (err) {
+      return false;
+    }
+  },
+
+  async verifyRefreshToken(token) {
+    const exToken = await RefreshToken.findOne({ refreshToken: token });
+
+    if (!exToken) {
+      throw ApiError.forbidden("회원의 리프레시 토큰이 아닙니다.");
+    }
+
+    const secret = process.env.JWT_SECRET_KEY;
+
+    try {
+      console.log(token, secret);
+      const decodedToken = jwt.verify(token, secret);
+      return decodedToken.userId;
+    } catch (err) {
+      return false;
+    }
+  },
+
+  async refresh(access, refresh) {
+    console.log(access, refresh)
+    if (!access) {
+      if (refresh) {
+        const newAccessToken = this.generateAccessToken(refresh.userId);
+        return newAccessToken;
+      } else {
+        throw ApiError.expiredToken(
+          "accessToken과 refreshToken 모두 만료되었습니다. 다시 로그인하세요."
+        );
+      }
+    }
+  },
+
   async lockUserInfo(userId) {
     await User.findOneAndUpdate({ _id: userId }, { withdrawal: true });
   },

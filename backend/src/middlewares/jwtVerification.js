@@ -10,9 +10,11 @@ module.exports = verifyJWT = (req, res, next) => {
       next(ApiError.badRequest("토큰을 받지 못했습니다."));
     }
 
+    const secret = process.env.JWT_SECRET_KEY;
+
     const decodedToken = jwt.verify(
       token,
-      process.env.JWT_SECRET_KEY || "q23gh3214fg"
+      secret
     );
 
     req.userId = decodedToken.userId;
@@ -22,6 +24,6 @@ module.exports = verifyJWT = (req, res, next) => {
     if (err.name === "TokenExpiredError") {
       next(ApiError.expiredToken("유효기간이 만료된 토큰입니다."));
     }
-    next(ApiError.unavailableToken("유효하지 않은 토큰입니다."));
+    next(ApiError.forbidden("유효하지 않은 토큰입니다."));
   }
 };
