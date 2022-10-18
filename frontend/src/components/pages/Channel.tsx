@@ -11,6 +11,7 @@ import {
   channelJoinAcceptRequet,
   channelJoinRejectRequet,
   channelLeaveRequest,
+  channelDeleteRequest,
 } from "@/api/channelFetcher";
 import {
   MainChannelType,
@@ -176,6 +177,16 @@ function Channel() {
     }
   };
 
+  const handleChannelDeleteButtonClick = async () => {
+    const res = await channelDeleteRequest(`/api/channels/${channelId}/delete`);
+    if (res.success) {
+      setSidebarChannels((prev) =>
+        prev.filter((channel) => channel._id !== channelId)
+      );
+      navigate("/channels", { replace: true });
+    }
+  };
+
   const handleShowContextMenuClick =
     (channelId: string, userId: string) => (e: React.MouseEvent) => {
       if (userId !== loginUserId) return;
@@ -287,6 +298,7 @@ function Channel() {
                   handleChannelJoinPermissionButtonClick
                 }
                 onChannelLeaveEvent={handleChannelLeaveButtonClick}
+                onChannelDeleteEvent={handleChannelDeleteButtonClick}
               />
             </React.Fragment>
           );

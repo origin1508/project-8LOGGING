@@ -20,6 +20,7 @@ interface MemberListProps {
     waitingId: string
   ) => void;
   onChannelLeaveEvent: () => void;
+  onChannelDeleteEvent: () => void;
 }
 
 function MemberList({
@@ -32,6 +33,7 @@ function MemberList({
   setIsShowWaitList,
   onChannelJoinPermissionButtonClickEvent,
   onChannelLeaveEvent,
+  onChannelDeleteEvent,
 }: MemberListProps) {
   const navigate = useNavigate();
   const [members, setMembers] =
@@ -131,7 +133,7 @@ function MemberList({
       </WaitListContainer>
 
       {isOwner ? (
-        <ChannelButton>채널 삭제</ChannelButton>
+        <ChannelButton onClick={onChannelDeleteEvent}>채널 삭제</ChannelButton>
       ) : (
         <ChannelButton onClick={onChannelLeaveEvent}>채널 나가기</ChannelButton>
       )}
