@@ -32,15 +32,15 @@ function Profile() {
 
   const [
     isOpenModal,
-    isAccepted,
+    ,
     handleModalOpenButtonClick,
-    handleAcceptButtonClick,
+    ,
     handleModalCloseButtonClick,
   ] = useModal(false);
 
   const [
     isOpenDeleteAccountlModal,
-    isAcceptedDelete,
+    ,
     handleDeleteAccountModalOpenButtonClick,
     handleAcceptDeleteClick,
     handleDeleteAccountModalCloseButtonClick,

@@ -1,5 +1,6 @@
 import customAxios from "@/util/customAxios";
 import Storage from "@/storage/storage";
+import CookieStorage from "@/storage/cookie";
 import { AuthFormInitialType } from "@/types/auth/authTypes";
 
 export async function authRegisterRequest(
@@ -40,7 +41,8 @@ export async function authLoginRequest(
     }
   );
   const { datas } = res.data;
-  Storage.setToken(datas.token);
+  Storage.setToken(datas.accessToken);
+  CookieStorage.setToken(datas.refreshToken);
   return datas;
 }
 

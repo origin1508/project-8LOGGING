@@ -12,9 +12,9 @@ const Footer = () => {
         </FooterFontWrapper>
         <FooterTeamWrapper>
           <FooterTeamTitle>8LOGGING Team</FooterTeamTitle>
-          <FooterTeamContent>About us</FooterTeamContent>
-          <FooterTeamContent>Contact us</FooterTeamContent>
-          <FooterTeamContent>Github</FooterTeamContent>
+          <FooterTeamContent>The team</FooterTeamContent>
+          <FooterTeamContent>8 Seconds</FooterTeamContent>
+          <FooterTeamContent>Project</FooterTeamContent>
         </FooterTeamWrapper>
       </FooterContainer>
       <FooterCopyRightContainer>
