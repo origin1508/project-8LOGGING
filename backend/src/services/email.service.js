@@ -31,7 +31,6 @@ module.exports = {
       const text = `인증번호는 ${authCode} 입니다.`;
       const html = `인증번호는 <b>${authCode}</b> 입니다.`;
       await sendEmail(from, to, subject, text, html);
-      console.log("1111")
 
     } catch (error) {
       throw ApiError.badRequest("인증 번호 생성 및 전송 실패하였습니다.");

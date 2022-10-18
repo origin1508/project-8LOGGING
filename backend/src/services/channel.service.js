@@ -313,7 +313,6 @@ module.exports = {
     const newWaitReqList = user.waitReqList.filter(
       (id) => String(id) !== String(waitList._id)
     );
-    console.log("newWaitreqlist:",newWaitReqList);
     const newChannels = user.channels.filter((id) => String(id) != String(channelId));
     const updatedUser = await User.findByIdAndUpdate(
       userId,
