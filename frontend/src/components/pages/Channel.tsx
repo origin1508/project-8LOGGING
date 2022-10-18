@@ -34,6 +34,7 @@ import {
   customSocketCreateRequest,
   customSocketUpdateRequest,
   customSocketDeleteRequest,
+  customSocketLeaveRequest,
 } from "@/util/customSocket";
 
 const CONTEXT_MENU_ID = "CONTEXT_MENU_ID";
@@ -68,6 +69,13 @@ function Channel() {
     handleAcceptModalOpenButtonClick,
     handleAcceptButtonClick,
     handleAcceptModalCloseButtonClick,
+  ] = useModal(false);
+  const [
+    isOpenAlertModal,
+    ,
+    handleAlertModalOpenButtonClick,
+    ,
+    handleAlertModalCloseButtonClick,
   ] = useModal(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -125,11 +133,20 @@ function Channel() {
         return prev.filter((chat) => chat._id !== data._id);
       });
     });
+    customSocket.on("receive-remove-member", (data) => {
+      setMemberList((prev) =>
+        prev.filter((member) => member.memberId !== data.userId)
+      );
+      setSidebarChannels((prev) =>
+        prev.filter((channel) => channel._id !== channelId)
+      );
+    });
     return () => {
-      customSocket.off("receive-chatLog");
-      customSocket.off("receive-create-chat");
-      customSocket.off("receive-modify-chat");
-      customSocket.off("receive-remove-chat");
+      // customSocket.off("receive-chatLog");
+      // customSocket.off("receive-create-chat");
+      // customSocket.off("receive-modify-chat");
+      // customSocket.off("receive-remove-chat");
+      customSocket.removeAllListeners();
     };
   }, [channelId]);
 
@@ -153,6 +170,12 @@ function Channel() {
   const handleChannelJoinPermissionButtonClick = useCallback(
     async (e: React.MouseEvent<HTMLButtonElement>, waitingId: string) => {
       setIsLoading(true);
+      if (channelData[0].memberNum === memberList.length) {
+        setIsLoading(false);
+        setModalMessage("채널 인원이 꽉 찼습니다.");
+        handleAlertModalOpenButtonClick();
+        return;
+      }
       if (e.target instanceof HTMLButtonElement) {
         if (e.target.name === "accept") {
           const res = await channelJoinAcceptRequet(
@@ -195,13 +218,8 @@ function Channel() {
   );
 
   const handleChannelLeaveButtonClick = async () => {
-    const res = await channelLeaveRequest(`/api/channels/${channelId}/leave`);
-    if (res.success) {
-      setSidebarChannels((prev) =>
-        prev.filter((channel) => channel._id !== channelId)
-      );
-      navigate("/channels", { replace: true });
-    }
+    customSocketLeaveRequest("remove-member", loginUserId);
+    navigate("/channels", { replace: true });
   };
 
   const handleChannelDeleteButtonClick = async () => {
@@ -264,7 +282,7 @@ function Channel() {
               <ChannelContainer>
                 <ChannelHeader
                   title={data.title}
-                  memberNums={data.membersInfo.length}
+                  memberNums={memberList.length}
                 />
                 <ChatForm>
                   <ContentContainer ref={chatRef}>
@@ -352,6 +370,14 @@ function Channel() {
             : handleChannelLeaveButtonClick();
           handleAcceptButtonClick();
         }}
+      >
+        {modalMessage}
+      </Modal>
+      <Modal
+        isOpenModal={isOpenAlertModal}
+        isShowImage={true}
+        isAlertModal={true}
+        onModalCancelButtonClickEvent={handleAlertModalCloseButtonClick}
       >
         {modalMessage}
       </Modal>
