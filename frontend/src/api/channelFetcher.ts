@@ -122,3 +122,12 @@ export async function channelLeaveRequest(endPoint: string) {
   });
   return res.data;
 }
+
+export async function channelDeleteRequest(endPoint: string) {
+  const res = await customAxios.delete(endPoint, {
+    headers: {
+      Authorization: `Bearer ${Storage.getToken()}`,
+    },
+  });
+  return res.data;
+}

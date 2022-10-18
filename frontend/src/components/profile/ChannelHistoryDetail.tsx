@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import ChannelInfo from "@/components/channelDetail/ChannelInfo";
+import { useNavigate } from "react-router-dom";
 import { ChannelDetailType } from "@/types/channel/channelTypes";
 import { loginUserIdState, curUserState } from "@/recoil/atoms/authState";
 import { useRecoilValue } from "recoil";
@@ -30,6 +31,7 @@ const ChannelHistoryDetail = ({
   const curUser = useRecoilValue(curUserState);
   const ownerId = curUser._id;
   const isLoginUserChannel = ownerId === loginUserId;
+  const navigate = useNavigate();
 
   return (
     <ChannelDetailBackground isShowMore={isShowMore}>
@@ -60,6 +62,15 @@ const ChannelHistoryDetail = ({
               }}
             >
               신청취소
+            </Button>
+          ) : (
+            ""
+          )}
+          {channelStatus !== 2 && isLoginUserChannel ? (
+            <Button
+              onClick={() => navigate(`/channels/${channelDetailInfo[0]._id}`)}
+            >
+              채널
             </Button>
           ) : (
             ""

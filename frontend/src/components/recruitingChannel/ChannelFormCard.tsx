@@ -57,7 +57,7 @@ const ChannelFormCard = ({
         <ChannelTitle>CREATE CHANNEL</ChannelTitle>
         <ChannelButtonContainer>
           <ChannelButton type="submit" onClick={onChannelFormCreateClickEvent}>
-            CREATE CHANNEL
+            채널생성
           </ChannelButton>
           <ChannelImageLabel>Image upload</ChannelImageLabel>
           <ChannelImageUploadInput
@@ -78,7 +78,7 @@ const ChannelFormCard = ({
             />
             {!isValidTitle && (
               <BaseValidateTextContainer>
-                Please check your channel title
+                제목을 15글자 이하로 입력해주세요.
               </BaseValidateTextContainer>
             )}
           </BaseIntputContainer>
@@ -95,7 +95,7 @@ const ChannelFormCard = ({
             />
             {!isValidMemberCount && (
               <BaseValidateTextContainer>
-                Please check your channel member count
+                인원은 최소2명, 최대25명입니다.
               </BaseValidateTextContainer>
             )}
           </BaseIntputContainer>
@@ -133,7 +133,7 @@ const ChannelFormCard = ({
       />
       {!isValidSpec && (
         <BaseValidateTextContainer>
-          Please check your channel description
+          상세내용을 입력해주세요.
         </BaseValidateTextContainer>
       )}
     </ChannelFormWrapper>

@@ -11,11 +11,13 @@ import {
   channelJoinAcceptRequet,
   channelJoinRejectRequet,
   channelLeaveRequest,
+  channelDeleteRequest,
 } from "@/api/channelFetcher";
 import {
   MainChannelType,
   ChannelLogObjectType,
   waitListType,
+  ChannelMemberType,
 } from "@/types/channel/channelTypes";
 import useModal from "@/hooks/useModal";
 import Modal from "@/components/modal/Modal";
@@ -40,8 +42,10 @@ function Channel() {
   const [channelContent, setChannelContent] = useState<string>("");
   const [chatLogs, setChatLogs] = useState<Array<ChannelLogObjectType>>([]);
   const [channelData, setChannelData] = useState<MainChannelType[]>([]);
-  const [entryFailureMessage, setEntryFailureMessage] = useState();
+  const [modalMessage, setModalMessage] = useState("");
+  const [isOwner, setIsOwner] = useState(false);
   const [waitList, setWaitList] = useState<waitListType[]>([]);
+  const [memberList, setMemberList] = useState<ChannelMemberType[]>([]);
   const [isShowWaitList, setIsShowWaitList] = useState(false);
   const [selectedChat, setSelectedChat] = useState("");
   const [isChatLogEditMode, setIsChatLogEditMode] = useState(false);
@@ -57,6 +61,13 @@ function Channel() {
     handleModalOpenButtonClick,
     ,
     handleModalCloseButtonClick,
+  ] = useModal(false);
+  const [
+    isOpenAcceptModal,
+    ,
+    handleAcceptModalOpenButtonClick,
+    handleAcceptButtonClick,
+    handleAcceptModalCloseButtonClick,
   ] = useModal(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -86,11 +97,13 @@ function Channel() {
       );
       if (res.success) {
         setChannelData([res.datas]);
+        setIsOwner(res.datas.ownerInfo.ownerId === loginUserId);
         if (res.datas.waitList) setWaitList(res.datas.waitList);
+        if (res.datas.membersInfo) setMemberList(res.datas.membersInfo);
       } else {
         setChannelData([]);
         handleModalOpenButtonClick();
-        setEntryFailureMessage(res.message);
+        setModalMessage(res.message);
       }
     })();
     channelId && customSocketConnectRequest("enter-chat", channelId);
@@ -129,43 +142,57 @@ function Channel() {
 
   const handleChannelSendButtonClick = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (channelId)
+    if (channelId && channelContent) {
       customSocketCreateRequest("create-chat", loginUserId, channelContent);
+      setChannelContent("");
+    }
     if (inputRef.current) inputRef.current.value = "";
     prepareScroll(200);
   };
 
-  const handleChannelJoinPermissionButtonClick = async (
-    e: React.MouseEvent<HTMLButtonElement>,
-    waitingId: string
-  ) => {
-    setIsLoading(true);
-    if (e.target instanceof HTMLButtonElement) {
-      if (e.target.name === "accept") {
-        const res = await channelJoinAcceptRequet(
-          `/api/channels/${channelId}/waiting`,
-          waitingId
-        );
-        if (res) {
-          setWaitList((prev) =>
-            prev.filter((member) => member.userId !== waitingId)
+  const handleChannelJoinPermissionButtonClick = useCallback(
+    async (e: React.MouseEvent<HTMLButtonElement>, waitingId: string) => {
+      setIsLoading(true);
+      if (e.target instanceof HTMLButtonElement) {
+        if (e.target.name === "accept") {
+          const res = await channelJoinAcceptRequet(
+            `/api/channels/${channelId}/waiting`,
+            waitingId
           );
-          setIsLoading(false);
-        }
-      } else if (e.target.name === "reject") {
-        const res = await channelJoinRejectRequet(
-          `/api/channels/${channelId}/waiting`,
-          waitingId
-        );
-        if (res.success) {
-          setWaitList((prev) =>
-            prev.filter((member) => member.userId !== waitingId)
+          if (res.success) {
+            const newMember = waitList.find(
+              (member) => member.userId === waitingId
+            );
+            if (newMember) {
+              setMemberList((prev) => [
+                ...prev,
+                {
+                  memberId: newMember.userId,
+                  memberNickname: newMember.nickname,
+                  memberPic: newMember.profPic,
+                },
+              ]);
+            }
+            setWaitList((prev) =>
+              prev.filter((member) => member.userId !== waitingId)
+            );
+          }
+        } else if (e.target.name === "reject") {
+          const res = await channelJoinRejectRequet(
+            `/api/channels/${channelId}/waiting`,
+            waitingId
           );
-          setIsLoading(false);
+          if (res.success) {
+            setWaitList((prev) =>
+              prev.filter((member) => member.userId !== waitingId)
+            );
+          }
         }
+        setIsLoading(false);
       }
-    }
-  };
+    },
+    [memberList, setMemberList, waitList, setWaitList]
+  );
 
   const handleChannelLeaveButtonClick = async () => {
     const res = await channelLeaveRequest(`/api/channels/${channelId}/leave`);
@@ -173,7 +200,17 @@ function Channel() {
       setSidebarChannels((prev) =>
         prev.filter((channel) => channel._id !== channelId)
       );
-      navigate("/profile", { replace: true });
+      navigate("/channels", { replace: true });
+    }
+  };
+
+  const handleChannelDeleteButtonClick = async () => {
+    const res = await channelDeleteRequest(`/api/channels/${channelId}/delete`);
+    if (res.success) {
+      setSidebarChannels((prev) =>
+        prev.filter((channel) => channel._id !== channelId)
+      );
+      navigate("/channels", { replace: true });
     }
   };
 
@@ -222,7 +259,6 @@ function Channel() {
     <BasePageComponent>
       {channelData &&
         channelData.map((data) => {
-          const isOwner = data.ownerInfo.ownerId === loginUserId ? true : false;
           return (
             <React.Fragment key={data._id}>
               <ChannelContainer>
@@ -277,17 +313,20 @@ function Channel() {
                 </ChatForm>
               </ChannelContainer>
               <MemberList
-                channelMemberList={data.membersInfo}
+                channelMemberList={memberList}
                 waitMemberList={waitList}
                 isOwner={isOwner}
                 ownerId={data.ownerInfo.ownerId}
                 isShowWaitList={isShowWaitList}
                 isLoading={isLoading}
                 setIsShowWaitList={setIsShowWaitList}
+                setModalMessage={setModalMessage}
+                onAcceptModalOpenButtonClickEvent={
+                  handleAcceptModalOpenButtonClick
+                }
                 onChannelJoinPermissionButtonClickEvent={
                   handleChannelJoinPermissionButtonClick
                 }
-                onChannelLeaveEvent={handleChannelLeaveButtonClick}
               />
             </React.Fragment>
           );
@@ -301,7 +340,20 @@ function Channel() {
           navigate("/profile", { replace: true });
         }}
       >
-        {entryFailureMessage}
+        {modalMessage}
+      </Modal>
+      <Modal
+        isOpenModal={isOpenAcceptModal}
+        isShowImage={true}
+        onModalCancelButtonClickEvent={handleAcceptModalCloseButtonClick}
+        onModalAcceptButtonClickEvent={() => {
+          isOwner
+            ? handleChannelDeleteButtonClick()
+            : handleChannelLeaveButtonClick();
+          handleAcceptButtonClick();
+        }}
+      >
+        {modalMessage}
       </Modal>
       <ContextMenu
         items={menuItems}
@@ -349,6 +401,17 @@ const ContentContainer = styled.div`
   height: 88%;
   padding: 1rem 0rem 0rem 3rem;
   overflow-y: auto;
+  &::-webkit-scrollbar {
+    display: block;
+    width: 5px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: ${GlobalTheme.colors.theme};
+    border-radius: 4px;
+  }
+  &::-webkit-scrollbar-track {
+    background: ${GlobalTheme.colors.lightTwoGray};
+  }
 `;
 
 const UserContainer = styled.div`

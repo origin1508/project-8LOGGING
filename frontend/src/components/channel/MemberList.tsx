@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
@@ -8,6 +8,7 @@ import {
   MoreSmallButton,
   BigTitle,
   ModalTitle,
+  BigButton,
 } from "@/styles/commonStyle";
 import { ChannelMemberType, waitListType } from "@/types/channel/channelTypes";
 import LoadingCycle from "@/components/loading/LoadingCycle";
@@ -19,12 +20,13 @@ interface MemberListProps {
   ownerId: string;
   isShowWaitList: boolean;
   isLoading: boolean;
+  setModalMessage: React.Dispatch<React.SetStateAction<string>>;
   setIsShowWaitList: React.Dispatch<React.SetStateAction<boolean>>;
+  onAcceptModalOpenButtonClickEvent: () => void;
   onChannelJoinPermissionButtonClickEvent: (
     e: React.MouseEvent<HTMLButtonElement>,
     waitingId: string
   ) => void;
-  onChannelLeaveEvent: () => void;
 }
 
 function MemberList({
@@ -34,23 +36,31 @@ function MemberList({
   ownerId,
   isShowWaitList,
   isLoading,
+  setModalMessage,
   setIsShowWaitList,
+  onAcceptModalOpenButtonClickEvent,
   onChannelJoinPermissionButtonClickEvent,
-  onChannelLeaveEvent,
 }: MemberListProps) {
   const navigate = useNavigate();
   const [members, setMembers] =
     useState<ChannelMemberType[]>(channelMemberList);
   const [memberName, setMemberName] = useState("");
 
-  const memberSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-    const searchMember = channelMemberList.filter((member) =>
-      member.memberNickname.includes(value)
-    );
-    setMemberName(value);
-    setMembers(searchMember);
-  };
+  useEffect(() => {
+    setMembers(channelMemberList);
+  }, [channelMemberList]);
+
+  const memberSearch = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const { value } = e.target;
+      const searchMember = channelMemberList.filter((member) =>
+        member.memberNickname.includes(value)
+      );
+      setMemberName(value);
+      setMembers(searchMember);
+    },
+    [members, members]
+  );
 
   return (
     <MemberListWrapper>
@@ -136,9 +146,23 @@ function MemberList({
       </WaitListContainer>
 
       {isOwner ? (
-        <ChannelButton>채널 삭제</ChannelButton>
+        <DeleteButton
+          onClick={() => {
+            setModalMessage("정말 채널을 삭제하시겠습니까?");
+            onAcceptModalOpenButtonClickEvent();
+          }}
+        >
+          채널 삭제
+        </DeleteButton>
       ) : (
-        <ChannelButton onClick={onChannelLeaveEvent}>채널 나가기</ChannelButton>
+        <LeaveButton
+          onClick={() => {
+            setModalMessage("정말 채널을 나가시겠습니까?");
+            onAcceptModalOpenButtonClickEvent();
+          }}
+        >
+          채널 나가기
+        </LeaveButton>
       )}
     </MemberListWrapper>
   );
@@ -254,9 +278,11 @@ const Notification = styled.span`
   align-items: center;
 `;
 
-const ChannelButton = styled.button`
-  ${GlobalTheme.buttons}
-  height: 5rem;
+const LeaveButton = styled(BigButton)`
+  width: 80%;
+  margin-bottom: 2rem;
+`;
+const DeleteButton = styled(BigButton)`
   width: 80%;
   margin-bottom: 2rem;
 `;

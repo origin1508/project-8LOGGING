@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
@@ -48,18 +48,22 @@ const ChannelList = () => {
   ] = useModal(false);
 
   const navigate = useNavigate();
-  const handleSearchButtonClick = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const { datas } = await getResultByKeyword(page, status, keyword, filter);
-    setChannels(datas);
-  };
+  const handleSearchButtonClick = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
+      const { datas } = await getResultByKeyword(page, status, keyword, filter);
+      setChannels(datas);
+    },
+    [channels]
+  );
 
-  const handleSelectFilterChange = (
-    e: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    const { value } = e.target;
-    setFilter(value);
-  };
+  const handleSelectFilterChange = useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
+      const { value } = e.target;
+      setFilter(value);
+    },
+    [filter]
+  );
 
   const getResultByKeyword = async (
     page: number,
@@ -116,6 +120,12 @@ const ChannelList = () => {
     setIsLoading(false);
     handleModalOpenButtonClick();
   };
+  const handleChangeKeyword = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setKeyword(e.target.value);
+    },
+    [keyword]
+  );
 
   return (
     <BasePageComponent>
@@ -135,9 +145,7 @@ const ChannelList = () => {
               placeholder="Search"
               name="keyword"
               value={keyword}
-              onChange={(e) => {
-                setKeyword(e.target.value);
-              }}
+              onChange={handleChangeKeyword}
             ></SearchInput>
             <SearchButton onClick={handleSearchButtonClick}>
               <CustomIcon name="SeachIcon" size="20" color="black"></CustomIcon>
@@ -198,15 +206,16 @@ const ChannelListContiner = styled.div`
 `;
 const CardsContainer = styled.div`
   margin-top: 2rem;
-  width: 90%;
+  width: 100%;
   padding: 4rem;
+  box-sizing: border-box;
   overflow-y: scroll;
   display: flex;
   height: 80%;
   align-itmes: center;
-  justify-content: space-between;
+  justify-content: start;
   flex-wrap: wrap;
-  gap: 3rem;
+  gap: 4rem;
 `;
 const TitleContainer = styled.div`
   padding: 3rem 0rem;
