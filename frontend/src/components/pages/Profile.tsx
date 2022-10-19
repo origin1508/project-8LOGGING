@@ -22,8 +22,6 @@ function Profile() {
   const navigate = useNavigate();
   const params = useParams();
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [confirmCheck, setConfirmCheck] = useState("");
-  const [confirmMessage, setConfirmMessage] = useState("");
   const [curUser, setCurUser] = useRecoilState(curUserState);
   const loginUserId = useRecoilValue(loginUserIdState);
 
@@ -61,19 +59,13 @@ function Profile() {
     navigate("/profile", { replace: true });
   };
 
-  const handleDeleteAccountAcceptClick = async () => {
-    if (curUser.email === confirmCheck) {
-      await deleteAccountRequest("/api/auth/withdrawal");
-      handleAcceptDeleteClick();
-      Storage.clearToken();
-      navigate("/", { replace: true });
-    } else setConfirmMessage("올바른 이메일을 입력해주세요.");
-    setConfirmCheck("");
+  const handleDeleteAccountSubmit = async () => {
+    await deleteAccountRequest("/api/auth/withdrawal");
+    handleAcceptDeleteClick();
+    Storage.clearToken();
+    navigate("/", { replace: true });
   };
-
   const handleDeleteAccountCancelClick = () => {
-    setConfirmMessage("");
-    setConfirmCheck("");
     handleDeleteAccountModalCloseButtonClick();
   };
 
@@ -110,19 +102,19 @@ function Profile() {
       >
         <UserImageUpdate
           onProfileImageUploadSubmit={handleProfileImageUploadSubmit}
+          curImage={curUser.profPic}
         />
       </Modal>
-      <DeleteAccountModal
+      <Modal
         isOpenModal={isOpenDeleteAccountlModal}
-        onModalAcceptButtonClickEvent={handleDeleteAccountAcceptClick}
+        isAlertModal={true}
         onModalCancelButtonClickEvent={handleDeleteAccountCancelClick}
       >
         <UserDeleteAccount
-          confirmCheck={confirmCheck}
-          setConfirmCheck={setConfirmCheck}
-          confirmMessage={confirmMessage}
+          curUserEmail={curUser.email}
+          onvalid={handleDeleteAccountSubmit}
         ></UserDeleteAccount>
-      </DeleteAccountModal>
+      </Modal>
     </BasePageComponent>
   );
 }
