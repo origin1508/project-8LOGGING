@@ -26,7 +26,6 @@ const Channel: React.FC = () => {
         loginUserId
       );
       setSidebarChannels(res.channels);
-      console.log("sidebarChannel : ", sidebarChannels);
     })();
   }, [isToggle]);
 
