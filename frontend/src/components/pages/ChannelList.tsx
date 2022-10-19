@@ -48,22 +48,18 @@ const ChannelList = () => {
   ] = useModal(false);
 
   const navigate = useNavigate();
-  const handleSearchButtonClick = useCallback(
-    async (e: React.FormEvent) => {
-      e.preventDefault();
-      const { datas } = await getResultByKeyword(page, status, keyword, filter);
-      setChannels(datas);
-    },
-    [channels]
-  );
+  const handleSearchButtonClick = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const { datas } = await getResultByKeyword(page, status, keyword, filter);
+    setChannels(datas);
+  };
 
-  const handleSelectFilterChange = useCallback(
-    (e: React.ChangeEvent<HTMLSelectElement>) => {
-      const { value } = e.target;
-      setFilter(value);
-    },
-    [filter]
-  );
+  const handleSelectFilterChange = (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const { value } = e.target;
+    setFilter(value);
+  };
 
   const getResultByKeyword = async (
     page: number,
