@@ -23,6 +23,7 @@ function Profile() {
   const params = useParams();
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [confirmCheck, setConfirmCheck] = useState("");
+  const [confirmMessage, setConfirmMessage] = useState("");
   const [curUser, setCurUser] = useRecoilState(curUserState);
   const [image, setImage] = useState<Blob>();
   const [profileImagePreview, setProfileImagePreview] = useState<
@@ -80,13 +81,13 @@ function Profile() {
       await deleteAccountRequest("/api/auth/withdrawal");
       handleAcceptDeleteClick();
       Storage.clearToken();
-      alert("Your account has been successfully deleted");
       navigate("/", { replace: true });
-    } else alert("check your email");
+    } else setConfirmMessage("올바른 이메일을 입력해주세요.");
     setConfirmCheck("");
   };
 
   const handleDeleteAccountCancelClick = () => {
+    setConfirmMessage("");
     setConfirmCheck("");
     handleDeleteAccountModalCloseButtonClick();
   };
@@ -136,6 +137,7 @@ function Profile() {
         <UserDeleteAccount
           confirmCheck={confirmCheck}
           setConfirmCheck={setConfirmCheck}
+          confirmMessage={confirmMessage}
         ></UserDeleteAccount>
       </DeleteAccountModal>
     </BasePageComponent>

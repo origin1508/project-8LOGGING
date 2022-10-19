@@ -7,9 +7,10 @@ import CustomIcon from "@/components/icons/CustomIcon";
 interface PropsType {
   title: string;
   memberNums: number;
+  location: string;
 }
 
-const ChannelHeader = ({ title, memberNums }: PropsType) => {
+const ChannelHeader = ({ title, memberNums, location }: PropsType) => {
   return (
     <TitleContainer>
       <BigTitle>Channel</BigTitle>
@@ -23,7 +24,8 @@ const ChannelHeader = ({ title, memberNums }: PropsType) => {
           />
           {memberNums}
         </PeopleContainer>
-        {/* <Application>new applicant {waitNums}</Application> */}
+        <CustomIcon name="map" size="20" color={GlobalTheme.colors.gray} />
+        {location}
       </MediumSubTitle>
     </TitleContainer>
   );

@@ -142,10 +142,6 @@ function Channel() {
       );
     });
     return () => {
-      // customSocket.off("receive-chatLog");
-      // customSocket.off("receive-create-chat");
-      // customSocket.off("receive-modify-chat");
-      // customSocket.off("receive-remove-chat");
       customSocket.removeAllListeners();
     };
   }, [channelId]);
@@ -283,6 +279,7 @@ function Channel() {
                 <ChannelHeader
                   title={data.title}
                   memberNums={memberList.length}
+                  location={`${data.locationDist} ${data.locationCity}`}
                 />
                 <ChatForm>
                   <ContentContainer ref={chatRef}>
