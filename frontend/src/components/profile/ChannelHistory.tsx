@@ -49,7 +49,6 @@ function ChannelHistory() {
     setChannelDetailInfo([res.datas]);
     setSelectedChannelId(res.datas._id);
     setIsShowMore(true);
-    console.log(channels);
     if (typeof index === "number") {
       setIndex(index);
     }
@@ -69,7 +68,6 @@ function ChannelHistory() {
       const err = error as ErrorType;
       const errorMessage = err.response.data.message;
       setResMessage(errorMessage);
-      console.log(errorMessage);
     }
     setIsLoading(false);
   };
@@ -102,7 +100,6 @@ function ChannelHistory() {
             );
           })}
         </ChannelTaps>
-        {/* <SmallButton onClick={handleClickButton}>api</SmallButton> */}
       </TitleContainer>
       <CardContainer>
         {channels.map((ch) =>
