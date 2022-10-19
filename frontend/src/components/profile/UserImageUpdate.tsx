@@ -14,15 +14,13 @@ interface UploadImgType {
 }
 
 interface UserImageUpdateProps {
-  onProfileImageUploadClickEvent: ({
-    uploadImg,
-  }: {
-    uploadImg: File[];
-  }) => void;
+  onProfileImageUploadSubmit: ({ uploadImg }: { uploadImg: File[] }) => void;
+  curImage?: string;
 }
 
 const UserImageUpdate = ({
-  onProfileImageUploadClickEvent,
+  onProfileImageUploadSubmit,
+  curImage,
 }: UserImageUpdateProps) => {
   const {
     register,
@@ -45,12 +43,14 @@ const UserImageUpdate = ({
     })();
   }, [profileImg]);
   return (
-    <UserImageContainer onSubmit={handleSubmit(onProfileImageUploadClickEvent)}>
+    <UserImageContainer onSubmit={handleSubmit(onProfileImageUploadSubmit)}>
       <UserImageUploadTitle>Profile upload</UserImageUploadTitle>
       <UserImageInputWrapper>
         <UserImageUploadInput type="file" {...register("uploadImg")} />
       </UserImageInputWrapper>
-      <ProfileImageBox backgroundImg={profileimgPreview} />
+      <ProfileImageBox
+        backgroundImg={profileimgPreview ? profileimgPreview : curImage}
+      />
       <EditButton type="submit">CHANGE PROFILE IMAGE</EditButton>
     </UserImageContainer>
   );

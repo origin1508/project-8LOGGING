@@ -19,6 +19,7 @@ import {
   EditButtonWrapper,
   EditButton,
 } from "@/styles/commonStyle";
+import CustomIcon from "@/components/icons/CustomIcon";
 
 interface ImgProps {
   img?: string;
@@ -87,7 +88,15 @@ function UserInfoEditForm({
       <TitleContainer>
         <BigTitle>EDIT USER INFORMATION</BigTitle>
       </TitleContainer>
-      <Img img={curUser?.profPic} onClick={onModalOpenButtonClickEvent}></Img>
+      <Img img={curUser?.profPic} onClick={onModalOpenButtonClickEvent}>
+        <UploadButton>
+          <CustomIcon
+            name="upload"
+            size="20"
+            color={GlobalTheme.colors.theme}
+          />
+        </UploadButton>
+      </Img>
       <InpurForm onSubmit={handleSubmit(onvalid)}>
         <InputContainer>
           닉네임변경
@@ -159,13 +168,20 @@ function UserInfoEditForm({
 }
 
 const Img = styled.div<ImgProps>`
-  width: 7rem;
-  height: 7rem;
+  position: relative;
+  width: 8rem;
+  height: 8rem;
   cursor: pointer;
   background-image: url(${(props) => props.img});
   background-size: cover;
   border-radius: 100%;
   margin-bottom: 2rem;
+`;
+
+const UploadButton = styled.span`
+  position: absolute;
+  bottom: -0.5rem;
+  right: 0rem;
 `;
 const InpurForm = styled.form`
   display: flex;

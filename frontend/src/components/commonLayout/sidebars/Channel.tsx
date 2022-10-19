@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { sidebarChannelsState } from "@/recoil/atoms/channelState";
@@ -26,13 +26,14 @@ const Channel: React.FC = () => {
         loginUserId
       );
       setSidebarChannels(res.channels);
+      console.log("sidebarChannel : ", sidebarChannels);
     })();
   }, [isToggle]);
 
   return (
     <ChannelsContainer>
       <TitleContainer>
-        <ChannelTitle>Channel</ChannelTitle>
+        <ChannelsTitle>Channel</ChannelsTitle>
         <ToggleIcon onClick={() => setIsToggle(!isToggle)}>
           {!isToggle ? (
             <CustomIcon
@@ -56,7 +57,10 @@ const Channel: React.FC = () => {
           .map((channel, index) => {
             return (
               <ChannelLink key={index} to={`/channels/${channel._id}`}>
-                {channel.title}
+                <ChannelImg src={channel.img} />
+                <FlowContent>
+                  <ChannelTitle>{channel.title}</ChannelTitle>
+                </FlowContent>
               </ChannelLink>
             );
           })}
@@ -64,6 +68,14 @@ const Channel: React.FC = () => {
     </ChannelsContainer>
   );
 };
+const flow = keyframes`
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(-100%, 0);
+  }
+`;
 
 const ChannelsContainer = styled.div`
   display: flex;
@@ -74,12 +86,35 @@ const ChannelsContainer = styled.div`
 `;
 
 const ChannelLink = styled(Link)`
+  display: flex;
+  align-items: center;
+  height: 4rem;
   text-decoration: none;
   margin-bottom: 3rem;
   color: ${GlobalTheme.colors.gray};
 `;
 
+const FlowContent = styled.div`
+  overflow: hidden;
+  height: 4rem;
+  width: 60%;
+  line-height: 4rem;
+  margin-left: 0.5rem;
+`;
 const ChannelTitle = styled.div`
+  white-space: nowrap;
+  &:hover {
+    animation: ${flow} 3s linear infinite;
+  }
+`;
+const ChannelImg = styled.img`
+  width: 7rem;
+  height: 3.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+`;
+
+const ChannelsTitle = styled.div`
   width: 100%;
   font-size: ${GlobalTheme.fontSize.moreBig};
   font-weight: bold;
