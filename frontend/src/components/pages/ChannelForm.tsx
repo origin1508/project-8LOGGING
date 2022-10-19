@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
 import useModal from "@/hooks/useModal";
-import useChannelForm from "@/hooks/useChannelForm";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import ChannelFormCard from "@/components/recruitingChannel/ChannelFormCard";
 import BaseChannelComponent from "@/components/hoc/BaseChannelComponent";
 import Modal from "@/components/modal/Modal";
-import ValidationUtil from "@/util/validationUtil";
 import { createChannelRequest } from "@/api/channelFetcher";
 import { imageResize } from "@/util/imageResizeUtil";
 import { channelListData } from "@/components/recruitingChannel/channelListData";
 import { sidebarChannelsState } from "@/recoil/atoms/channelState";
 import { useSetRecoilState } from "recoil";
+import { ChannelFormInitialType } from "@/types/channel/channelTypes";
 import Storage from "@/storage/storage";
 
 const ChannelForm = () => {
@@ -24,19 +24,27 @@ const ChannelForm = () => {
   const setSidebarChannels = useSetRecoilState(sidebarChannelsState);
   const [
     isOpenModal,
-    isAccepted,
+    ,
     handleModalOpenButtonClick,
-    handleAcceptButtonClick,
+    ,
     handleModalCloseButtonClick,
   ] = useModal(false);
-
-  const { channelForm, handleChannelFormValueChange } = useChannelForm({
-    title: "",
-    locationDist: "경기도",
-    memberNum: 2,
-    spec: "",
-    image: "",
+  const {
+    register,
+    watch,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ChannelFormInitialType>({
+    mode: "onChange",
+    defaultValues: {
+      title: "",
+      locationDist: "경기도",
+      memberNum: 2,
+      spec: "",
+      image: "",
+    },
   });
+  const selectedDist = watch("locationDist");
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -55,21 +63,7 @@ const ChannelForm = () => {
     };
   }, {});
 
-  const {
-    checkChannelTitleValidate,
-    checkChannelMemberCountValidate,
-    checkChannelSpecValidate,
-  } = ValidationUtil;
-
-  const isValidTitle = checkChannelTitleValidate(channelForm.title);
-  const isValidMemberCount = checkChannelMemberCountValidate(
-    channelForm.memberNum
-  );
-  const isValidSpec = checkChannelSpecValidate(channelForm.spec);
-
-  const isValid = [isValidTitle, isValidMemberCount, isValidSpec].every(
-    (valid) => valid === true
-  );
+  const isValid = !errors.title && !errors.memberNum && !errors.spec;
 
   const handleImageUploadClick = async (
     e: React.ChangeEvent<HTMLInputElement>
@@ -100,13 +94,12 @@ const ChannelForm = () => {
     }
   };
 
-  const handleChannelFormCreateClick = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleChannelFormCreateClick = async (data: ChannelFormInitialType) => {
     if (!isValid) {
       handleModalOpenButtonClick();
       return;
     }
-    const { title, locationDist, memberNum, spec } = channelForm;
+    const { title, locationDist, memberNum, spec } = data;
     const { datas } = await createChannelRequest("/api/channels", {
       title,
       locationDist,
@@ -134,18 +127,18 @@ const ChannelForm = () => {
     <BaseChannelComponent>
       <ChannelContainer>
         <ChannelFormCard
-          channelForm={channelForm}
+          channelForm={register}
           distOptions={distOptions}
           channelListData={sortedChannelListData}
           selectedCity={selectedCity}
+          selectedDist={selectedDist}
           imagePreview={imagePreview}
-          isValidTitle={isValidTitle}
-          isValidMemberCount={isValidMemberCount}
-          isValidSpec={isValidSpec}
-          onChannelFormValueChangeEvent={handleChannelFormValueChange}
+          errors={errors}
           onChannelImageUploadClickEvent={handleImageUploadClick}
           onChangeSelectChangeEvent={hanldeSelecCityChange}
-          onChannelFormCreateClickEvent={handleChannelFormCreateClick}
+          onChannelFormCreateClickEvent={handleSubmit(
+            handleChannelFormCreateClick
+          )}
         />
         <Modal
           isOpenModal={isOpenModal}
