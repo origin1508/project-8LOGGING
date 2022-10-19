@@ -7,8 +7,8 @@ const { User, Channel, WaitList } = require("../models");
 module.exports = {
   /**
    * 이메일 중복 체크
-   * 
-   * @param {String} email 이메일 
+   *
+   * @param {String} email 이메일
    */
   async checkEmailDuplication(email) {
     const exUser = await User.findOne({ email });
@@ -19,13 +19,13 @@ module.exports = {
 
   /**
    * 닉네임 중복 체크
-   * 
-   * @param {String} userId 유저 아이디 
+   *
+   * @param {String} userId 유저 아이디
    * @param {String} nickname 유저 닉네임
    */
   async checkNicknameDuplication(userId, nickname) {
     const exUser = await User.findOne({ nickname });
-    
+
     if (exUser && exUser._id.toString() !== userId) {
       throw ApiError.badRequest("이미 존재하는 닉네임입니다.");
     }
@@ -54,7 +54,7 @@ module.exports = {
 
   /**
    * 기존 비밀번호와 currentPassword 비교
-   * 
+   *
    * @param {String} userId 유저 아이디
    * @param {String} currentPassword 현재 비밀번호
    */
@@ -73,7 +73,7 @@ module.exports = {
 
   /**
    * 기존 비밀번호와 newPassword 비교
-   * 
+   *
    * @param {String} userId 유저 아이디
    * @param {String} newPassword 새로운 비밀번호
    */
@@ -147,33 +147,37 @@ module.exports = {
    */
   async findUserAllData(userId) {
     const user = await User.findOne({ _id: userId }).lean();
-    const waitingChannels = await Promise.all(user.waitReqList.map(async (waitListId) => {
-      const waitList = await WaitList.findById(waitListId);
-      return waitList.channelId
-    }))
-    const channels = await Promise.all(user.channels.map(async (channelId) => {
-      const channel = await Channel.findById(channelId);
-      // 개설자/입장대기자/일반멤버 파악
-      var position = 1;
-      if ( userId == channel.ownerId )  {
-        position = 0;
-      } else if ( waitingChannels.includes(String(channelId)) ) {
-        position = 2;
-      }
+    const waitingChannels = await Promise.all(
+      user.waitReqList.map(async (waitListId) => {
+        const waitList = await WaitList.findById(waitListId);
+        return waitList.channelId;
+      })
+    );
+    const channels = await Promise.all(
+      user.channels.map(async (channelId) => {
+        const channel = await Channel.findById(channelId);
+        // 개설자/입장대기자/일반멤버 파악
+        var position = 1;
+        if (userId == channel.ownerId) {
+          position = 0;
+        } else if (waitingChannels.includes(String(channelId))) {
+          position = 2;
+        }
 
-      return {
-        _id: channel._id,
-        title: channel.title,
-        locationDist: channel.locationDist,
-        locationCity: channel.locationCity,
-        memberNum: channel.memberNum,
-        curMemberNum: channel.members.length,
-        img: channel.img,
-        position
-      }
-    }))
-    
-    user.channels = channels
+        return {
+          _id: channel._id,
+          title: channel.title,
+          locationDist: channel.locationDist,
+          locationCity: channel.locationCity,
+          memberNum: channel.memberNum,
+          curMemberNum: channel.members.length,
+          img: channel.img,
+          position,
+        };
+      })
+    );
+
+    user.channels = channels;
     delete user.password;
 
     return user;
@@ -204,13 +208,13 @@ module.exports = {
 
   /**
    * 탈퇴한 회원 체크
-   * 
-   * @param {String} email 이메일 
+   *
+   * @param {String} email 이메일
    */
   async findLockedUser(email) {
-    const exUser = await User.findOne({email}, "withdrawal").lean();
-    if(exUser.withdrawal) {
-      throw ApiError.forbbiden('탈퇴한 회원입니다.');
+    const exUser = await User.findOne({ email }, "withdrawal").lean();
+    if (exUser.withdrawal) {
+      throw ApiError.forbidden("탈퇴한 회원입니다.");
     }
-  }
+  },
 };
