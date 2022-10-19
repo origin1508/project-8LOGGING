@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import GlobalTheme from "@/styles/theme";
-import useRegisterForm from "@/hooks/useRegisterForm";
 import useLoginForm from "@/hooks/useLoginForm";
 import useCheckDuplication from "@/hooks/useCheckDuplication";
 import AuthLogin from "@/components/auth/AuthLogin";
@@ -11,6 +11,7 @@ import AuthEmailVerification from "@/components/auth/AuthEmailVerification";
 import BasePageComponent from "@/components/hoc/BasePageComponent";
 import Modal from "@/components/modal/Modal";
 import useModal from "@/hooks/useModal";
+import { AuthFormInitialType } from "@/types/auth/authTypes";
 import { ErrorType } from "@/types/error/errorType";
 import {
   authRegisterRequest,
@@ -23,9 +24,15 @@ import { loginUserIdState } from "@/recoil/atoms/authState";
 const TapMenu = ["로그인", "회원가입"];
 
 const Auth = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    watch,
+  } = useForm<AuthFormInitialType>();
   const [tabIndex, setTabIndex] = useState(0);
   const [errMessage, setErrMessage] = useState("");
-  const [isVerifiedEmail, setIsVerifiedEmail] = useState(false);
+  const [isVerified, setIsVerified] = useState(false);
   const [verificationCode, setVerificationCode] = useState("");
   const [
     isOpenModal,
@@ -50,14 +57,14 @@ const Auth = () => {
   ] = useModal(false);
 
   useEffect(() => {
-    setAuthForm({
-      email: "",
-      nickname: "",
-      password: "",
-      confirmPassword: "",
-    });
+    // setAuthForm({
+    //   email: "",
+    //   nickname: "",
+    //   password: "",
+    //   confirmPassword: "",
+    // });
     setErrMessage("");
-    setIsVerifiedEmail(false);
+    setIsVerified(false);
     setLoginValue({
       email: "",
       password: "",
@@ -68,14 +75,6 @@ const Auth = () => {
       nickname: false,
     });
   }, [tabIndex]);
-
-  const { authFormState, handleAuthFormValueChange, setAuthForm } =
-    useRegisterForm({
-      email: "",
-      nickname: "",
-      password: "",
-      confirmPassword: "",
-    });
 
   const [loginValue, handleLoginFormChange, isValid, setLoginValue] =
     useLoginForm({
@@ -93,10 +92,10 @@ const Auth = () => {
 
   const navigate = useNavigate();
 
-  const handleRegisterSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const { email, nickname, password } = authFormState;
-    if (!isVerifiedEmail) {
+  const handleRegisterSubmit = async (data: AuthFormInitialType) => {
+    console.log("data : ", data);
+    const { email, nickname, password } = data;
+    if (!isVerified) {
       setErrMessage("이메일 인증이 필요합니다.");
       handleModalOpenButtonClick();
       return;
@@ -129,7 +128,7 @@ const Auth = () => {
     }
   };
 
-  const handleSendVerificationCode = async (
+  const handleVerificationCodeSend = async (
     e: React.MouseEvent<HTMLButtonElement>,
     email: string
   ) => {
@@ -139,14 +138,14 @@ const Auth = () => {
     }
     setErrMessage("");
     handleEmailVerificationModalOpenButtonClick();
-    const res = await authVerificationCodeSend("/api/auth/email", email);
+    await authVerificationCodeSend("/api/auth/email", email);
   };
 
   const handleEmailVerificationCheck = async (
     e: React.MouseEvent<HTMLButtonElement>
   ) => {
     e.preventDefault();
-    const { email } = authFormState;
+    const email = watch("email");
     if (verificationCode) {
       const res = await authVerificationCodeCheck(
         "api/auth/email",
@@ -154,7 +153,7 @@ const Auth = () => {
         verificationCode
       );
       if (res.success) {
-        setIsVerifiedEmail(true);
+        setIsVerified(true);
         setVerificationCode("");
         handleEmailVerificationAcceptButtonClick();
       } else {
@@ -203,14 +202,15 @@ const Auth = () => {
             />
           ) : (
             <AuthReigster
-              authFormState={authFormState}
-              onRegisterFormValueChaneEvent={handleAuthFormValueChange}
-              onRegisterSubmitEvent={handleRegisterSubmit}
+              register={register}
+              watch={watch}
+              errors={errors}
+              onRegisterSubmitEvent={handleSubmit(handleRegisterSubmit)}
               onCheckDuplicationEvent={handleCheckDuplication}
-              onSendVerficationCodeClickEvent={handleSendVerificationCode}
+              onSendVerficationCodeClickEvent={handleVerificationCodeSend}
               isDuplicated={isDuplicated}
-              isVerifiedEmail={isVerifiedEmail}
-              setIsVerifiedEmail={setIsVerifiedEmail}
+              isVerified={isVerified}
+              setIsVerified={setIsVerified}
             />
           )}
         </FormContainer>
@@ -235,7 +235,7 @@ const Auth = () => {
           verificationCode={verificationCode}
           setVerificationCode={setVerificationCode}
           errMessage={errMessage}
-          emailToSend={authFormState.email}
+          emailToSend={watch("email")}
         />
       </Modal>
       <Modal
