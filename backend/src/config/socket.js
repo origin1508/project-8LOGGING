@@ -1,20 +1,20 @@
 const socket = require("socket.io");
-const { chatService } = require("../services");
+const { chatService, channelService } = require("../services");
 
 const socketConfig = (server) => {
   const io = socket(server, { path: "/chat-socket" });
   const chat = io.of("/chat");
+  const channel = io.of("/channel");
 
   chat.on("connection", (socket) => {
     console.log(`chat 연결 ${socket.id}`);
-    
 
     socket.on("enter-chat", async (data) => {
       console.log(data.roomId + "에 접속");
       socket.roomId = data.roomId;
       const chatLog = await chatService.getChatLog(socket.roomId);
       socket.join(socket.roomId);
-      chat.to(socket.roomId).emit('receive-chatLog', chatLog);
+      chat.to(socket.roomId).emit("receive-chatLog", chatLog);
     });
 
     socket.on("create-chat", async (data) => {
@@ -41,11 +41,16 @@ const socketConfig = (server) => {
 
       chat.to(socket.roomId).emit("receive-remove-chat", userChatInfo);
     }); // data = {chatId, roomId}
-    
+
+    socket.on("remove-member", async (data) => {
+      await channelService.quitChannel(data.userId, socket.roomId);
+      chat.to(socket.roomId).emit("receive-remove-member", {userId: data.userId});
+    });
+
     socket.on("disconnect", () => {
-      console.log(socket.id + "에서 연결 해제"); 
+      console.log(socket.id + "에서 연결 해제");
       socket.leave(socket.roomId);
-    });  
+    });
   });
 };
 

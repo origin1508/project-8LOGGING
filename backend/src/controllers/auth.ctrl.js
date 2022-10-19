@@ -8,10 +8,13 @@ module.exports = {
 
       await userService.findLockedUser(email);
 
-      const token = await authService.generateAccessToken(user.userId);
+      const accessToken = await authService.generateAccessToken(user.userId);
+      const refreshToken = await authService.generateRefreshToken(user.userId);
+      await authService.insertRefreshToken(user.userId, refreshToken);
 
       const userData = {
-        token,
+        accessToken,
+        refreshToken,
         ...user,
       };
 
@@ -66,8 +69,8 @@ module.exports = {
       res.status(201).json({
         success: true,
         status: 201,
-        message: "email authCode send success"
-      })
+        message: "email authCode send success",
+      });
     } catch (err) {
       next(err);
     }
@@ -79,19 +82,50 @@ module.exports = {
       const isCorrect = await emailService.checkAuthCode(email, authCode);
       var message = "";
       if (isCorrect) {
-        message = "email authCode correct"
+        message = "email authCode correct";
       } else {
-        message = "email authCode incorrect"
+        message = "email authCode incorrect";
       }
 
       res.status(201).json({
         success: isCorrect,
         status: 201,
-        message
-      })
+        message,
+      });
     } catch (err) {
       next(err);
     }
-  }
+  },
 
+  async reissueToken(req, res, next) {
+    const accessToken = req.headers.authorization.split("Bearer ")[1];
+    const refreshToken = req.headers["refresh-token"];
+
+    try {
+      const validAccessToken = await authService.verifyAccessToken(accessToken);
+      const validRefreshToken = await authService.verifyRefreshToken(
+        refreshToken
+      );
+
+      const newAccessToken = await authService.refresh(
+        validAccessToken,
+        validRefreshToken
+      );
+      res.status(201).json({
+        success: true,
+        status: 201,
+        message: "reissue new refresh token",
+        datas: {
+          newAccessToken,
+        },
+      });
+    } catch (err) {
+      res.status(401).json({
+        success: false,
+        status: 401,
+        mesasge: err.message,
+        neededBothToken: true,
+      });
+    }
+  },
 };

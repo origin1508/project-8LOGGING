@@ -50,7 +50,7 @@ function ChannelHistory() {
     setSelectedChannelId(res.datas._id);
     setIsShowMore(true);
     console.log(channels);
-    if (index) {
+    if (typeof index === "number") {
       setIndex(index);
     }
   };

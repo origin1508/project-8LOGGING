@@ -19,6 +19,7 @@ const {
   chatRouter,
   errorRouter,
 } = require("./src/routes");
+const jwtVerification = require('./src/middlewares/jwtVerification');
 
 const app = express();
 dotenv.config();
@@ -39,6 +40,9 @@ app.use("/api/data", dataRouter);
 app.use("/api/follow", followRouter);
 app.use("/api/chat", chatRouter);
 app.use("/api/error", errorRouter);
+app.get("/api/jwt", jwtVerification, (req, res, next) => {
+  res.send('성공');
+})
 
 // swagger
 app.use("/docs", swaggerUI.serve, swaggerUI.setup(specs));

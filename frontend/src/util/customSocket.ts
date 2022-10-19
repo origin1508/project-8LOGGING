@@ -45,3 +45,10 @@ export const customSocketDeleteRequest = (eMsg: string, chatId: string) => {
     chatId: chatId,
   });
 };
+
+export const customSocketLeaveRequest = (eMsg: string, userId: string) => {
+  if (!customSocket) throw new Error("This is custom socket error");
+  customSocket.emit(eMsg, {
+    userId: userId,
+  });
+};

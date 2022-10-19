@@ -70,7 +70,7 @@ const Button = styled.button`
   color: ${(props) => props.color};
   font-size: 1.5rem;
   padding: 1rem 2rem;
-
+  cursor: pointer;
   &:hover {
     transform: translateY(-0.3rem);
   }
