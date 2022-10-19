@@ -1,6 +1,7 @@
-import React, { useMemo } from "react";
+import React from "react";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
+import usePaginate from "@/hooks/usePaginate";
 
 interface PaginateButtonProps {
   page: number;
@@ -9,38 +10,30 @@ interface PaginateButtonProps {
 }
 
 const PaginateButton = ({ page, totalPages, setPage }: PaginateButtonProps) => {
-  const handleNextButtonClick = () => {
-    setPage((prev) => (prev + 1 > totalPages ? totalPages : prev + 1));
-  };
-
-  const handlePrevButtonClick = () => {
-    setPage((prev) => (prev - 1 < 1 ? 1 : prev - 1));
-  };
-
-  const handlePageButtonClick = (page: number) => () => {
-    setPage(page);
-  };
-
-  const pages = useMemo(
-    () => Array.from({ length: totalPages }).map((p, i) => i + 1),
-    [totalPages]
-  );
+  const {
+    isFirst,
+    isLast,
+    pages,
+    handleNextButtonClick,
+    handlePrevButtonClick,
+    handlePageButtonClick,
+  } = usePaginate(page, setPage, totalPages, 12);
 
   return (
     <PaginateContainer>
       <PaginateNav>
-        <PaginateButtonStyle
-          disabled={page === 1}
-          onClick={handlePrevButtonClick}
-        >
+        <PaginateButtonStyle disabled={isFirst} onClick={handlePrevButtonClick}>
           &lt;
         </PaginateButtonStyle>
         {pages.map((p) => (
-          <PaginateButtonStyle key={p} onClick={handlePageButtonClick(p)}>
+          <PaginateButtonStyle
+            key={p}
+            onClick={handlePageButtonClick(p === null ? 1 : p)}
+          >
             {p}
           </PaginateButtonStyle>
         ))}
-        <PaginateButtonStyle onClick={handleNextButtonClick}>
+        <PaginateButtonStyle disabled={isLast} onClick={handleNextButtonClick}>
           &gt;
         </PaginateButtonStyle>
       </PaginateNav>
