@@ -10,6 +10,11 @@ export interface EditFormInitialType {
   nickname: string;
 }
 
+export interface UserInfoType {
+  description: string;
+  nickname: string;
+}
+
 export interface PsEditFormInitialType {
   currentPassword: string;
   newPassword: string;
