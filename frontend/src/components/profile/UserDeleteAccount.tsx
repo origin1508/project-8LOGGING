@@ -2,28 +2,38 @@ import React from "react";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import BaseInputContainer from "@/components/hoc/BaseInputContainer";
+import BaseValidateTextContainer from "@/components/hoc/BaseValidateTextContainer";
 
 interface Props {
   confirmCheck: string;
   setConfirmCheck: React.Dispatch<React.SetStateAction<string>>;
+  confirmMessage: string;
 }
 
-const UserDeleteAccount = ({ confirmCheck, setConfirmCheck }: Props) => {
+const UserDeleteAccount = ({
+  confirmCheck,
+  setConfirmCheck,
+  confirmMessage,
+}: Props) => {
   return (
     <UserDeleteAccountContainer>
       <TitleContainer>Delete Account</TitleContainer>
       <BodyContainer>
         <TextAreaContainer>
-          Do you want to delete your account? This process cannot be undone.
+          정말 회원탈퇴를 하시겠습니까? <br />
+          탈퇴를 하게 되면 서비스 이용이 불가능하게 됩니다.
         </TextAreaContainer>
         <BaseInputContainer>
           <ConfirmInput
-            placeholder="To confirm this, type your email"
+            placeholder="계속 진행하시려면 이메일을 입력하세요."
             value={confirmCheck}
             onChange={(e) => {
               setConfirmCheck(e.target.value);
             }}
           ></ConfirmInput>
+          <BaseValidateTextContainer>
+            {confirmMessage}
+          </BaseValidateTextContainer>
         </BaseInputContainer>
       </BodyContainer>
     </UserDeleteAccountContainer>
