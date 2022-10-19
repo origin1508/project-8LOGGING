@@ -131,7 +131,11 @@ function UserPsEditForm({ setIsEditing, setIsPsEditing }: UserInfoEditProps) {
           <EditButton width="60%" type="submit" disabled={!isValid}>
             CONFIRM
           </EditButton>
-          <EditButton width="60%" onClick={() => setIsPsEditing(false)}>
+          <EditButton
+            type="button"
+            width="60%"
+            onClick={() => setIsPsEditing(false)}
+          >
             CANCEL
           </EditButton>
         </EditButtonWrapper>
