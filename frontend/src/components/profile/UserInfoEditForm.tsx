@@ -130,7 +130,7 @@ function UserInfoEditForm({
           <EditButton width="60%" type="submit" disabled={!isValidAll}>
             CONFIRM
           </EditButton>
-          <EditButton width="60%" onClick={handlerClick}>
+          <EditButton width="60%" type="button" onClick={handlerClick}>
             CANCEL
           </EditButton>
         </EditButtonWrapper>
