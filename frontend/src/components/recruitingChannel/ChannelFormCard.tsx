@@ -1,4 +1,5 @@
 import React from "react";
+import { UseFormRegister, FieldErrorsImpl } from "react-hook-form";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import { ChannelFormInitialType } from "@/types/channel/channelTypes";
@@ -10,20 +11,14 @@ interface CardImageProp {
 }
 
 interface ChannelFormCardProps {
-  channelForm: ChannelFormInitialType;
+  channelForm: UseFormRegister<ChannelFormInitialType>;
   distOptions: Array<string>;
   channelListData: { [key: string]: Array<string> };
   selectedCity: string;
+  selectedDist: string;
   imagePreview: string | ArrayBuffer | FileReader | null | undefined;
-  isValidTitle: boolean;
-  isValidMemberCount: boolean;
-  isValidSpec: boolean;
-  onChannelFormValueChangeEvent: (
-    e:
-      | React.ChangeEvent<HTMLInputElement>
-      | React.ChangeEvent<HTMLTextAreaElement>
-      | React.ChangeEvent<HTMLSelectElement>
-  ) => void;
+  errors: Partial<FieldErrorsImpl<ChannelFormInitialType>>;
+
   onChannelImageUploadClickEvent: (
     e: React.ChangeEvent<HTMLInputElement>
   ) => void;
@@ -42,11 +37,9 @@ const ChannelFormCard = ({
   distOptions,
   channelListData,
   selectedCity,
+  selectedDist,
   imagePreview,
-  isValidTitle,
-  isValidMemberCount,
-  isValidSpec,
-  onChannelFormValueChangeEvent,
+  errors,
   onChannelImageUploadClickEvent,
   onChangeSelectChangeEvent,
   onChannelFormCreateClickEvent,
@@ -71,54 +64,65 @@ const ChannelFormCard = ({
           <ChannelLabel>Title</ChannelLabel>
           <BaseIntputContainer>
             <ChannelInput
+              type="text"
               placeholder="Channel title"
-              name="title"
-              value={channelForm.title}
-              onChange={onChannelFormValueChangeEvent}
+              {...channelForm("title", {
+                required: "제목은 필수 입니다.",
+                minLength: {
+                  value: 3,
+                  message: "제목을 3글자 이상 입력해 주세요.",
+                },
+                maxLength: {
+                  value: 15,
+                  message: "제목을 15글자 이하로 입력해 주세요.",
+                },
+              })}
             />
-            {!isValidTitle && (
+            {errors.title && errors.title.message && (
               <BaseValidateTextContainer>
-                제목을 15글자 이하로 입력해주세요.
+                {errors.title.message}
               </BaseValidateTextContainer>
             )}
           </BaseIntputContainer>
           <ChannelLabel>Member count</ChannelLabel>
           <BaseIntputContainer>
             <ChannelInput
-              placeholder="Number of recruits"
-              name="memberNum"
               type="number"
-              min="2"
-              max="25"
-              value={channelForm.memberNum}
-              onChange={onChannelFormValueChangeEvent}
+              placeholder="Number of recruits"
+              {...channelForm("memberNum", {
+                min: {
+                  value: 2,
+                  message: "인원은 최소 2명 이상입니다.",
+                },
+                max: {
+                  value: 25,
+                  message: "인원은 최대 25명 이하입니다.",
+                },
+              })}
             />
-            {!isValidMemberCount && (
+            {errors.memberNum && (
               <BaseValidateTextContainer>
-                인원은 최소2명, 최대25명입니다.
+                {errors.memberNum.message}
               </BaseValidateTextContainer>
             )}
           </BaseIntputContainer>
           <ChannelLabel>Location</ChannelLabel>
           <BaseIntputContainer>
-            <ChannelSelector
-              name="locationDist"
-              value={channelForm.locationDist}
-              onChange={(e) => {
-                onChannelFormValueChangeEvent(e);
-                onChangeSelectChangeEvent(channelListData[e.target.value][0]);
-              }}
-            >
+            <ChannelSelector {...channelForm("locationDist")}>
               {distOptions.map((dist) => (
-                <ChannelOption key={dist}>{dist}</ChannelOption>
+                <ChannelOption key={dist} value={dist}>
+                  {dist}
+                </ChannelOption>
               ))}
             </ChannelSelector>
             <ChannelSelector
               value={selectedCity}
               onChange={onChangeSelectChangeEvent}
             >
-              {channelListData[channelForm.locationDist].map((city) => (
-                <ChannelOption key={city}>{city}</ChannelOption>
+              {channelListData[selectedDist].map((city) => (
+                <ChannelOption key={city} value={city}>
+                  {city}
+                </ChannelOption>
               ))}
             </ChannelSelector>
           </BaseIntputContainer>
@@ -127,13 +131,16 @@ const ChannelFormCard = ({
       </ChannelWrapper>
       <ChannelTextArea
         placeholder="Please enter your channel description"
-        name="spec"
-        value={channelForm.spec}
-        onChange={onChannelFormValueChangeEvent}
+        {...channelForm("spec", {
+          minLength: {
+            value: 2,
+            message: "상세 설명을 입력해 주세요.",
+          },
+        })}
       />
-      {!isValidSpec && (
+      {errors.spec && (
         <BaseValidateTextContainer>
-          상세내용을 입력해주세요.
+          {errors.spec.message}
         </BaseValidateTextContainer>
       )}
     </ChannelFormWrapper>
