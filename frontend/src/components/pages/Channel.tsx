@@ -10,7 +10,6 @@ import {
   currentChannelDetailRequest,
   channelJoinAcceptRequet,
   channelJoinRejectRequet,
-  channelLeaveRequest,
   channelDeleteRequest,
 } from "@/api/channelFetcher";
 import {

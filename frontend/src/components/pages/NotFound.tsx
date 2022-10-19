@@ -1,12 +1,10 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import BasePageComponent from "../hoc/BasePageComponent";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 
 const NotFound = () => {
   const navigate = useNavigate();
-
   return (
     <NotFoundContainer>
       <NotFoundTitleContainer>
