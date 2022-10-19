@@ -1,43 +1,62 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import { EditButton } from "@/styles/commonStyle";
+import { useForm } from "react-hook-form";
+import { imageResize } from "@/util/imageResizeUtil";
 
 interface ProfileImageProp {
   backgroundImg?: string;
 }
 
+interface UploadImgType {
+  uploadImg: File[];
+}
+
 interface UserImageUpdateProps {
-  profileImagePreview: string | ArrayBuffer | FileReader | null | undefined;
-  onChannelImageUploadClickEvent: (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => void;
-  onProfileImageUploadClickEvent: () => void;
+  onProfileImageUploadClickEvent: ({
+    uploadImg,
+  }: {
+    uploadImg: File[];
+  }) => void;
 }
 
 const UserImageUpdate = ({
-  profileImagePreview,
-  onChannelImageUploadClickEvent,
   onProfileImageUploadClickEvent,
 }: UserImageUpdateProps) => {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<UploadImgType>({
+    mode: "onChange",
+  });
+  const [profileimgPreview, setProfileImgPreview] = useState("");
+  const profileImg = watch("uploadImg");
+
+  useEffect(() => {
+    (async () => {
+      if (profileImg && profileImg.length > 0) {
+        const file = profileImg[0];
+        const copress = await imageResize(file);
+        setProfileImgPreview(URL.createObjectURL(copress));
+      }
+    })();
+  }, [profileImg]);
   return (
-    <UserImageContainer>
+    <UserImageContainer onSubmit={handleSubmit(onProfileImageUploadClickEvent)}>
       <UserImageUploadTitle>Profile upload</UserImageUploadTitle>
       <UserImageInputWrapper>
-        <UserImageUploadInput
-          type="file"
-          onChange={onChannelImageUploadClickEvent}
-        />
+        <UserImageUploadInput type="file" {...register("uploadImg")} />
       </UserImageInputWrapper>
-      <ProfileImageBox backgroundImg={profileImagePreview as string} />
-      <EditButton onClick={onProfileImageUploadClickEvent}>
-        CHANGE PROFILE IMAGE
-      </EditButton>
+      <ProfileImageBox backgroundImg={profileimgPreview} />
+      <EditButton type="submit">CHANGE PROFILE IMAGE</EditButton>
     </UserImageContainer>
   );
 };
 
-const UserImageContainer = styled.div`
+const UserImageContainer = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
