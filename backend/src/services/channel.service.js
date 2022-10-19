@@ -59,7 +59,7 @@ module.exports = {
       waitResList: [...user.waitReqList, waitList._id],
     });
 
-    return channel._id;
+    return channel._id, location;
   },
 
   /**
