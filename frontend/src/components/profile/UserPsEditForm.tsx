@@ -3,7 +3,6 @@ import BaseCardContainer from "@/components/hoc/BaseCardContainer";
 import { useNavigate } from "react-router-dom";
 import GlobalTheme from "@/styles/theme";
 import styled, { css } from "styled-components";
-import usePsEditForm from "@/hooks/usePsEditForm";
 import BaseValidateTextContainer from "@/components/hoc/BaseValidateTextContainer";
 import {
   BigTitle,
@@ -14,8 +13,9 @@ import {
 import Storage from "@/storage/storage";
 import Modal from "../modal/Modal";
 import { authProfilePasswordUpdate } from "@/api/authFetcher";
-import ValidationUtil from "@/util/validationUtil";
 import { ErrorType } from "@/types/error/errorType";
+import { useForm } from "react-hook-form";
+import { PsEditFormInitialType } from "@/types/auth/authTypes";
 
 const EditInput = css`
   background-color: ${GlobalTheme.colors.lightGray};
@@ -37,35 +37,26 @@ function UserPsEditForm({ setIsEditing, setIsPsEditing }: UserInfoEditProps) {
   const navigate = useNavigate();
   const [erorrMessage, setErorrMessage] = useState("");
   const [isOppenModal, setIsOpenModal] = useState(false);
-  const [values, handleEditFormChange] = usePsEditForm({
-    currentPassword: "",
-    newPassword: "",
-    confirmPassword: "",
-  });
-  const isValidCurPassword = ValidationUtil.checkPasswordValidate(
-    values.currentPassword
-  );
-  const isValidNewPassword = ValidationUtil.checkPasswordValidate(
-    values.newPassword
-  );
 
-  const isPasswordSame = values.newPassword === values.confirmPassword;
-  const isValid = [
-    isValidCurPassword,
-    isValidNewPassword,
-    isPasswordSame,
-  ].every((v) => v === true);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    getValues,
+  } = useForm<PsEditFormInitialType>({ mode: "onChange" });
+
+  const isValid =
+    !errors.currentPassword && !errors.newPassword && !errors.confirmPassword;
 
   const onModalCancelButtonClickEvent = () => {
     setIsOpenModal(false);
   };
-  const handleSubmitClick = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onvalid = async (data: PsEditFormInitialType) => {
     try {
       await authProfilePasswordUpdate(
         "/api/users/password",
-        values.currentPassword,
-        values.newPassword
+        data.currentPassword,
+        data.newPassword
       );
       Storage.clearToken();
       setIsEditing(false);
@@ -82,29 +73,43 @@ function UserPsEditForm({ setIsEditing, setIsPsEditing }: UserInfoEditProps) {
       <TitleContainer>
         <BigTitle>Change password</BigTitle>
       </TitleContainer>
-      <InpurForm onSubmit={handleSubmitClick}>
+      <InpurForm onSubmit={handleSubmit(onvalid)}>
         <InputContainer>
           현재 비밀번호
           <UserNickNameIntput
             type="password"
-            placeholder="비밀번호"
-            value={values.currentPassword}
-            name="currentPassword"
-            onChange={handleEditFormChange}
+            placeholder="현재 비밀번호"
+            {...register("currentPassword", {
+              required: "현재 비밀번호를 입력해주세요!",
+              minLength: {
+                value: 8,
+                message: "비밀번호는 8글자 이상입니다.",
+              },
+            })}
           />
+          {errors.currentPassword && (
+            <BaseValidateTextContainer>
+              {errors.currentPassword.message}
+            </BaseValidateTextContainer>
+          )}
         </InputContainer>
         <InputContainer>
           새로운 비밀번호
           <UserNickNameIntput
             type="password"
             placeholder="새로운 비밀번호"
-            value={values.newPassword}
-            name="newPassword"
-            onChange={handleEditFormChange}
+            {...register("newPassword", {
+              required: "새로운 비밀번호를 입력해주세요!",
+              pattern: {
+                value:
+                  /^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/,
+                message: " 8~15자 영문 소문자, 숫자, 특수문자를 사용해주세요.",
+              },
+            })}
           />
-          {values.newPassword && !isValidNewPassword && (
+          {errors.newPassword && (
             <BaseValidateTextContainer>
-              8~15자 영문 소문자, 숫자, 특수문자를 사용해주세요.
+              {errors.newPassword.message}
             </BaseValidateTextContainer>
           )}
         </InputContainer>
@@ -114,16 +119,22 @@ function UserPsEditForm({ setIsEditing, setIsPsEditing }: UserInfoEditProps) {
           <UserDescriptionInput
             type="password"
             placeholder="새로운 비밀번호 확인"
-            value={values.confirmPassword}
-            name="confirmPassword"
-            onChange={handleEditFormChange}
+            {...register("confirmPassword", {
+              required: "비밀번호가 일치하지 않습니다!",
+              validate: {
+                cofirmNewPassword: (value) => {
+                  const { newPassword } = getValues();
+                  return (
+                    newPassword === value || "비밀번호가 일치하지 않습니다!"
+                  );
+                },
+              },
+            })}
           />
-          {!isPasswordSame ? (
+          {errors.confirmPassword && (
             <BaseValidateTextContainer>
-              비밀번호가 일치하지 않습니다.
+              {errors.confirmPassword.message}
             </BaseValidateTextContainer>
-          ) : (
-            ""
           )}
         </InputContainer>
 
