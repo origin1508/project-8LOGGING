@@ -11,7 +11,7 @@ module.exports = {
     }
     const { title, locationDist, locationCity, memberNum, spec } = req.body;
     try {
-      const channelId = await channelService.createChannel(
+      const channelInfo = await channelService.createChannel(
         title,
         userId,
         locationDist,
@@ -26,7 +26,8 @@ module.exports = {
         status: 201,
         message: "Channel create success.",
         datas: {
-          _id: channelId,
+          _id: channelInfo._id,
+          location: channelInfo.location,
         },
       });
     } catch (err) {
