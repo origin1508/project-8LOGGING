@@ -4,15 +4,15 @@ import GlobalTheme from "@/styles/theme";
 import { curUserState } from "@/recoil/atoms/authState";
 import { useRecoilState } from "recoil";
 import BaseValidateTextContainer from "@/components/hoc/BaseValidateTextContainer";
-import useEditForm from "@/hooks/useEditForm";
 import BaseCardContainer from "../hoc/BaseCardContainer";
 import Modal from "../modal/Modal";
+import { useForm } from "react-hook-form";
 import { ErrorType } from "@/types/error/errorType";
+import { UserInfoType } from "@/types/auth/authTypes";
 import {
   authProfileNickUpdate,
   authProfileDescriptionUpdate,
 } from "@/api/authFetcher";
-
 import {
   BigTitle,
   TitleContainer,
@@ -52,37 +52,31 @@ function UserInfoEditForm({
   const handlerClick = () => {
     setIsEditing(false);
   };
-  const [values, handleEditFormChange, isValid] = useEditForm({
-    nickname: curUser.nickname,
-    description: curUser.description,
-  });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<UserInfoType>({ mode: "onChange" });
 
-  const isValidAll = isValid.description && isValid.nickname;
   const onModalCancelButtonClickEvent = () => {
     setIsOpenModal(false);
   };
-
-  const handleSubmitClick = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const isValid = !errors.nickname && !errors.description;
+  const onvalid = async (data: UserInfoType) => {
     try {
-      const { nickname } = await authProfileNickUpdate(
-        "/api/users/nickname",
-        values.nickname
-      );
-      const { description } = await authProfileDescriptionUpdate(
+      await authProfileNickUpdate("/api/users/nickname", data.nickname);
+      await authProfileDescriptionUpdate(
         "/api/users/description",
-        values.description
+        data.description
       );
       setCurUser({
         ...curUser,
-        nickname: nickname,
-        description: description,
+        ...data,
       });
-
       setIsEditing(false);
     } catch (e) {
       const err = e as ErrorType;
-      const erorrMessage = err.response.data.message;
+      const erorrMessage = err.response.data?.message;
       setErorrMessage(erorrMessage);
       setIsOpenModal(true);
     }
@@ -94,19 +88,24 @@ function UserInfoEditForm({
         <BigTitle>EDIT USER INFORMATION</BigTitle>
       </TitleContainer>
       <Img img={curUser?.profPic} onClick={onModalOpenButtonClickEvent}></Img>
-      <InpurForm onSubmit={handleSubmitClick}>
+      <InpurForm onSubmit={handleSubmit(onvalid)}>
         <InputContainer>
           닉네임변경
           <UserNickNameIntput
             type="text"
             placeholder="NickName..."
-            value={values.nickname}
-            name="nickname"
-            onChange={handleEditFormChange}
+            defaultValue={curUser.nickname}
+            {...register("nickname", {
+              required: "닉네임을 입력하세요!",
+              minLength: {
+                value: 3,
+                message: "닉네임을 세글자 이상 입력하세요!",
+              },
+            })}
           />
-          {values.nickname && !isValid.nickname && (
+          {errors.nickname && (
             <BaseValidateTextContainer>
-              please check your nickname
+              {errors.nickname.message}
             </BaseValidateTextContainer>
           )}
         </InputContainer>
@@ -116,18 +115,23 @@ function UserInfoEditForm({
           <UserDescriptionInput
             type="text"
             placeholder="Description..."
-            value={values.description}
-            name="description"
-            onChange={handleEditFormChange}
+            defaultValue={curUser.description}
+            {...register("description", {
+              required: "한줄 소개를 입력하세요!",
+              minLength: {
+                value: 1,
+                message: "한줄 소개를 네글자 이상 입력하세요!",
+              },
+            })}
           />
-          {values.description && !isValid.description && (
+          {errors.description && (
             <BaseValidateTextContainer>
-              please check your introduction
+              {errors.description.message}
             </BaseValidateTextContainer>
           )}
         </InputContainer>
         <EditButtonWrapper>
-          <EditButton width="60%" type="submit" disabled={!isValidAll}>
+          <EditButton width="60%" type="submit" disabled={!isValid}>
             CONFIRM
           </EditButton>
           <EditButton width="60%" type="button" onClick={handlerClick}>

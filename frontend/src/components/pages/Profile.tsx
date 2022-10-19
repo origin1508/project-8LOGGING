@@ -25,10 +25,6 @@ function Profile() {
   const [confirmCheck, setConfirmCheck] = useState("");
   const [confirmMessage, setConfirmMessage] = useState("");
   const [curUser, setCurUser] = useRecoilState(curUserState);
-  const [image, setImage] = useState<Blob>();
-  const [profileImagePreview, setProfileImagePreview] = useState<
-    string | ArrayBuffer | null
-  >();
   const loginUserId = useRecoilValue(loginUserIdState);
 
   const [
@@ -52,28 +48,17 @@ function Profile() {
     setCurUser(res);
   };
 
-  const handleProfileImageUploadChange = async (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    if (e.target.files) {
-      const file = e.target.files[0];
-      const compress = await imageResize(file);
-      setImage(compress);
-      const preview = new FileReader();
-      preview.readAsDataURL(file);
-      preview.onload = () => {
-        setProfileImagePreview(preview.result);
-      };
-    }
-  };
-
-  const handleProfileImageUploadClick = async () => {
-    if (image) {
-      await authProfileImageUpdate("api/users/profpic", image);
-      handleModalCloseButtonClick();
-      setIsEditing(false);
-      navigate("/profile", { replace: true });
-    }
+  const handleProfileImageUploadClick = async ({
+    uploadImg,
+  }: {
+    uploadImg: File[];
+  }) => {
+    const file = uploadImg[0];
+    const copress = await imageResize(file);
+    await authProfileImageUpdate("api/users/profpic", copress);
+    handleModalCloseButtonClick();
+    setIsEditing(false);
+    navigate("/profile", { replace: true });
   };
 
   const handleDeleteAccountAcceptClick = async () => {
@@ -124,8 +109,6 @@ function Profile() {
         onModalCancelButtonClickEvent={handleModalCloseButtonClick}
       >
         <UserImageUpdate
-          profileImagePreview={profileImagePreview}
-          onChannelImageUploadClickEvent={handleProfileImageUploadChange}
           onProfileImageUploadClickEvent={handleProfileImageUploadClick}
         />
       </Modal>
