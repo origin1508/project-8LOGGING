@@ -3,20 +3,26 @@ import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import BaseInputContainer from "@/components/hoc/BaseInputContainer";
 import BaseValidateTextContainer from "@/components/hoc/BaseValidateTextContainer";
+import { useForm } from "react-hook-form";
+import { EditButton } from "@/styles/commonStyle";
 
 interface Props {
+  onvalid: () => void;
+  curUserEmail?: string;
+}
+interface confirmChecktype {
   confirmCheck: string;
-  setConfirmCheck: React.Dispatch<React.SetStateAction<string>>;
-  confirmMessage: string;
 }
 
-const UserDeleteAccount = ({
-  confirmCheck,
-  setConfirmCheck,
-  confirmMessage,
-}: Props) => {
+const UserDeleteAccount = ({ onvalid, curUserEmail }: Props) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<confirmChecktype>({ mode: "onChange" });
+  const isValid = !errors.confirmCheck;
   return (
-    <UserDeleteAccountContainer>
+    <UserDeleteAccountContainer onSubmit={handleSubmit(onvalid)}>
       <TitleContainer>Delete Account</TitleContainer>
       <BodyContainer>
         <TextAreaContainer>
@@ -26,23 +32,32 @@ const UserDeleteAccount = ({
         <BaseInputContainer>
           <ConfirmInput
             placeholder="계속 진행하시려면 이메일을 입력하세요."
-            value={confirmCheck}
-            onChange={(e) => {
-              setConfirmCheck(e.target.value);
-            }}
+            type="text"
+            {...register("confirmCheck", {
+              validate: {
+                cofirmEmail: (value) => {
+                  return (
+                    curUserEmail === value || "이메일이 일치하지 않습니다!"
+                  );
+                },
+              },
+            })}
           ></ConfirmInput>
+
           <BaseValidateTextContainer>
-            {confirmMessage}
+            {errors.confirmCheck?.message}
           </BaseValidateTextContainer>
         </BaseInputContainer>
+        <EditButton width="20%" type="submit" disabled={!isValid}>
+          Delete
+        </EditButton>
       </BodyContainer>
     </UserDeleteAccountContainer>
   );
 };
 
-const UserDeleteAccountContainer = styled.div`
+const UserDeleteAccountContainer = styled.form`
   width: 100%;
-  height: 100%;
 `;
 
 const TitleContainer = styled.div`
