@@ -14,15 +14,11 @@ interface UploadImgType {
 }
 
 interface UserImageUpdateProps {
-  onProfileImageUploadClickEvent: ({
-    uploadImg,
-  }: {
-    uploadImg: File[];
-  }) => void;
+  onProfileImageUploadSubmit: ({ uploadImg }: { uploadImg: File[] }) => void;
 }
 
 const UserImageUpdate = ({
-  onProfileImageUploadClickEvent,
+  onProfileImageUploadSubmit,
 }: UserImageUpdateProps) => {
   const {
     register,
@@ -45,7 +41,7 @@ const UserImageUpdate = ({
     })();
   }, [profileImg]);
   return (
-    <UserImageContainer onSubmit={handleSubmit(onProfileImageUploadClickEvent)}>
+    <UserImageContainer onSubmit={handleSubmit(onProfileImageUploadSubmit)}>
       <UserImageUploadTitle>Profile upload</UserImageUploadTitle>
       <UserImageInputWrapper>
         <UserImageUploadInput type="file" {...register("uploadImg")} />

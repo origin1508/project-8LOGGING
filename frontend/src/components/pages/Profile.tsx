@@ -48,7 +48,7 @@ function Profile() {
     setCurUser(res);
   };
 
-  const handleProfileImageUploadClick = async ({
+  const handleProfileImageUploadSubmit = async ({
     uploadImg,
   }: {
     uploadImg: File[];
@@ -109,7 +109,7 @@ function Profile() {
         onModalCancelButtonClickEvent={handleModalCloseButtonClick}
       >
         <UserImageUpdate
-          onProfileImageUploadClickEvent={handleProfileImageUploadClick}
+          onProfileImageUploadSubmit={handleProfileImageUploadSubmit}
         />
       </Modal>
       <DeleteAccountModal
