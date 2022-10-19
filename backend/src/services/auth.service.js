@@ -164,7 +164,7 @@ module.exports = {
     console.log(access, refresh)
     if (!access) {
       if (refresh) {
-        const newAccessToken = this.generateAccessToken(refresh.userId);
+        const newAccessToken = this.generateAccessToken(refresh);
         return newAccessToken;
       } else {
         throw new Error("accessToken과 refreshToken 모두 만료되었습니다. 다시 로그인하세요.");
