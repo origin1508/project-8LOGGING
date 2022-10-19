@@ -116,12 +116,15 @@ const ChannelForm = () => {
       image,
     });
     if (datas) {
+      console.log(datas);
       setSidebarChannels((prev) => {
         return [
           ...prev,
           {
             _id: datas._id,
             title: title,
+            // res.datas에 img 추가 필요
+            img: "",
             position: 0,
           },
         ];
