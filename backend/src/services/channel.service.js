@@ -59,7 +59,7 @@ module.exports = {
       waitResList: [...user.waitReqList, waitList._id],
     });
 
-    return channel._id, location;
+    return { _id: channel._id, location };
   },
 
   /**
@@ -242,7 +242,7 @@ module.exports = {
 
     // 채널 가입 여부 확인
     if (channel.members.includes(userId)) {
-      throw ApiError.badRequest("이미 채널에 가입 돼있습니다.")
+      throw ApiError.badRequest("이미 채널에 가입 돼있습니다.");
     }
 
     // waitList 수정
@@ -313,7 +313,9 @@ module.exports = {
     const newWaitReqList = user.waitReqList.filter(
       (id) => String(id) !== String(waitList._id)
     );
-    const newChannels = user.channels.filter((id) => String(id) != String(channelId));
+    const newChannels = user.channels.filter(
+      (id) => String(id) != String(channelId)
+    );
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       {
@@ -391,7 +393,9 @@ module.exports = {
     await WaitList.findOneAndUpdate(
       { channelId },
       {
-        waiting: waitList.waiting.filter((id) => String(id) != String(waitingId)),
+        waiting: waitList.waiting.filter(
+          (id) => String(id) != String(waitingId)
+        ),
       }
     );
 
@@ -435,7 +439,9 @@ module.exports = {
     await WaitList.findOneAndUpdate(
       { channelId },
       {
-        waiting: waitList.waiting.filter((id) => String(id) != String(waitingId)),
+        waiting: waitList.waiting.filter(
+          (id) => String(id) != String(waitingId)
+        ),
       }
     );
 
@@ -444,7 +450,9 @@ module.exports = {
     const newWaitReqList = user.waitReqList.filter(
       (id) => String(id) != String(waitList._id)
     );
-    const newChannels = user.channels.filter((id) => String(id) != String(channelId));
+    const newChannels = user.channels.filter(
+      (id) => String(id) != String(channelId)
+    );
     await User.findByIdAndUpdate(waitingId, {
       waitReqList: newWaitReqList,
       channels: newChannels,
@@ -500,12 +508,16 @@ module.exports = {
 
     // user의 채널 정보, channel의 멤버 정보 수정
     const user = await User.findById(userId);
-    const updatedChannels = user.channels.filter((id) => String(id) != String(channelId));
+    const updatedChannels = user.channels.filter(
+      (id) => String(id) != String(channelId)
+    );
     const updatedUser = await User.findByIdAndUpdate(userId, {
       channels: updatedChannels,
     });
 
-    const updatedMembers = channel.members.filter((id) => String(id) != String(userId));
+    const updatedMembers = channel.members.filter(
+      (id) => String(id) != String(userId)
+    );
     await Channel.findByIdAndUpdate(channelId, { members: updatedMembers });
 
     // 채널 정보 반환
