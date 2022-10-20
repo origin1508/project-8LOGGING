@@ -1,36 +1,34 @@
 import React from "react";
 import styled from "styled-components";
+import { UseFormRegister, FieldErrorsImpl } from "react-hook-form";
 import GlobalTheme from "@/styles/theme";
 import BaseIntputContainer from "@/components/hoc/BaseInputContainer";
 import BaseValidateTextContainer from "@/components/hoc/BaseValidateTextContainer";
 import { AuthFormInitialType } from "@/types/auth/authTypes";
-import { ValidationType } from "@/types/auth/validationTypes";
 
 interface AuthLoginProps {
-  loginValue: AuthFormInitialType;
-  onLoginFormChangeEvent: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  register: UseFormRegister<AuthFormInitialType>;
+  errors: Partial<FieldErrorsImpl<AuthFormInitialType>>;
   onLoginSubmitEvent: (e: React.FormEvent) => void;
-  isValid: ValidationType;
 }
 
 const AuthLogin = ({
-  loginValue,
-  onLoginFormChangeEvent,
+  register,
+  errors,
   onLoginSubmitEvent,
-  isValid,
 }: AuthLoginProps) => {
-  const isValidAll = isValid.email && isValid.password;
+  const isValidAll = !errors.email && !errors.password;
   return (
     <AuthLoginFormContainer onSubmit={onLoginSubmitEvent}>
       <BaseIntputContainer>
         <AuthLoginInput
+          {...register("email", {
+            required: true,
+            pattern: /^\S+@\S+$/i,
+          })}
           placeholder="이메일"
-          type="email"
-          name="email"
-          onChange={onLoginFormChangeEvent}
-          value={loginValue.email}
         />
-        {loginValue.email && !isValid.email && (
+        {errors.email && (
           <BaseValidateTextContainer>
             올바른 이메일을 입력해주세요.
           </BaseValidateTextContainer>
@@ -38,13 +36,16 @@ const AuthLogin = ({
       </BaseIntputContainer>
       <BaseIntputContainer>
         <AuthLoginInput
+          {...register("password", {
+            required: true,
+            maxLength: 15,
+            minLength: 8,
+            pattern: /^.(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/,
+          })}
           placeholder="비밀번호"
           type="password"
-          name="password"
-          onChange={onLoginFormChangeEvent}
-          value={loginValue.password}
         />
-        {loginValue.password && !isValid.password && (
+        {errors.password && (
           <BaseValidateTextContainer>
             올바른 비밀번호를 입력해주세요.
           </BaseValidateTextContainer>

@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import GlobalTheme from "@/styles/theme";
-import useLoginForm from "@/hooks/useLoginForm";
 import useCheckDuplication from "@/hooks/useCheckDuplication";
 import AuthLogin from "@/components/auth/AuthLogin";
 import AuthReigster from "../auth/AuthRegister";
@@ -29,7 +28,15 @@ const Auth = () => {
     handleSubmit,
     formState: { errors },
     watch,
-  } = useForm<AuthFormInitialType>();
+    reset,
+  } = useForm<AuthFormInitialType>({
+    defaultValues: {
+      email: "",
+      nickname: "",
+      password: "",
+      confirmPassword: "",
+    },
+  });
   const [tabIndex, setTabIndex] = useState(0);
   const [errMessage, setErrMessage] = useState("");
   const [isVerified, setIsVerified] = useState(false);
@@ -57,30 +64,15 @@ const Auth = () => {
   ] = useModal(false);
 
   useEffect(() => {
-    // setAuthForm({
-    //   email: "",
-    //   nickname: "",
-    //   password: "",
-    //   confirmPassword: "",
-    // });
+    reset({ email: "", nickname: "", password: "", confirmPassword: "" });
     setErrMessage("");
     setIsVerified(false);
-    setLoginValue({
-      email: "",
-      password: "",
-    });
     setVerificationCode("");
     setIsDuplicated({
       email: false,
       nickname: false,
     });
-  }, [tabIndex]);
-
-  const [loginValue, handleLoginFormChange, isValid, setLoginValue] =
-    useLoginForm({
-      email: "",
-      password: "",
-    });
+  }, [tabIndex, reset]);
 
   const { isDuplicated, setIsDuplicated, handleCheckDuplication } =
     useCheckDuplication({
@@ -108,9 +100,8 @@ const Auth = () => {
     if (res) handleWelcomeModalOpenButtonClick();
   };
 
-  const handleLoginSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const { email, password } = loginValue;
+  const handleLoginSubmit = async (data: AuthFormInitialType) => {
+    const { email, password } = data;
     try {
       const res = await authLoginRequest("/api/auth/login", {
         email,
@@ -128,7 +119,7 @@ const Auth = () => {
     }
   };
 
-  const handleVerificationCodeSend = async (
+  const handleSendVerificationCodeClick = async (
     e: React.MouseEvent<HTMLButtonElement>,
     email: string
   ) => {
@@ -195,10 +186,9 @@ const Auth = () => {
         <FormContainer>
           {tabIndex === 0 ? (
             <AuthLogin
-              loginValue={loginValue}
-              onLoginFormChangeEvent={handleLoginFormChange}
-              onLoginSubmitEvent={handleLoginSubmit}
-              isValid={isValid}
+              register={register}
+              errors={errors}
+              onLoginSubmitEvent={handleSubmit(handleLoginSubmit)}
             />
           ) : (
             <AuthReigster
@@ -207,7 +197,7 @@ const Auth = () => {
               errors={errors}
               onRegisterSubmitEvent={handleSubmit(handleRegisterSubmit)}
               onCheckDuplicationEvent={handleCheckDuplication}
-              onSendVerficationCodeClickEvent={handleVerificationCodeSend}
+              onSendVerficationCodeClickEvent={handleSendVerificationCodeClick}
               isDuplicated={isDuplicated}
               isVerified={isVerified}
               setIsVerified={setIsVerified}
