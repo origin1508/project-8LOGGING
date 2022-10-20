@@ -44,7 +44,13 @@ const socketConfig = (server) => {
 
     socket.on("remove-member", async (data) => {
       await channelService.quitChannel(data.userId, socket.roomId);
-      chat.to(socket.roomId).emit("receive-remove-member", {userId: data.userId});
+      chat
+        .to(socket.roomId)
+        .emit("receive-remove-member", { userId: data.userId });
+    });
+
+    socket.on("escape-room", () => {
+      socket.leave(socket.roomId);
     });
 
     socket.on("disconnect", () => {
