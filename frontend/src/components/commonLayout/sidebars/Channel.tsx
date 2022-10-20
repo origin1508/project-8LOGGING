@@ -14,25 +14,34 @@ interface ChannelContainerProps {
 
 const Channel: React.FC = () => {
   const [isToggle, setIsToggle] = useState(false);
-
   const loginUserId = useRecoilValue(loginUserIdState);
   const [sidebarChannels, setSidebarChannels] =
     useRecoilState(sidebarChannelsState);
+  const handleRefreshButtonClick = async () => {
+    const res = await getAuthInformationById(
+      "/api/users/userinfo",
+      loginUserId
+    );
+    setSidebarChannels(res.channels);
+  };
 
   useEffect(() => {
-    (async () => {
-      const res = await getAuthInformationById(
-        "/api/users/userinfo",
-        loginUserId
-      );
-      setSidebarChannels(res.channels);
-    })();
-  }, [isToggle]);
+    handleRefreshButtonClick();
+  }, []);
 
   return (
     <ChannelsContainer>
       <TitleContainer>
-        <ChannelsTitle>Channel</ChannelsTitle>
+        <ChannelsTitle>
+          Channel
+          <RefreshButton onClick={handleRefreshButtonClick}>
+            <CustomIcon
+              name="refresh"
+              size="25"
+              color={GlobalTheme.colors.gray}
+            />
+          </RefreshButton>
+        </ChannelsTitle>
         <ToggleIcon onClick={() => setIsToggle(!isToggle)}>
           {!isToggle ? (
             <CustomIcon
@@ -107,6 +116,16 @@ const ChannelTitle = styled.div`
   white-space: nowrap;
   &:hover {
     animation: ${flow} 5s linear infinite;
+  }
+`;
+
+const RefreshButton = styled.button`
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.1s ease;
+  &:active {
+    transform: rotate(-1turn);
   }
 `;
 

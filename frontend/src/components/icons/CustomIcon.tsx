@@ -9,7 +9,7 @@ import {
 import { VscTriangleDown, VscTriangleUp } from "react-icons/vsc";
 import { FaUserFriends, FaCrown } from "react-icons/fa";
 import { FiSend } from "react-icons/fi";
-import { BiCloudUpload } from "react-icons/bi";
+import { BiCloudUpload, BiRefresh } from "react-icons/bi";
 
 interface CustomIconProps {
   name: string;
@@ -48,6 +48,8 @@ const CustomIcon = ({ name, size, color }: CustomIconProps) => {
         return <FaCrown size={size} color={color}></FaCrown>;
       case "upload":
         return <BiCloudUpload size={size} color={color}></BiCloudUpload>;
+      case "refresh":
+        return <BiRefresh size={size} color={color}></BiRefresh>;
       default:
         console.log("Not implemented!");
         return;
