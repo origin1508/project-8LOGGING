@@ -258,13 +258,13 @@ module.exports = {
     const { channelId } = req.params;
 
     try {
-      const channels = await channelService.quitChannel(userId, channelId);
+      await channelService.quitChannel(userId, channelId);
 
       res.status(201).json({
         success: true,
         status: 201,
         message: "channel leave success",
-        datas: channels
+        //datas: channels
       });
     } catch (err) {
       next(err);
@@ -276,13 +276,13 @@ module.exports = {
     const { channelId } = req.params;
 
     try {
-      const channels = await channelService.deleteChannel(userId, channelId);
+      await channelService.deleteChannel(userId, channelId);
 
       res.status(201).json({
         success: true,
         status: 201,
         message: "channel delete success",
-        datas: channels
+        //datas: channels
       });
     } catch (err) {
       next(err);

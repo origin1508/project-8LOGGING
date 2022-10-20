@@ -56,7 +56,7 @@ module.exports = {
     const user = await User.findOne({ _id: userId });
     const updatedUser = await User.findByIdAndUpdate(userId, {
       channels: [...user.channels, channel._id],
-      waitResList: [...user.waitReqList, waitList._id],
+      waitResList: [...user.waitResList, waitList._id],
     });
 
     return { _id: channel._id, location };
@@ -520,6 +520,7 @@ module.exports = {
     );
     await Channel.findByIdAndUpdate(channelId, { members: updatedMembers });
 
+    /*
     // 채널 정보 반환
     const channels = await Promise.all(
       updatedUser.channels.map(async (channelId) => {
@@ -528,6 +529,7 @@ module.exports = {
       })
     );
     return channels;
+    */
   },
 
   /**
@@ -582,6 +584,7 @@ module.exports = {
     await Channel.findByIdAndDelete(channelId);
     await WaitList.findByIdAndDelete(waitList._id);
 
+    /*
     // 채널 정보 반환
     const channels = await Promise.all(
       updatedUser.channels.map(async (channelId) => {
@@ -590,5 +593,6 @@ module.exports = {
       })
     );
     return channels;
+    */
   },
 };

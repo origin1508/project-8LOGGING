@@ -88,4 +88,14 @@ module.exports = {
   async deleteFollow(userId, targetId) {
     await Follow.deleteOne({ follower: userId, following: targetId });
   },
+
+  /**
+   * 팔로우/팔로잉 정보 전부 삭제
+   * 
+   * @param {String} userId 유저 아이디
+   */
+  async deleteAllFollow(userId) {
+    await Follow.deleteMany({ follower: userId });
+    await Follow.deleteMany({ following: userId });
+  }
 };

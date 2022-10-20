@@ -4,7 +4,9 @@
 const mongoose = require("mongoose");
 
 const connectionEvent = () => {
-  mongoose.connect(process.env.ATLAS_DB_URL); 
+  mongoose.connect(process.env.ATLAS_DB_URL, {
+    dbName: 'test1020'
+  }); 
   mongoose.connection.on("connected", () => {
     console.log("DB 연결 성공");
   });
