@@ -84,7 +84,7 @@ const flow = keyframes`
     transform: translate(0, 0);
   }
   100% {
-    transform: translate(-199%, 0);
+    transform: translate(-203%, 0);
   }
 `;
 
