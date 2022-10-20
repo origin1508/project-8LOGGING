@@ -2,10 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import GlobalTheme from "@/styles/theme";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { sidebarChannelsState } from "@/recoil/atoms/channelState";
 import { loginUserIdState } from "@/recoil/atoms/authState";
-import { loadingState } from "@/recoil/atoms/loadingState";
 import CustomIcon from "@/components/icons/CustomIcon";
 import { getAuthInformationById } from "@/api/authFetcher";
 
@@ -18,7 +17,7 @@ const Channel: React.FC = () => {
   const loginUserId = useRecoilValue(loginUserIdState);
   const [sidebarChannels, setSidebarChannels] =
     useRecoilState(sidebarChannelsState);
-  const setIsLoadingState = useSetRecoilState(loadingState);
+
   const navigate = useNavigate();
 
   const handleRefreshButtonClick = async () => {
@@ -30,11 +29,7 @@ const Channel: React.FC = () => {
   };
 
   const handleChannelMoveClick = (channel: string) => () => {
-    setIsLoadingState(true);
-    setTimeout(() => {
-      setIsLoadingState(false);
-      navigate(`/channels/${channel}`);
-    }, 1000);
+    navigate(`/channels/${channel}`);
   };
 
   useEffect(() => {
