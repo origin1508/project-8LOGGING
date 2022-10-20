@@ -114,10 +114,12 @@ function Channel() {
       }
     })();
     channelId && customSocketConnectRequest("enter-chat", channelId);
+
     customSocket.on("receive-chatLog", (data) => {
       setChatLogs(data);
     });
     customSocket.on("receive-create-chat", (data) => {
+      prepareScroll(200);
       setChatLogs((prev) => {
         return [...prev, data];
       });
@@ -161,7 +163,6 @@ function Channel() {
       setChannelContent("");
     }
     if (inputRef.current) inputRef.current.value = "";
-    prepareScroll(200);
   };
 
   const handleChannelJoinPermissionButtonClick = useCallback(
