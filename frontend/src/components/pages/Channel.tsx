@@ -140,6 +140,7 @@ function Channel() {
         prev.filter((channel) => channel._id !== channelId)
       );
     });
+    setIsShowWaitList(false);
     return () => {
       customSocket.removeAllListeners();
     };
