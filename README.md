@@ -62,7 +62,7 @@
 <img src="https://img.shields.io/badge/styled_components-DB7093?style=flat-square&logo=styled-components&logoColor=white"/>
 <img src="https://img.shields.io/badge/Socket.io-010101?style=flat-square&logo=Socket.io&logoColor=white"/>
 <img src="https://img.shields.io/badge/Axios-5A29E4?style=flat-square&logo=Axios&logoColor=white"/>
-<img src="https://img.shields.io/badge/JWT-black?style=for-the-badge&logo=JSON%20web%20tokens"/>
+<img src="https://img.shields.io/badge/JWT-41454A?style=flat-square&logo=JSON%20web%20tokens&logoColor=white"/>
 
 </div>
 
@@ -76,8 +76,7 @@
 <img src="https://img.shields.io/badge/Express-000000?style=flat-square&logo=express&logoColor=white"/>
 <img src="https://img.shields.io/badge/mongoDB-47A248?style=flat-square&logo=mongoDB&logoColor=white"/>
 <img src="https://img.shields.io/badge/Socket.io-010101?style=flat-square&logo=Socket.io&logoColor=white"/>
-<br />
-<img src="https://img.shields.io/badge/JWT-black?style=for-the-badge&logo=JSON%20web%20tokens"/>
+<img src="https://img.shields.io/badge/JWT-41454A?style=flat-square&logo=JSON%20web%20tokens&logoColor=white"/>
 </div>
 
 <br />
@@ -353,5 +352,59 @@
 <br />
 
 ## 💾 DB 컬렉션 구조
-<br />
+
 ![er_다이어그램](/uploads/8045fe23308bd879a06678336c9b977e/er_다이어그램.PNG)
+
+<br />
+
+## 🔍 테스트 방법
+
+1. 해당 프로젝트를 clone 합니다.
+```
+
+git clone https://kdt-gitlab.elice.io/ai_track/class05/data_project/team08.git
+
+```
+
+2. 프로젝트 실행에 필요한 패키지를 설치합니다.
+```
+
+cd frontend
+npm install
+
+cd backend
+npm install
+
+```
+
+3. nodeMailer 사용에 필요한 설정을 진행합니다.
+```
+
+1. [구글 앱 설정 진행](https://velog.io/@pixelstudio/NodeJS-NodeMailer-%EC%82%AC%EC%9A%A9-GMAIL-%EB%B3%B4%EC%95%88%EB%AC%B8%EC%A0%9C-%ED%95%B4%EA%B2%B0)
+2. .env 파일 편집
+3. MAILS_EMAIL에 email 삽입
+4. MAILS_PWD에 app password 삽입 
+
+```
+
+4. 몽고디비 아틀라스에서 데이터베이스를 생성합니다.
+```
+
+1. 몽고디비 아틀라스 클라우드 데이터베이스 생성
+2. backend 디렉토리의 .env 파일 편집
+3. ATLAS_DB_URL 변수에 DB URL 삽입
+
+```
+
+5. 프론트엔드 서버와 백엔드 서버를 실행합니다.
+```
+
+cd frontend
+npm start
+
+cd backend
+npm start
+
+```
+
+6. 마음껏 테스트 해보세요!
