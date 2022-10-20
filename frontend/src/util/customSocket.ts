@@ -11,9 +11,10 @@ export const customSocket = socketIOClient(
 export const customSocketConnectRequest = (eMsg: string, roomId: string) => {
   if (!customSocket) throw new Error("This is custom socket error");
   console.log("chat 연결 성공", roomId);
-  customSocket.emit(eMsg, {
+  const res = customSocket.emit(eMsg, {
     roomId: roomId,
   });
+  console.log("chat connect request res : ", res);
 };
 
 export const customSocketCreateRequest = (
@@ -23,10 +24,11 @@ export const customSocketCreateRequest = (
 ) => {
   if (!customSocket) throw new Error("This is custom socket error");
   console.log("chat create request ", chat);
-  customSocket.emit(eMsg, {
+  const res = customSocket.emit(eMsg, {
     userId: userId,
     chat: chat,
   });
+  console.log("chat create request emit ", res);
 };
 
 export const customSocketUpdateRequest = (
