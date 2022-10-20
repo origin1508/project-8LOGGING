@@ -144,8 +144,8 @@ function Channel() {
     });
     setIsShowWaitList(false);
     return () => {
-      customSocket.emit("escape-room");
       customSocket.removeAllListeners();
+      customSocket.emit("escape-room");
     };
   }, [channelId]);
 
