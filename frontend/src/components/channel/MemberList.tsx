@@ -185,6 +185,7 @@ const MemberListContainer = styled.div`
   width: 80%;
   height: 90%;
   vertical-align: middle;
+  overflow: auto;
 `;
 
 const WaitListContainer = styled.div<{ isShowWaitList: boolean }>`
