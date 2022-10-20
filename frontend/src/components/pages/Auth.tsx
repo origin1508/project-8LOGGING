@@ -85,7 +85,6 @@ const Auth = () => {
   const navigate = useNavigate();
 
   const handleRegisterSubmit = async (data: AuthFormInitialType) => {
-    console.log("data : ", data);
     const { email, nickname, password } = data;
     if (!isVerified) {
       setErrMessage("이메일 인증이 필요합니다.");

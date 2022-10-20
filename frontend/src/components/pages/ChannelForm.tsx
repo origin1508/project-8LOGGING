@@ -109,7 +109,6 @@ const ChannelForm = () => {
       image,
     });
     if (datas) {
-      console.log(datas.location);
       setSidebarChannels((prev) => {
         return [
           ...prev,
