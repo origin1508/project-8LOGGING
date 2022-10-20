@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import GlobalTheme from "@/styles/theme";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { sidebarChannelsState } from "@/recoil/atoms/channelState";
 import { loginUserIdState } from "@/recoil/atoms/authState";
+import { loadingState } from "@/recoil/atoms/loadingState";
 import CustomIcon from "@/components/icons/CustomIcon";
 import { getAuthInformationById } from "@/api/authFetcher";
 
@@ -17,12 +18,23 @@ const Channel: React.FC = () => {
   const loginUserId = useRecoilValue(loginUserIdState);
   const [sidebarChannels, setSidebarChannels] =
     useRecoilState(sidebarChannelsState);
+  const setIsLoadingState = useSetRecoilState(loadingState);
+  const navigate = useNavigate();
+
   const handleRefreshButtonClick = async () => {
     const res = await getAuthInformationById(
       "/api/users/userinfo",
       loginUserId
     );
     setSidebarChannels(res.channels);
+  };
+
+  const handleChannelMoveClick = (channel: string) => () => {
+    setIsLoadingState(true);
+    setTimeout(() => {
+      setIsLoadingState(false);
+      navigate(`/channels/${channel}`);
+    }, 1000);
   };
 
   useEffect(() => {
@@ -64,7 +76,10 @@ const Channel: React.FC = () => {
           .filter((channel) => channel.position !== 2)
           .map((channel, index) => {
             return (
-              <ChannelLink key={index} to={`/channels/${channel._id}`}>
+              <ChannelLink
+                key={index}
+                onClick={handleChannelMoveClick(channel._id)}
+              >
                 <ChannelImg src={channel.img} />
                 <FlowContent>
                   <ChannelTitle>
@@ -97,7 +112,8 @@ const ChannelsContainer = styled.div`
   magin-top: 20rem;
 `;
 
-const ChannelLink = styled(Link)`
+const ChannelLink = styled.span`
+  cursor: pointer;
   display: flex;
   align-items: center;
   height: 4rem;
