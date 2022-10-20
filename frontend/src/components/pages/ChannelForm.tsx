@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import useModal from "@/hooks/useModal";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import ChannelFormCard from "@/components/recruitingChannel/ChannelFormCard";
 import BaseChannelComponent from "@/components/hoc/BaseChannelComponent";
-import Modal from "@/components/modal/Modal";
 import { createChannelRequest } from "@/api/channelFetcher";
 import { imageResize } from "@/util/imageResizeUtil";
 import { channelListData } from "@/components/recruitingChannel/channelListData";
@@ -22,13 +20,6 @@ const ChannelForm = () => {
     `${process.env.PUBLIC_URL}/images/preview-form-img.png`
   );
   const setSidebarChannels = useSetRecoilState(sidebarChannelsState);
-  const [
-    isOpenModal,
-    ,
-    handleModalOpenButtonClick,
-    ,
-    handleModalCloseButtonClick,
-  ] = useModal(false);
   const {
     register,
     watch,
@@ -68,8 +59,6 @@ const ChannelForm = () => {
     {}
   );
 
-  const isValid = !errors.title && !errors.memberNum && !errors.spec;
-
   const handleImageUploadClick = async (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -100,10 +89,6 @@ const ChannelForm = () => {
   };
 
   const handleChannelFormCreateClick = async (data: ChannelFormInitialType) => {
-    if (!isValid) {
-      handleModalOpenButtonClick();
-      return;
-    }
     const { title, locationDist, memberNum, spec } = data;
     const { datas } = await createChannelRequest("/api/channels", {
       title,
@@ -146,15 +131,6 @@ const ChannelForm = () => {
             handleChannelFormCreateClick
           )}
         />
-        <Modal
-          isOpenModal={isOpenModal}
-          isAlertModal={true}
-          isShowImage={true}
-          onModalCancelButtonClickEvent={handleModalCloseButtonClick}
-        >
-          작성하신 내용이 올바른지 <br />
-          확인해주세요.
-        </Modal>
       </ChannelContainer>
     </BaseChannelComponent>
   );
@@ -167,11 +143,4 @@ const ChannelContainer = styled.div`
   padding: 3rem;
 `;
 
-const ChannelFormWrap = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
 export default ChannelForm;
