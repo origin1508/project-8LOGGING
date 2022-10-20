@@ -27,7 +27,8 @@ const UserDeleteAccount = ({ onvalid, curUserEmail }: Props) => {
       <BodyContainer>
         <TextAreaContainer>
           정말 회원탈퇴를 하시겠습니까? <br />
-          탈퇴를 하게 되면 서비스 이용이 불가능하게 됩니다.
+          탈퇴를 하게 되면 모든 데이터가 삭제되며 서비스 이용이 불가능하게
+          됩니다. 또한, 해당 이메일로 재가입이 불가능합니다.
         </TextAreaContainer>
         <BaseInputContainer>
           <ConfirmInput
