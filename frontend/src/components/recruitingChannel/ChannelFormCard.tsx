@@ -65,7 +65,7 @@ const ChannelFormCard = ({
           <BaseIntputContainer>
             <ChannelInput
               type="text"
-              placeholder="Channel title"
+              placeholder="채널 제목"
               {...channelForm("title", {
                 required: "제목은 필수 입니다.",
                 minLength: {
@@ -88,7 +88,6 @@ const ChannelFormCard = ({
           <BaseIntputContainer>
             <ChannelInput
               type="number"
-              placeholder="Number of recruits"
               {...channelForm("memberNum", {
                 min: {
                   value: 2,
@@ -98,6 +97,7 @@ const ChannelFormCard = ({
                   value: 25,
                   message: "인원은 최대 25명 이하입니다.",
                 },
+                required: "인원은 최소 2명 이상입니다.",
               })}
             />
             {errors.memberNum && (
@@ -130,12 +130,13 @@ const ChannelFormCard = ({
         <ChannelImageBox backgroundImg={imagePreview as string} />
       </ChannelWrapper>
       <ChannelTextArea
-        placeholder="Please enter your channel description"
+        placeholder="채널 설명을 입력해 주세요."
         {...channelForm("spec", {
           minLength: {
             value: 2,
             message: "상세 설명을 입력해 주세요.",
           },
+          required: "상세 설명을 최소 2글자 이상 작성해 주세요.",
         })}
       />
       {errors.spec && (
