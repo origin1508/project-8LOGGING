@@ -1,4 +1,4 @@
-const { authService, emailService, userService } = require("../services");
+const { authService, emailService, userService, followService, channelService } = require("../services");
 
 module.exports = {
   async login(req, res, next) {
@@ -49,8 +49,23 @@ module.exports = {
     const userId = req.userId;
 
     try {
+      await followService.deleteAllFollow(userId);
+      const user = await userService.findUserAllData(userId);
+      console.log(user.channels)
+      await Promise.all(user.channels.map( async(channel) => {
+        if (channel.position==0) {
+          await channelService.deleteChannel(userId, String(channel._id));
+          console.log("delete", channel._id);
+        } else if (channel.position==1) {
+          await channelService.quitChannel(userId, String(channel._id));
+          console.log("quit", channel._id);
+        } else {
+          await channelService.cancelEnter(userId, String(channel._id));
+          console.log("cancel enter", channel._id);
+        }
+      } ));
       await authService.lockUserInfo(userId);
-
+      
       res.status(201).json({
         success: true,
         status: 201,

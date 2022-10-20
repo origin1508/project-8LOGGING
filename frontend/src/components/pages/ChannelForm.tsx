@@ -49,19 +49,24 @@ const ChannelForm = () => {
   const navigate = useNavigate();
   useEffect(() => {
     if (!Storage.getToken()) navigate("/", { replace: true });
-  });
+    setSelectedCity(sortedChannelListData[selectedDist][0]);
+  }, [selectedDist]);
+
   const distOptions = Object.keys(channelListData).sort(
     (a: string, b: string) => (a < b ? -1 : 1)
   );
 
-  const sortedChannelListData = distOptions.reduce((acc, cur: string) => {
-    return {
-      ...acc,
-      [cur]: channelListData[cur].sort((a: string, b: string) =>
-        a < b ? -1 : 1
-      ),
-    };
-  }, {});
+  const sortedChannelListData = distOptions.reduce<{ [key: string]: string[] }>(
+    (acc, cur: string) => {
+      return {
+        ...acc,
+        [cur]: channelListData[cur].sort((a: string, b: string) =>
+          a < b ? -1 : 1
+        ),
+      };
+    },
+    {}
+  );
 
   const isValid = !errors.title && !errors.memberNum && !errors.spec;
 

@@ -108,6 +108,7 @@ function Profile() {
       <Modal
         isOpenModal={isOpenDeleteAccountlModal}
         isAlertModal={true}
+        isShowImage={true}
         onModalCancelButtonClickEvent={handleDeleteAccountCancelClick}
       >
         <UserDeleteAccount
