@@ -178,13 +178,20 @@ const TitleContainer = styled.div`
 
 const CardContainer = styled.div`
   display: flex;
-  padding: 4rem;
-  align-items: center;
-  flex-wrap: wrap;
+  height: 100%;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  padding: 0 10% 10% 10%;
   gap: 2rem;
   overflow-y: scroll;
   &::-webkit-scrollbar {
     display: none; /* Chrome, Safari, Opera*/
+  }
+  &:: {
+    ::after {
+      content: "";
+      flex: auto;
+    }
   }
 `;
 

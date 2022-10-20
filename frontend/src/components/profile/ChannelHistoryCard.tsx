@@ -59,8 +59,8 @@ function ChannelHistoryCard({
 }
 
 const CardContainer = styled.div`
-  width: 25rem;
-  height: 25rem;
+  width: 28vh;
+  height: 28vh;
   border-radius: 0.7rem;
   display: flex;
   flex-direction: column;

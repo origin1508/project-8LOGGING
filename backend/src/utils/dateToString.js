@@ -1,7 +1,9 @@
 module.exports = (dateObj) => {
-  const year = dateObj.getFullYear();
-  const month = ("0" + (1 + dateObj.getMonth())).slice(-2);
-  const day = ("0" + dateObj.getDate()).slice(-2);
+  const year = dateObj.getFullYear().toString();
+  const month = dateObj.getMonth().toString().padStart(2, "0");
+  const day = dateObj.getDate().toString().padStart(2, "0");
+
+  console.log(year, month, day);
 
   return `${year}-${month}-${day}`;
 };

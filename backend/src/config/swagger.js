@@ -11,8 +11,8 @@ const options = {
     },
     servers: [
       {
-        url: "http://localhost:3002/api",
-        description: "로컬 서버",
+        url: "http://kdt-ai5-team08.elicecoding.com:3002/api",
+        description: "",
       },
     ],
   },
