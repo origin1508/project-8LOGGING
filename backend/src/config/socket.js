@@ -13,7 +13,7 @@ const socketConfig = (server) => {
       console.log(data.roomId + "에 접속");
       socket.roomId = data.roomId;
       const chatLog = await chatService.getChatLog(socket.roomId);
-      socket.join(data.roomId);
+      socket.join(socket.roomId);
       socket.emit("receive-chatLog", chatLog);
     });
 
