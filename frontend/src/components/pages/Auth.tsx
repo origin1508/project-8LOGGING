@@ -30,6 +30,7 @@ const Auth = () => {
     watch,
     reset,
   } = useForm<AuthFormInitialType>({
+    mode: "onChange",
     defaultValues: {
       email: "",
       nickname: "",
@@ -79,7 +80,7 @@ const Auth = () => {
       setErrMessage,
       handleModalOpenButtonClick,
     });
-
+  const curEmail = watch("email");
   const setLoginUserId = useSetRecoilState(loginUserIdState);
 
   const navigate = useNavigate();
@@ -118,11 +119,7 @@ const Auth = () => {
     }
   };
 
-  const handleSendVerificationCodeClick = async (
-    e: React.MouseEvent<HTMLButtonElement>,
-    email: string
-  ) => {
-    e.preventDefault();
+  const handleSendVerificationCodeClick = async (email: string) => {
     if (isDuplicated.email) {
       return handleModalOpenButtonClick();
     }
@@ -131,15 +128,11 @@ const Auth = () => {
     await authVerificationCodeSend("/api/auth/email", email);
   };
 
-  const handleEmailVerificationCheck = async (
-    e: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    e.preventDefault();
-    const email = watch("email");
+  const handleEmailVerificationCheck = async () => {
     if (verificationCode) {
       const res = await authVerificationCodeCheck(
         "api/auth/email",
-        email,
+        curEmail,
         verificationCode
       );
       if (res.success) {
@@ -224,7 +217,7 @@ const Auth = () => {
           verificationCode={verificationCode}
           setVerificationCode={setVerificationCode}
           errMessage={errMessage}
-          emailToSend={watch("email")}
+          emailToSend={curEmail}
         />
       </Modal>
       <Modal

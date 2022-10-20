@@ -16,10 +16,7 @@ interface Props {
   errors: Partial<FieldErrorsImpl<AuthFormInitialType>>;
   onRegisterSubmitEvent: (e: React.FormEvent) => void;
   onCheckDuplicationEvent: (endPoint: string, checkData: string) => void;
-  onSendVerficationCodeClickEvent: (
-    e: React.MouseEvent<HTMLButtonElement>,
-    email: string
-  ) => void;
+  onSendVerficationCodeClickEvent: (email: string) => void;
   isDuplicated: {
     email: boolean;
     nickname: boolean;
@@ -73,10 +70,10 @@ const AuthReigster: React.FC<Props> = ({
         ) : (
           <EmailVerificationButton
             type="button"
-            onClick={(e) => {
-              onSendVerficationCodeClickEvent(e, curEmail);
+            onClick={() => {
+              onSendVerficationCodeClickEvent(curEmail);
             }}
-            disabled={errors?.email && true}
+            disabled={!curEmail || errors?.email ? true : false}
           >
             인증요청
           </EmailVerificationButton>
