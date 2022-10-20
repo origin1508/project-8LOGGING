@@ -325,6 +325,7 @@ module.exports = {
       { new: true }
     );
 
+
     // 이메일 전송
     const channel = await Channel.findById(channelId);
     const owner = await User.findById(channel.ownerId);
@@ -336,6 +337,7 @@ module.exports = {
     const html = `<b>${user.nickname}</b>님께서 회원님의 채널 <b>[ ${channel.title} ]</b> 입장 신청을 취소하였습니다.`;
     await sendEmail(from, to, subject, text, html);
 
+    /*
     // 채널 정보 반환
     const channels = await Promise.all(
       updatedUser.channels.map(async (channelId) => {
@@ -344,6 +346,7 @@ module.exports = {
       })
     );
     return channels;
+    */
   },
 
   /**
@@ -574,8 +577,12 @@ module.exports = {
         const updatedWaitReqList = user.waitReqList.filter(
           (waitListId) => String(waitListId) != String(waitList._id)
         );
+        const updatedChannels = user.channels.filter(
+          (id) => String(id) != String(channelId)
+        );
         await User.findByIdAndUpdate(userId, {
           waitReqList: updatedWaitReqList,
+          channels: updatedChannels
         });
       })
     );

@@ -154,13 +154,13 @@ module.exports = {
     const { channelId } = req.params;
   
     try {
-      const channels = await channelService.cancelEnter(userId, channelId);
+      await channelService.cancelEnter(userId, channelId);
 
       res.status(201).json({
         success: true,
         status: 201,
         message: "Channel enter cancel success",
-        datas: channels
+      //  datas: channels
       });
     } catch (err) {
       next(err);
