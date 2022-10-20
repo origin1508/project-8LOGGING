@@ -1,5 +1,7 @@
 import React, { Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import { loadingState } from "@/recoil/atoms/loadingState";
 import SidebarComponent from "@/components/commonLayout/sidebars/SidebarComponent";
 import Footer from "@/components/commonLayout/footer/Footer";
 import LoadingCycle from "@/components/loading/LoadingCycle";
@@ -27,8 +29,11 @@ const NotFoundPageComponent = React.lazy(
 );
 
 const CustomRouter = () => {
+  const isLoading = useRecoilValue(loadingState);
+
   return (
     <React.Fragment>
+      {isLoading && <LoadingCycle />}
       <SidebarComponent />
       <Suspense fallback={<LoadingCycle />}>
         <ScrollToTop />
@@ -50,7 +55,7 @@ const CustomRouter = () => {
           <Route path="*" element={<NotFoundPageComponent />} />
         </Routes>
       </Suspense>
-      <Footer />
+      {!isLoading && <Footer />}
     </React.Fragment>
   );
 };
