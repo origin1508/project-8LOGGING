@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
@@ -44,13 +44,16 @@ function Main() {
 export default Main;
 
 const MainContent = styled.div`
-  margin: 4rem 0 0 20rem;
+  width: 70%;
+  margin: 0 0 0 10rem;
 `;
 
 const MainContentTitle = styled.h1`
   font-family: ${GlobalTheme.fontStyle.bold};
   font-size: 4.5rem;
+  line-height: 1.2;
   width: 55rem;
+  margin-bottom: 2rem;
 `;
 
 const MainContentMinTitle = styled.h3`
@@ -60,7 +63,7 @@ const MainContentMinTitle = styled.h3`
 
 const ButtonContainer = styled.div`
   display: flex;
-  gap: 2rem;
+  gap: 3rem;
   margin-bottom: 4rem;
 `;
 
@@ -69,7 +72,7 @@ const Button = styled.button`
   background-color:${(props) => props.itemProp};
   color: ${(props) => props.color};
   font-size: 1.5rem;
-  padding: 1rem 2rem;
+  padding: 1rem 3rem;
   cursor: pointer;
   &:hover {
     transform: translateY(-0.3rem);
@@ -85,7 +88,7 @@ const Button = styled.button`
 
 const ImgContainer = styled.div`
   display: flex;
-  gap: 8%;
+  gap: 12%;
 `;
 
 const MainImg = styled.img`
