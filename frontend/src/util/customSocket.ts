@@ -10,6 +10,7 @@ export const customSocket = socketIOClient(
 
 export const customSocketConnectRequest = (eMsg: string, roomId: string) => {
   if (!customSocket) throw new Error("This is custom socket error");
+  console.log("chat 연결 성공", roomId);
   customSocket.emit(eMsg, {
     roomId: roomId,
   });
@@ -21,6 +22,7 @@ export const customSocketCreateRequest = (
   chat: string
 ) => {
   if (!customSocket) throw new Error("This is custom socket error");
+  console.log("chat create request ", chat);
   customSocket.emit(eMsg, {
     userId: userId,
     chat: chat,
