@@ -173,6 +173,11 @@ module.exports = {
   },
 
   async lockUserInfo(userId) {
-    await User.findOneAndUpdate({ _id: userId }, { withdrawal: true });
+    await User.findOneAndUpdate({ _id: userId }, { 
+      withdrawal: true, 
+      channels: [],
+      waitResList: [],
+      waitReqList: []
+    });
   },
 };
