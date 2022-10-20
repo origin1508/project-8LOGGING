@@ -19,12 +19,17 @@ import {
 import CustomIcon from "@/components/icons/CustomIcon";
 import { ChannelDetailType } from "@/types/channel/channelTypes";
 import Storage from "@/storage/storage";
+import { useForm } from "react-hook-form";
+
+interface KeywordType {
+  keyword: string;
+  filter: string;
+}
 
 const ChannelList = () => {
   const isLoggedIn = useMemo(() => {
     return Storage.getToken() ? true : false;
   }, [Storage.getToken()]);
-
   const [channels, setChannels] = useState<Array<ChannelsType>>([]);
   const [resMessage, setResMessage] = useState("");
   const [selectedChannelId, setSelectedChannelId] = useState<string>("");
@@ -34,10 +39,12 @@ const ChannelList = () => {
     ChannelDetailType[]
   >([]);
   const [page, setPage] = useState<number>(1);
-  const [keyword, setKeyword] = useState("");
-  const [filter, setFilter] = useState("none");
   const [isLoading, setIsLoading] = useState(false);
   const status = 0;
+  const { register, handleSubmit } = useForm<KeywordType>({
+    mode: "onChange",
+    defaultValues: { filter: "none" },
+  });
 
   const [
     isOpenModal,
@@ -46,19 +53,11 @@ const ChannelList = () => {
     ,
     handleModalCloseButtonClick,
   ] = useModal(false);
-
   const navigate = useNavigate();
-  const handleSearchButtonClick = async (e: React.FormEvent) => {
-    e.preventDefault();
+
+  const onvalid = async ({ keyword, filter }: KeywordType) => {
     const { datas } = await getResultByKeyword(page, status, keyword, filter);
     setChannels(datas);
-  };
-
-  const handleSelectFilterChange = (
-    e: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    const { value } = e.target;
-    setFilter(value);
   };
 
   const getResultByKeyword = async (
@@ -116,12 +115,6 @@ const ChannelList = () => {
     setIsLoading(false);
     handleModalOpenButtonClick();
   };
-  const handleChangeKeyword = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setKeyword(e.target.value);
-    },
-    [keyword]
-  );
 
   return (
     <BasePageComponent>
@@ -135,18 +128,16 @@ const ChannelList = () => {
               </BigButton>
             )}
           </TitleContainer>
-          <Search>
+          <Search onSubmit={handleSubmit(onvalid)}>
             <SearchInput
               type="text"
               placeholder="Search"
-              name="keyword"
-              value={keyword}
-              onChange={handleChangeKeyword}
+              {...register("keyword")}
             ></SearchInput>
-            <SearchButton onClick={handleSearchButtonClick}>
+            <SearchButton type="submit">
               <CustomIcon name="SeachIcon" size="20" color="black"></CustomIcon>
             </SearchButton>
-            <Select name="filterSelect" onChange={handleSelectFilterChange}>
+            <Select {...register("filter")}>
               <option value="none">All</option>
               <option value="title">Title</option>
               <option value="region">Region</option>
