@@ -142,6 +142,7 @@ function Channel() {
     });
     setIsShowWaitList(false);
     return () => {
+      customSocket.emit("escape-room");
       customSocket.removeAllListeners();
     };
   }, [channelId]);
