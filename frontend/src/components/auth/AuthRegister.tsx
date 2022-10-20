@@ -1,16 +1,19 @@
 import React from "react";
+import {
+  UseFormRegister,
+  UseFormWatch,
+  FieldErrorsImpl,
+} from "react-hook-form";
 import styled from "styled-components";
 import GlobalTheme from "@/styles/theme";
 import BaseIntputContainer from "@/components/hoc/BaseInputContainer";
 import BaseValidateTextContainer from "@/components/hoc/BaseValidateTextContainer";
 import { AuthFormInitialType } from "@/types/auth/authTypes";
-import ValidationUtil from "@/util/validationUtil";
 
 interface Props {
-  authFormState: AuthFormInitialType;
-  onRegisterFormValueChaneEvent: (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => void;
+  register: UseFormRegister<AuthFormInitialType>;
+  watch: UseFormWatch<AuthFormInitialType>;
+  errors: Partial<FieldErrorsImpl<AuthFormInitialType>>;
   onRegisterSubmitEvent: (e: React.FormEvent) => void;
   onCheckDuplicationEvent: (endPoint: string, checkData: string) => void;
   onSendVerficationCodeClickEvent: (
@@ -21,62 +24,48 @@ interface Props {
     email: boolean;
     nickname: boolean;
   };
-  isVerifiedEmail: boolean;
-  setIsVerifiedEmail: React.Dispatch<React.SetStateAction<boolean>>;
+  isVerified: boolean;
+  setIsVerified: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const AuthReigster: React.FC<Props> = ({
-  authFormState,
-  onRegisterFormValueChaneEvent,
+  register,
+  watch,
+  errors,
   onRegisterSubmitEvent,
   onCheckDuplicationEvent,
   onSendVerficationCodeClickEvent,
   isDuplicated,
-  isVerifiedEmail,
-  setIsVerifiedEmail,
+  isVerified,
+  setIsVerified,
 }) => {
-  const isValidEmail = ValidationUtil.checkEmailValidate(authFormState.email);
-  const isValidNickname = ValidationUtil.checkNicknameValidate(
-    authFormState.nickname || ""
-  );
-  const isValidPassword = ValidationUtil.checkPasswordValidate(
-    authFormState.password
-  );
-  const isPasswordSame =
-    authFormState.password === authFormState.confirmPassword;
-  const isValid = [
-    isValidEmail,
-    isValidNickname,
-    isValidPassword,
-    isPasswordSame,
-    !isDuplicated.email,
-    !isDuplicated.nickname,
-  ].every((v) => v === true);
+  const curPassword = watch("password");
+  const confirmPassword = watch("confirmPassword");
+  const curEmail = watch("email");
   return (
-    <RegistrationFormContainer>
+    <RegistrationFormContainer onSubmit={onRegisterSubmitEvent}>
       <BaseIntputContainer>
         <RegistrationInput
+          {...register("email", {
+            required: true,
+            pattern: /^\S+@\S+$/i,
+            onBlur: (e) => onCheckDuplicationEvent("email", e.target.value),
+          })}
           placeholder="이메일"
-          name="email"
-          value={authFormState.email}
           isDuplicated={isDuplicated.email}
-          onChange={onRegisterFormValueChaneEvent}
-          onBlur={(e) => {
-            onCheckDuplicationEvent("email", e.target.value);
-          }}
-          disabled={isVerifiedEmail && true}
+          disabled={isVerified && true}
         />
-        {authFormState.email && !isValidEmail && (
+        {errors.email && (
           <BaseValidateTextContainer>
             올바른 이메일을 입력해주세요.
           </BaseValidateTextContainer>
         )}
-        {isVerifiedEmail ? (
+        {isVerified ? (
           <VerifiedEmailButton
             type="button"
             onClick={(e) => {
               e.preventDefault();
-              setIsVerifiedEmail(false);
+              setIsVerified(false);
             }}
           >
             인증확인
@@ -85,9 +74,9 @@ const AuthReigster: React.FC<Props> = ({
           <EmailVerificationButton
             type="button"
             onClick={(e) => {
-              onSendVerficationCodeClickEvent(e, authFormState.email);
+              onSendVerficationCodeClickEvent(e, curEmail);
             }}
-            disabled={!isValidEmail && true}
+            disabled={errors?.email && true}
           >
             인증요청
           </EmailVerificationButton>
@@ -95,16 +84,15 @@ const AuthReigster: React.FC<Props> = ({
       </BaseIntputContainer>
       <BaseIntputContainer>
         <RegistrationInput
+          {...register("nickname", {
+            required: true,
+            minLength: 4,
+            onBlur: (e) => onCheckDuplicationEvent("nickname", e.target.value),
+          })}
           placeholder="닉네임"
-          name="nickname"
-          value={authFormState.nickname}
           isDuplicated={isDuplicated.nickname}
-          onChange={onRegisterFormValueChaneEvent}
-          onBlur={(e) => {
-            onCheckDuplicationEvent("nickname", e.target.value);
-          }}
         />
-        {authFormState.nickname && !isValidNickname && (
+        {errors?.nickname && (
           <BaseValidateTextContainer>
             닉네임을 4글자 이상 사용해주세요.
           </BaseValidateTextContainer>
@@ -112,13 +100,16 @@ const AuthReigster: React.FC<Props> = ({
       </BaseIntputContainer>
       <BaseIntputContainer>
         <RegistrationInput
+          {...register("password", {
+            required: true,
+            maxLength: 15,
+            minLength: 8,
+            pattern: /^.(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/,
+          })}
           placeholder="비밀번호"
           type="password"
-          name="password"
-          value={authFormState.password}
-          onChange={onRegisterFormValueChaneEvent}
         />
-        {authFormState.password && !isValidPassword && (
+        {errors.password && (
           <BaseValidateTextContainer>
             8~15자 영문 소문자, 숫자, 특수문자를 사용해주세요.
           </BaseValidateTextContainer>
@@ -126,26 +117,20 @@ const AuthReigster: React.FC<Props> = ({
       </BaseIntputContainer>
       <BaseIntputContainer>
         <RegistrationInput
+          {...register("confirmPassword", {
+            required: true,
+          })}
           placeholder="비밀번호 재확인"
           type="password"
-          name="confirmPassword"
-          value={authFormState.confirmPassword}
-          onChange={onRegisterFormValueChaneEvent}
         />
-        {authFormState.confirmPassword && !isPasswordSame && (
+        {confirmPassword && curPassword !== confirmPassword && (
           <BaseValidateTextContainer>
             비밀번호가 일치하지 않습니다.
           </BaseValidateTextContainer>
         )}
       </BaseIntputContainer>
       <RegistrationButtonContainer>
-        <RegistrationButton
-          disabled={isValid ? false : true}
-          type="submit"
-          onClick={onRegisterSubmitEvent}
-        >
-          가입하기
-        </RegistrationButton>
+        <RegistrationButton type="submit">회원가입</RegistrationButton>
       </RegistrationButtonContainer>
     </RegistrationFormContainer>
   );
