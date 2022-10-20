@@ -160,3 +160,27 @@ paths:
                   type: string
                 authCode:
                   type: string
+  /auth/refresh:
+    post:
+      summary: 리프레시 토큰 발급
+      tags: [AUTH]
+      responses:
+        '201':
+          description: 인증
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    default: true
+                  status:
+                    type: integer
+                    default: 201
+                  message:
+                    type: string
+                    default: reissue new refresh token
+                  datas:
+                    type: object
+                    default: {newAccessToken: "erikw3lrw3r"}
