@@ -70,6 +70,7 @@ const Channel: React.FC = () => {
                   <ChannelTitle>
                     <Title>{channel.title}</Title>
                     <Title>{channel.title}</Title>
+                    <Title>{channel.title}</Title>
                   </ChannelTitle>
                 </FlowContent>
               </ChannelLink>
@@ -84,7 +85,7 @@ const flow = keyframes`
     transform: translate(0, 0);
   }
   100% {
-    transform: translate(-203%, 0);
+    transform: translate(-50rem, 0);
   }
 `;
 
@@ -115,7 +116,7 @@ const FlowContent = styled.div`
 const ChannelTitle = styled.div`
   white-space: nowrap;
   &:hover {
-    animation: ${flow} 5s linear infinite;
+    animation: ${flow} 7s linear infinite;
   }
 `;
 
