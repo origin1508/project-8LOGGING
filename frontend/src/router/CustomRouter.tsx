@@ -2,7 +2,9 @@ import React, { Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
 import SidebarComponent from "@/components/commonLayout/sidebars/SidebarComponent";
 import Footer from "@/components/commonLayout/footer/Footer";
+import LoadingCycle from "@/components/loading/LoadingCycle";
 import ScrollToTop from "@/util/scrollToTop";
+
 const MainComponentPage = React.lazy(() => import("@/components/pages/Main"));
 const LoginComponentPage = React.lazy(() => import("@/components/pages/Auth"));
 const ChannelFormComponentPage = React.lazy(
@@ -23,13 +25,12 @@ const ChannelPageComponent = React.lazy(
 const NotFoundPageComponent = React.lazy(
   () => import("@/components/pages/NotFound")
 );
+
 const CustomRouter = () => {
   return (
     <React.Fragment>
       <SidebarComponent />
-      <Suspense
-        fallback={<div>Loading... 이 친구도 따로 디자인 필요 Spinner?</div>}
-      >
+      <Suspense fallback={<LoadingCycle />}>
         <ScrollToTop />
         <Routes>
           <Route path="/" element={<MainComponentPage />} />
