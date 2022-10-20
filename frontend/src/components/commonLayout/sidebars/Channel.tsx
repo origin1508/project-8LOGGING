@@ -58,7 +58,10 @@ const Channel: React.FC = () => {
               <ChannelLink key={index} to={`/channels/${channel._id}`}>
                 <ChannelImg src={channel.img} />
                 <FlowContent>
-                  <ChannelTitle>{channel.title}</ChannelTitle>
+                  <ChannelTitle>
+                    <Title>{channel.title}</Title>
+                    <Title>{channel.title}</Title>
+                  </ChannelTitle>
                 </FlowContent>
               </ChannelLink>
             );
@@ -72,7 +75,7 @@ const flow = keyframes`
     transform: translate(0, 0);
   }
   100% {
-    transform: translate(-100%, 0);
+    transform: translate(-199%, 0);
   }
 `;
 
@@ -103,8 +106,14 @@ const FlowContent = styled.div`
 const ChannelTitle = styled.div`
   white-space: nowrap;
   &:hover {
-    animation: ${flow} 3s linear infinite;
+    animation: ${flow} 5s linear infinite;
   }
+`;
+
+const Title = styled.span`
+  display: inline-block;
+  width: 20rem;
+  margin-right: 5rem;
 `;
 const ChannelImg = styled.img`
   width: 7rem;
