@@ -125,7 +125,7 @@ module.exports = {
         status: 401,
         mesasge: err.message,
         neededBothToken: true,
-      });
+      }); 
     }
   },
 };
