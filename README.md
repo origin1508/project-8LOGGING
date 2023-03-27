@@ -2,7 +2,7 @@
 <br />
 <br />
 
-![plogging_logo](/uploads/a50fc68f184b86dc759f5a43dd311d49/plogging_logo.png)
+![plogging_logo](https://user-images.githubusercontent.com/108377283/227824622-b84ea381-66b4-494a-a677-0d006583e10f.png)
 
 <br />
 
@@ -353,7 +353,7 @@
 
 ## 💾 DB 컬렉션 구조
 
-![er_다이어그램](/uploads/8045fe23308bd879a06678336c9b977e/er_다이어그램.PNG)
+![er_다이어그램](https://user-images.githubusercontent.com/108377283/227824686-5a090213-64d8-4f94-8b29-21ceb179da57.PNG)
 
 <br />
 
